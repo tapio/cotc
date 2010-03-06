@@ -1,82 +1,45 @@
 #pragma once
 
-#include <vector>
+#include <cstdlib>
 #include <boost/noncopyable.hpp>
 
-#include "rlutil.h"
-#include "common.hh"
 
 class ConsoleWindow: boost::noncopyable {
   public:
-	ConsoleWindow(int w, int h): windowW(w), windowH(h), curX(), curY() {
-		for (int j = 0; j < h; j++) {
-			std::vector<Tile> row;
-			for (int i = 0; i < w; i++) row.push_back(Tile());
-			cells.push_back(row);
+	ConsoleWindow() {
+		if ((window = initscr()) == NULL) {
+			std::cerr << "-!- Error initializing ncurses." << std::endl;
+			exit(1);
 		}
-		rlutil::hidecursor();
+		noecho(); // Turn off key echoing
+		keypad(window, true); // Enable the keypad for non-char keys
+		oldcur = curs_set(0);
+
+		start_color(); // Initialize colours
+		if (has_colors() && COLOR_PAIRS >= 16 && COLORS >= 8) {
+			use_default_colors();
+			for (int i = 1; i < 4; i++) init_pair(i, i, -1);
+		} else {
+			cleanup();
+			std::cerr << "-!- Error initializing colors:" << std::endl;
+			std::cerr << "    has_colors: " << has_colors() << std::endl;
+			std::cerr << "    COLOR_PAIRS: " << COLOR_PAIRS << std::endl;
+			std::cerr << "    COLORS: " << COLORS << std::endl;
+			exit(2);
+		}
 	}
+
 	~ConsoleWindow() {
-		rlutil::showcursor();
+		cleanup();
 	}
 
-	/// Function: print
-	void print(std::string txt, int x, int y, int color) {
-		if (x < 0 || x >=windowW || y < 0 || y >= windowH) return;
-		//for (int i = 0; i < ((x+int(txt.length()) >= windowW) ? windowW-x : int(txt.length())); i++) {
-			for (int i = 0; i < int(txt.length()); i++) {
-			cells[y][x+i].ch = txt[i];
-			cells[y][x+i].color = color;
-			cells[y][x+i].changed = true;
-		}
-	}
-
-	/// Function: put
-	void put(char ch, int x, int y, int color) {
-		if (x < 0 || x >=windowW || y < 0 || y >= windowH) return;
-		if (cells[y][x].ch != ch || cells[y][x].color != color) {
-			cells[y][x].ch = ch;
-			cells[y][x].color = color;
-			cells[y][x].changed = true;
-		}
-	}
-
-	/// Function refresh
-	void refresh() {
-		for (int j = 0; j < windowH; j++) {
-			for (int i = 0; i < windowW; i++) {
-				if (cells[j][i].changed) {
-					rlutil::locate(i, j);
-					rlutil::setColor(cells[j][i].color);
-					std::cout << cells[j][i].ch;
-					cells[j][i].changed = false;
-				}
-			}
-		}
-		curX = 0; curY = 0;
-	}
-
-	/// Function redraw
-	void redraw() {
-		int prevC = -1, curC = -1;
-		for (int j = 0; j < windowH; j++) {
-			for (int i = 0; i < windowW; i++) {
-				if ((curC = cells[j][i].color) != prevC) {
-					rlutil::setColor(curC);
-					prevC = curC;
-				}
-				std::cout << cells[j][i].ch;
-				cells[j][i].changed = false;
-			}
-			std::cout << std::endl;
-		}
-		curX = 0; curY = 0;
+	void cleanup() {
+		delwin(window);
+		curs_set(oldcur);
+		endwin();
 	}
 
   private:
-	int windowW;
-	int windowH;
-	int curX;
-	int curY;
-	tilearray cells;
+	WINDOW* window;
+	int oldcur;
 };

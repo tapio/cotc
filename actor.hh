@@ -16,6 +16,7 @@ class Actor {
 	void position(int newx, int newy) {
 		x = newx;
 		y = newy;
+		//mvaddch(y, x, getChar());
 	}
 
 	char getChar() const {
@@ -32,12 +33,12 @@ class Actor {
 
 	int getColor() const {
 		switch(type) {
-			case HUMAN:     return rlutil::BROWN;
-			case ANGEL:     return rlutil::GREY;
-			case ARCHANGEL: return rlutil::WHITE;
-			case IMP:       return rlutil::RED;
-			case DEMON:     return rlutil::RED;
-			case ARCHDEMON: return rlutil::RED;
+			case HUMAN:     return 1;
+			case ANGEL:     return 3;
+			case ARCHANGEL: return 3;
+			case IMP:       return 2;
+			case DEMON:     return 2;
+			case ARCHDEMON: return 2;
 		}
 		return -1;
 	}

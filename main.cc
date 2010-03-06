@@ -1,3 +1,5 @@
+#include "curses.h"
+
 #include "rlutil.h"
 #include "common.hh"
 #include "console.hh"
@@ -5,22 +7,20 @@
 #include "world.hh"
 
 bool handleInput(Actor& actor) {
-	if (kbhit()) {
-		int k = rlutil::getkey();
+	int k = getch();
 
-		if (k == rlutil::KEY_ESCAPE) return false;
-		else if (k == rlutil::KEY_LEFT || k == 'a') actor.move(-1,0);
-		else if (k == rlutil::KEY_RIGHT || k == 'd') actor.move(1,0);
-		else if (k == rlutil::KEY_UP || k == 'w') actor.move(0,-1);
-		else if (k == rlutil::KEY_DOWN || k == 's') actor.move(0,1);
-	}
+	if (k == 'q') return false;
+	else if (k == KEY_LEFT || k == 'a') actor.move(-1,0);
+	else if (k == KEY_RIGHT || k == 'd') actor.move(1,0);
+	else if (k == KEY_UP || k == 'w') actor.move(0,-1);
+	else if (k == KEY_DOWN || k == 's') actor.move(0,1);
 	return true;
 }
 
 
 void mainLoop() {
 
-	ConsoleWindow cons(40,24);
+	ConsoleWindow cons;
 	World world(cons);
 	Actor pl(Actor::ANGEL);
 	pl.position(5,5);
@@ -29,7 +29,7 @@ void mainLoop() {
 	do {
 
 		world.draw(pl);
-		cons.refresh();
+		refresh();
 	} while(handleInput(pl));
 
 }
