@@ -3,6 +3,17 @@
 #include "common.hh"
 #include "logger.hh"
 
+void setColor(WINDOW* scr, int color) {
+	if (color < 0 || color > 15) return;
+	if (color > 7) wattron(scr, A_BOLD);
+	color = color % 8;
+	wcolor_set(scr, color, 0);
+}
+
+void setColor(int color) {
+	setColor(stdscr, color);
+}
+
 void World::generate(int w, int h) {
 	width = w; height = h;
 	for (int j = 0; j < h; j++) {
@@ -18,22 +29,25 @@ void World::generate(int w, int h) {
 	}
 }
 
-/// Function: getView
-/// Creates an array of <Tiles> from the actors view.
-tilearray World::getView(const Actor& actor) const {
-	tilearray view;
+/// Function: updateView
+/// Updates the Actor's view.
+void World::updateView(Actor& actor) {
+	tilearray view = actor.getView();
 	for (int j = 1; j < viewYDist*2 + 2; j++) {
 		tilerow row;
 		for (int i = 1; i < viewXDist*2 + 2; i++) {
 			Tile tile;
 			int x = scr2x(i, actor.x);
 			int y = scr2y(j, actor.y);
-			if (hasLOS(actor, x, y)) tile = getTile(x, y);
+			bool visible = hasLOS(actor, x, y);
+			bool explored = actor.hasExplored(x,y);
+			if (visible || explored) tile = getTile(x, y);
+			tile.visible = visible;
+			tile.explored = explored;
 			row.push_back(tile);
 		}
 		view.push_back(row);
 	}
-	return view;
 }
 
 /// Function: hasLOS
@@ -66,17 +80,18 @@ void World::draw(const Actor& actor) const {
 	wcolor_set(worldwin, COLOR_GREEN, 0);
 	box(worldwin, 0 , 0);
 	// Tiles
-	tilearray view = getView(actor);
+	const tilearray& view = actor.getConstView();
 	for (int j = 0; j < viewYDist*2 + 1; j++) {
 		for (int i = 0; i < viewXDist*2 + 1; i++) {
 			Tile tile = view[j][i];
+			if (tile.visible) wattron(worldwin, A_BOLD);
 			wcolor_set(worldwin, tile.color, 0);
 			mvwaddch(worldwin, j+1, i+1, tile.ch);
 		}
 	}
 	// Actors
 	for (Actors::const_iterator it = actors.begin(); it != actors.end(); it++) {
-		wcolor_set(worldwin, (*it)->getColor(), 0);
+		setColor(worldwin, (*it)->getColor());
 		mvwaddch(worldwin, y2scr((*it)->y, actor.y),
 						   x2scr((*it)->x, actor.x), (*it)->getChar());
 	}

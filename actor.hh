@@ -10,6 +10,14 @@ class Actor {
 
 	Actor(World& wd, Type type): type(type), x(), y(), viewDist(10), world(wd) {
 		world.addActor(this);
+		// Construct view array
+		int w = world.getWidth();
+		int h = world.getHeight();
+		for (int j = 0; j < h; j++) {
+			tilerow row;
+			for (int i = 0; i < w; i++) row.push_back(Tile());
+			view.push_back(row);
+		}
 	}
 
 	void move(int dx, int dy) {
@@ -48,11 +56,21 @@ class Actor {
 		return -1;
 	}
 
+	tilearray& getView() { return view; }
+
+	const tilearray&  getConstView() const { return view; }
+
+	bool hasExplored(int x, int y) const {
+		if (x < 0 || y < 0 || x >= world.getWidth() || y >= world.getHeight()) return false;
+		return view[y][x].explored;
+	}
+
 	int x;
 	int y;
 	int viewDist;
 
   private:
 	World& world;
+	tilearray view;
 
 };

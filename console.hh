@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <cstdlib>
 #include <iostream>
 #include <curses.h>
@@ -32,7 +31,7 @@ class ConsoleWindow: boost::noncopyable {
 		start_color(); // Initialize colours
 		if (has_colors() && COLOR_PAIRS >= 16 && COLORS >= 8) {
 			use_default_colors();
-			for (int i = 1; i < 4; i++) init_pair(i, i, -1);
+			for (int i = 1; i < 8; i++) init_pair(i, i, -1);
 		} else {
 			cleanup();
 			std::cerr << "-!- Error initializing colors:" << std::endl;

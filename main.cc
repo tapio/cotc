@@ -1,6 +1,5 @@
 #include "curses.h"
 
-#include "rlutil.h"
 #include "common.hh"
 #include "console.hh"
 #include "actor.hh"
@@ -44,6 +43,7 @@ void mainLoop() {
 	refresh();
 
 	do {
+		world.updateView(pl);
 		world.draw(pl);
 	} while(handleInput(pl));
 

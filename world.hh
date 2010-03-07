@@ -30,13 +30,16 @@ class World: boost::noncopyable {
 		return tiles[y][x];
 	}
 
-	tilearray getView(const Actor& actor) const;
+	void updateView(Actor& actor);
 
 	bool hasLOS(const Actor& actor, int x, int y) const;
 
 	void addActor(Actor* actor) { actors.push_back(actor); }
 
 	void draw(const Actor& actor) const;
+
+	int getWidth() const { return width; }
+	int getHeight() const { return height; }
 
   private:
 	int inline x2scr(int coord, int ref) const { return viewXDist + coord - ref + 1; }
