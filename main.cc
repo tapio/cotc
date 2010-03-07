@@ -5,6 +5,7 @@
 #include "console.hh"
 #include "actor.hh"
 #include "world.hh"
+#include "screens.hh"
 
 bool handleInput(Actor& actor) {
 	int k = getch();
@@ -21,13 +22,18 @@ bool handleInput(Actor& actor) {
 void mainLoop() {
 
 	ConsoleWindow cons;
+
+	title();
+	frame();
+	refresh();
+
 	World world(cons);
 	Actor pl(Actor::ANGEL);
 	pl.position(5,5);
 	world.addActor(pl);
 
 	do {
-
+		frame();
 		world.draw(pl);
 		refresh();
 	} while(handleInput(pl));

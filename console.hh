@@ -11,6 +11,7 @@ class ConsoleWindow: boost::noncopyable {
 			std::cerr << "-!- Error initializing ncurses." << std::endl;
 			exit(1);
 		}
+		cbreak(); // No line buffering
 		noecho(); // Turn off key echoing
 		keypad(window, true); // Enable the keypad for non-char keys
 		oldcur = curs_set(0);
