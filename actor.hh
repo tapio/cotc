@@ -11,7 +11,7 @@ class Actor {
 	enum Type { HUMAN, ANGEL, ARCHANGEL, IMP, DEMON, ARCHDEMON } type;
 
 	Actor(Type type, bool ai = true): type(type), x(), y(),
-	  viewDist(10), useAI(ai), world() { }
+	  viewDist(10), useAI(ai), world(), moves() { }
 
 	void setWorld(World* wd) {
 		world.reset(wd);
@@ -33,13 +33,14 @@ class Actor {
 		}
 	}
 
-	void idle() {}
+	void idle() { moves++; }
 
 	void move(int dx, int dy) {
 		if (world->isFreeTile(x+dx, y+dy)) {
 			x+=dx;
 			y+=dy;
 		}
+		moves++;
 	}
 
 	bool position(int newx, int newy) {
@@ -91,10 +92,11 @@ class Actor {
 	ActorPtrs visible_actors;
 
   private:
-	WorldPtr world;
-	tilearray view;
-
 	void AI_angel();
 	void AI_human();
 	void AI_demon();
+
+	WorldPtr world;
+	tilearray view;
+	unsigned long moves;
 };
