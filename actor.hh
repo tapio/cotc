@@ -16,7 +16,6 @@ class Actor {
 	void position(int newx, int newy) {
 		x = newx;
 		y = newy;
-		//mvaddch(y, x, getChar());
 	}
 
 	char getChar() const {

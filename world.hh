@@ -1,26 +1,37 @@
 #pragma once
 
-#include "rlutil.h"
+#include <boost/noncopyable.hpp>
+#include <vector>
+
 #include "console.hh"
 #include "actor.hh"
 
-class World {
+class World: boost::noncopyable {
   public:
-	World(ConsoleWindow& console): console(console), windowW(15), windowH(15), scrX(0), scrY(0) {
-
+	World(): windowW(15), windowH(15) {
+		scrX = COLS / 2 - windowW / 2;
+		scrY = LINES / 2 - windowH / 2 - 1;
+		worldwin = newwin(windowH, windowW, scrY, scrX);
+	}
+	~World() {
+		delwin(worldwin);
 	}
 
 	void addActor(Actor& actor) { actors.push_back(&actor); }
 
 	void draw(Actor& actor) {
+		werase(worldwin);
+		wcolor_set(worldwin, COLOR_GREEN, 0);
+		box(worldwin, 0 , 0);
 		for (Actors::const_iterator it = actors.begin(); it != actors.end(); it++) {
-			color_set((*it)->getColor(), 0);
-			mvaddch((*it)->y, (*it)->x, (*it)->getChar());
+			wcolor_set(worldwin, (*it)->getColor(), 0);
+			mvwaddch(worldwin, (*it)->y, (*it)->x, (*it)->getChar());
 		}
+		wrefresh(worldwin);
 	}
 
   private:
-	ConsoleWindow& console;
+	WINDOW* worldwin;
 	int windowW;
 	int windowH;
 	int scrX;
