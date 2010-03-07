@@ -7,14 +7,14 @@
 #include "world.hh"
 #include "screens.hh"
 
-bool handleInput(Actor& actor) {
+bool handleInput(Actor& pl) {
 	int k = getch();
 
 	if (k == 'q') return false;
-	else if (k == KEY_LEFT  || k == 'a') actor.move(-1,0);
-	else if (k == KEY_RIGHT || k == 'd') actor.move(1,0);
-	else if (k == KEY_UP    || k == 'w') actor.move(0,-1);
-	else if (k == KEY_DOWN  || k == 's') actor.move(0,1);
+	else if (k == KEY_LEFT  || k == 'a') pl.move(-1,0);
+	else if (k == KEY_RIGHT || k == 'd') pl.move(1,0);
+	else if (k == KEY_UP    || k == 'w') pl.move(0,-1);
+	else if (k == KEY_DOWN  || k == 's') pl.move(0,1);
 	return true;
 }
 
