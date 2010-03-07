@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 #include "console.hh"
@@ -16,14 +17,17 @@ class World: boost::noncopyable {
 		worldwin = newwin(windowH, windowW, scrY, scrX);
 		viewXDist = windowW / 2 - 1;
 		viewYDist = windowH / 2 - 1;
-		generate(100,100);
+		generate(50,50);
 	}
 
 	~World() {
+		actors.clear();
 		delwin(worldwin);
 	}
 
 	void generate(int w, int h);
+
+	Actor& addActor(Actor* actor);
 
 	Tile getTile(int x, int y) const {
 		if (x < 0 || y < 0 || x >= width || y >= height) return Tile();
@@ -32,11 +36,13 @@ class World: boost::noncopyable {
 
 	void updateView(Actor& actor);
 
+	void updateVisibleActors();
+
 	bool hasLOS(const Actor& actor, int x, int y) const;
 
-	void addActor(Actor* actor) { actors.push_back(actor); }
+	void update(bool skipAI = false);
 
-	void draw(const Actor& actor) const;
+	void draw(Actor& actor);
 
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
@@ -57,8 +63,7 @@ class World: boost::noncopyable {
 	int viewXDist;
 	int viewYDist;
 	tilearray tiles;
-	typedef std::vector<Actor*> Actors;
-	Actors actors;
-
+	ActorPtrs actors;
 };
 
+typedef boost::shared_ptr<World> WorldPtr;

@@ -2,17 +2,22 @@
 
 #include "world.hh"
 
+#define NO_AI false
+
 class World;
 
 class Actor {
   public:
 	enum Type { HUMAN, ANGEL, ARCHANGEL, IMP, DEMON, ARCHDEMON } type;
 
-	Actor(World& wd, Type type): type(type), x(), y(), viewDist(10), world(wd) {
-		world.addActor(this);
+	Actor(Type type, bool ai = true): type(type), x(), y(),
+	  viewDist(10), useAI(ai), world() { }
+
+	void setWorld(World* wd) {
+		world.reset(wd);
 		// Construct view array
-		int w = world.getWidth();
-		int h = world.getHeight();
+		int w = world->getWidth();
+		int h = world->getHeight();
 		for (int j = 0; j < h; j++) {
 			tilerow row;
 			for (int i = 0; i < w; i++) row.push_back(Tile());
@@ -20,16 +25,27 @@ class Actor {
 		}
 	}
 
+	void AI() {
+		switch (type) {
+			case HUMAN: AI_human(); break;
+			case ANGEL: case ARCHANGEL: AI_angel(); break;
+			case IMP: case DEMON: case ARCHDEMON: AI_demon(); break;
+		}
+	}
+
 	void move(int dx, int dy) {
-		if (!world.getTile(x+dx, y+dy).blocks_movement) {
+		if (!world->getTile(x+dx, y+dy).blocks_movement) {
 			x+=dx;
 			y+=dy;
 		}
 	}
 
-	void position(int newx, int newy) {
-		x = newx;
-		y = newy;
+	bool position(int newx, int newy) {
+		if (!world->getTile(newx, newy).blocks_movement) {
+			x = newx; y = newy;
+			return true;
+		}
+		return false;
 	}
 
 	char getChar() const {
@@ -46,12 +62,12 @@ class Actor {
 
 	int getColor() const {
 		switch(type) {
-			case HUMAN:     return 1;
-			case ANGEL:     return 3;
-			case ARCHANGEL: return 3;
-			case IMP:       return 2;
-			case DEMON:     return 2;
-			case ARCHDEMON: return 2;
+			case HUMAN:     return COLOR_YELLOW;
+			case ANGEL:     return COLOR_WHITE;
+			case ARCHANGEL: return COLOR_WHITE;
+			case IMP:       return COLOR_RED;
+			case DEMON:     return COLOR_RED;
+			case ARCHDEMON: return COLOR_RED;
 		}
 		return -1;
 	}
@@ -61,16 +77,22 @@ class Actor {
 	const tilearray&  getConstView() const { return view; }
 
 	bool hasExplored(int x, int y) const {
-		if (x < 0 || y < 0 || x >= world.getWidth() || y >= world.getHeight()) return false;
+		if (x < 0 || y < 0 || x >= world->getWidth() || y >= world->getHeight()) return false;
 		return view[y][x].explored;
 	}
 
 	int x;
 	int y;
 	int viewDist;
+	bool useAI;
+
+	Actors visible_actors;
 
   private:
-	World& world;
+	WorldPtr world;
 	tilearray view;
 
+	void AI_angel();
+	void AI_human();
+	void AI_demon();
 };

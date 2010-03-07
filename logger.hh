@@ -8,7 +8,7 @@ class Logger {
 		if (msg) m_stream << msg << std::endl;
 	}
 	~Logger() { m_stream.close(); }
-	void  write(const char* logline, ...){
+	void operator()(const char* logline, ...) {
 		va_list argList;
 		char cbuffer[1024];
 		va_start(argList, logline);

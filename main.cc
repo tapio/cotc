@@ -1,4 +1,5 @@
-#include "curses.h"
+#include <curses.h>
+#include <boost/shared_ptr.hpp>
 
 #include "common.hh"
 #include "console.hh"
@@ -8,7 +9,6 @@
 #include "logger.hh"
 
 #define KEY_ESCAPE 27
-
 
 bool handleInput(Actor& pl) {
 	int k = getch();
@@ -34,17 +34,24 @@ void mainLoop() {
 	title();
 	refresh();
 
-	World world;
-	Actor pl = Actor(world, Actor::ANGEL);
+	boost::shared_ptr<World> world(new World());
+	Actor& pl(world->addActor(new Actor(Actor::ANGEL, NO_AI)));
 	pl.position(5,5);
+
+	// Actors
+	for (int i = 0; i < 100; i++) {
+		Actor& a(world->addActor(new Actor(Actor::HUMAN)));
+		while (!a.position(randint(world->getWidth()),
+		                   randint(world->getHeight())));
+	}
 
 	erase();
 	frame();
 	refresh();
 
 	do {
-		world.updateView(pl);
-		world.draw(pl);
+		world->update();
+		world->draw(pl);
 	} while(handleInput(pl));
 
 }

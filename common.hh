@@ -1,11 +1,15 @@
 #pragma once
 
 #include <cstdlib>
-#include <vector>
 #include <cmath>
 #include <curses.h>
+#include <boost/ptr_container/ptr_vector.hpp>
 
 #define BLOCKS true
+
+class Actor;
+typedef std::vector<Actor> Actors;
+typedef boost::ptr_vector<Actor> ActorPtrs;
 
 struct Tile {
 	char ch;

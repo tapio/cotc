@@ -20,13 +20,19 @@ void World::generate(int w, int h) {
 		tilerow row;
 		for (int i = 0; i < w; i++) {
 			Tile tile;
-			if (i == 0 || i == w-1 || j == 0 || j == h-1 || randint(6) == 0)
-				tile = Tile('#', 1, BLOCKS);
-			else tile = Tile('.', 2, !BLOCKS);
+			if (i == 0 || i == w-1 || j == 0 || j == h-1 || randint(6) == 0) {
+				tile = Tile('#', COLOR_CYAN, BLOCKS);
+			} else tile = Tile('.', COLOR_GREEN, !BLOCKS);
 			row.push_back(tile);
 		}
 		tiles.push_back(row);
 	}
+}
+
+Actor& World::addActor(Actor* actor) {
+	actors.push_back(actor);
+	actors.back().setWorld(this);
+	return actors.back();
 }
 
 /// Function: updateView
@@ -42,6 +48,20 @@ void World::updateView(Actor& actor) {
 			if (visible || explored) tile = getTile(i, j);
 			tile.visible = visible;
 			tile.explored = explored;
+		}
+	}
+}
+
+/// Function updateVisibleActors
+/// Updates all visibile actors lists of all actors
+void World::updateVisibleActors() {
+	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); it++)
+		it->visible_actors.clear();
+	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); it++) {
+		for (ActorPtrs::iterator it2 = it+1; it2 != actors.end(); it2++) {
+			if (it->getConstView()[it2->y][it2->x].visible) {
+				it->visible_actors.push_back(*it2);
+			}
 		}
 	}
 }
@@ -67,9 +87,24 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 	return true;
 }
 
+/// Function: update
+/// Updates the world - views, visibilities and AI
+void World::update(bool skipAI) {
+	// Update views
+	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); ++it) {
+		updateView(*it);
+	}
+	// Update visible actors
+	updateVisibleActors();
+	// Do AI
+	if (skipAI) return;
+	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); ++it)
+		if (it->useAI) it->AI();
+}
+
 /// Function: draw
 /// Draws the world with actors.
-void World::draw(const Actor& actor) const {
+void World::draw(Actor& actor) {
 	// Cls
 	werase(worldwin);
 	// Border
@@ -88,20 +123,17 @@ void World::draw(const Actor& actor) const {
 			mvwaddch(worldwin, y2scr(j, actor.y), x2scr(i, actor.x), tile.ch);
 		}
 	}
-	//for (int j = 0; j < viewYDist*2 + 1; j++) {
-		//for (int i = 0; i < viewXDist*2 + 1; i++) {
-			//Tile tile = view[j][i];
-			//if (tile.visible) wattron(worldwin, A_BOLD);
-			//wcolor_set(worldwin, tile.color, 0);
-			//mvwaddch(worldwin, j+1, i+1, tile.ch);
-		//}
-	//}
 	// Actors
-	for (Actors::const_iterator it = actors.begin(); it != actors.end(); it++) {
-		setColor(worldwin, (*it)->getColor());
-		mvwaddch(worldwin, y2scr((*it)->y, actor.y),
-						   x2scr((*it)->x, actor.x), (*it)->getChar());
+	for (Actors::const_iterator it = actor.visible_actors.begin(); it != actor.visible_actors.end(); ++it) {
+		setColor(worldwin, it->getColor());
+		mvwaddch(worldwin, y2scr(it->y, actor.y),
+						   x2scr(it->x, actor.x), it->getChar());
 	}
+	// Player
+	setColor(worldwin, actor.getColor());
+	mvwaddch(worldwin, y2scr(actor.y, actor.y),
+					   x2scr(actor.x, actor.x), actor.getChar());
+
 	// Flush
 	wrefresh(worldwin);
 }
