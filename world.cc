@@ -20,7 +20,7 @@ void World::generate(int w, int h) {
 		tilerow row;
 		for (int i = 0; i < w; i++) {
 			Tile tile;
-			if (i == 0 || i == w-1 || j == 0 || j == h-1 || randint(6) == 0) {
+			if (i == 0 || i == w-1 || j == 0 || j == h-1 || randint(8) == 0) {
 				tile = Tile('#', COLOR_CYAN, BLOCKS);
 			} else tile = Tile('.', COLOR_GREEN, !BLOCKS);
 			row.push_back(tile);
@@ -60,7 +60,8 @@ void World::updateVisibleActors() {
 		it->visible_actors.clear();
 	}
 	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
-		for (Actors::iterator it2 = it+1; it2 != actors.end(); it2++) {
+		for (Actors::iterator it2 = actors.begin(); it2 != actors.end(); it2++) {
+			if (it == it2) continue;
 			if (it->getConstView()[it2->y][it2->x].visible) {
 				it->visible_actors.push_back(&(*it2));
 			}

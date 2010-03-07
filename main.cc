@@ -24,6 +24,11 @@ bool handleInput(Actor& pl) {
 	else if (k == '3') pl.move( 1, 1);
 	else if (k == '5') pl.idle();
 	else if (k == '?' || k == 'h') { help(); frame(); }
+
+	// Cheats
+	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;
+	else if (k == KEY_F(6)) pl.type = Actor::ANGEL;
+	else if (k == KEY_F(7)) pl.type = Actor::DEMON;
 	return true;
 }
 
@@ -40,8 +45,18 @@ void mainLoop() {
 	pl.position(5,5);
 
 	// Actors
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 30; i++) {
 		Actor& a(world->addActor(new Actor(Actor::HUMAN)));
+		while (!a.position(randint(world->getWidth()),
+		                   randint(world->getHeight())));
+	}
+	for (int i = 0; i < 20; i++) {
+		Actor& a(world->addActor(new Actor(Actor::IMP)));
+		while (!a.position(randint(world->getWidth()),
+		                   randint(world->getHeight())));
+	}
+	for (int i = 0; i < 20; i++) {
+		Actor& a(world->addActor(new Actor(Actor::ANGEL)));
 		while (!a.position(randint(world->getWidth()),
 		                   randint(world->getHeight())));
 	}

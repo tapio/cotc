@@ -1,6 +1,7 @@
 #pragma once
 
 #include "world.hh"
+#include "logger.hh"
 
 #define NO_AI false
 
@@ -8,7 +9,8 @@ class World;
 
 class Actor {
   public:
-	enum Type { HUMAN, ANGEL, ARCHANGEL, IMP, DEMON, ARCHDEMON } type;
+	enum Type { HUMAN = 1, ANGEL = 2, ARCHANGEL = 4,
+		IMP = 8, DEMON = 16, ARCHDEMON = 32, ALL = 63 } type;
 
 	Actor(Type type, bool ai = true): type(type), x(), y(),
 	  viewDist(10), useAI(ai), world(), moves() { }
@@ -30,6 +32,7 @@ class Actor {
 			case HUMAN: AI_human(); break;
 			case ANGEL: case ARCHANGEL: AI_angel(); break;
 			case IMP: case DEMON: case ARCHDEMON: AI_demon(); break;
+			case ALL: break;
 		}
 	}
 
@@ -37,15 +40,19 @@ class Actor {
 
 	void move(int dx, int dy) {
 		if (world->isFreeTile(x+dx, y+dy)) {
+			world->getTilePtr(x, y)->actor = NULL;
 			x+=dx;
 			y+=dy;
+			world->getTilePtr(x, y)->actor = this;
 		}
 		moves++;
 	}
 
 	bool position(int newx, int newy) {
 		if (world->isFreeTile(newx, newy)) {
+			world->getTilePtr(x, y)->actor = NULL;
 			x = newx; y = newy;
+			world->getTilePtr(x, y)->actor = this;
 			return true;
 		}
 		return false;
@@ -59,6 +66,7 @@ class Actor {
 			case IMP:       return 'i';
 			case DEMON:     return 'd';
 			case ARCHDEMON: return 'D';
+			case ALL:       return '\0';
 		}
 		return '\0';
 	}
@@ -71,8 +79,22 @@ class Actor {
 			case IMP:       return COLOR_RED;
 			case DEMON:     return COLOR_RED;
 			case ARCHDEMON: return COLOR_RED;
+			case ALL:       return -1;
 		}
 		return -1;
+	}
+
+	std::string getTypeName() const {
+		switch(type) {
+			case HUMAN:     return "Human";
+			case ANGEL:     return "Angel";
+			case ARCHANGEL: return "Archangel";
+			case IMP:       return "Imp";
+			case DEMON:     return "Demon";
+			case ARCHDEMON: return "Archdemon";
+			case ALL:       return "";
+		}
+		return "";
 	}
 
 	tilearray& getView() { return view; }
@@ -84,6 +106,14 @@ class Actor {
 		return view[y][x].explored;
 	}
 
+	void dumpDebugInfo() const {
+		Logger log("ACTOR");
+		log("Type: %s", getTypeName().c_str());
+		log("Visible_actors: (count = %d)", visible_actors.size());
+		for (ActorPtrs::const_iterator it = visible_actors.begin(); it != visible_actors.end(); ++it)
+			log((*it)->getTypeName().c_str());
+	}
+
 	int x;
 	int y;
 	int viewDist;
@@ -92,6 +122,10 @@ class Actor {
 	ActorPtrs visible_actors;
 
   private:
+	Actor* getClosestActor(int types = ALL);
+	void moveTowards(int tx, int ty);
+	void moveAway(int tx, int ty);
+
 	void AI_angel();
 	void AI_human();
 	void AI_demon();
