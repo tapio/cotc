@@ -2,6 +2,6 @@
 # Script name: make.sh
 # Description: Builds the sources
 
-g++ -lncurses -o 7drl main.cc
+g++ -lncurses -o 7drl *.cc
 
 

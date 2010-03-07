@@ -7,14 +7,18 @@
 #include "world.hh"
 #include "screens.hh"
 
+#define KEY_ESCAPE 27
+
+
 bool handleInput(Actor& pl) {
 	int k = getch();
 
-	if (k == 'q') return false;
-	else if (k == KEY_LEFT  || k == 'a') pl.move(-1,0);
-	else if (k == KEY_RIGHT || k == 'd') pl.move(1,0);
-	else if (k == KEY_UP    || k == 'w') pl.move(0,-1);
-	else if (k == KEY_DOWN  || k == 's') pl.move(0,1);
+	if      (k == KEY_ESCAPE || k == 'q') return false;
+	else if (k == KEY_LEFT   || k == 'a') pl.move(-1,0);
+	else if (k == KEY_RIGHT  || k == 'd') pl.move(1,0);
+	else if (k == KEY_UP     || k == 'w') pl.move(0,-1);
+	else if (k == KEY_DOWN   || k == 's') pl.move(0,1);
+	else if (k == '?' || k == 'h') help();
 	return true;
 }
 
@@ -27,9 +31,8 @@ void mainLoop() {
 	refresh();
 
 	World world;
-	Actor pl(Actor::ANGEL);
+	Actor pl(world, Actor::ANGEL);
 	pl.position(5,5);
-	world.addActor(pl);
 
 	erase();
 	frame();

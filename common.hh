@@ -3,12 +3,16 @@
 #include <cstdlib>
 #include <vector>
 
+#define BLOCKS true
+
 struct Tile {
 	char ch;
 	int color;
-	bool changed;
+	bool blocks_movement;
+	bool blocks_vision;
 
-	Tile(char ch = ' ', int color = 0): ch(ch), color(color) {}
+	Tile(char ch = ' ', int color = 0, bool blocker = true):
+	ch(ch), color(color), blocks_movement(blocker), blocks_vision(blocker) {}
 
 	bool operator==(const Tile& rhs) {
 		return ch == rhs.ch && color == rhs.color;

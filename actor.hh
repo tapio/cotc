@@ -1,16 +1,22 @@
 #pragma once
 
-#include "rlutil.h"
+#include "world.hh"
+
+class World;
 
 class Actor {
   public:
 	enum Type { HUMAN, ANGEL, ARCHANGEL, IMP, DEMON, ARCHDEMON } type;
 
-	Actor(Type type): type(type) {};
+	Actor(World& wd, Type type): world(wd), type(type) {
+		world.addActor(this);
+	}
 
 	void move(int dx, int dy) {
-		x+=dx;
-		y+=dy;
+		if (!world.getTile(x+dx, y+dy).blocks_movement) {
+			x+=dx;
+			y+=dy;
+		}
 	}
 
 	void position(int newx, int newy) {
@@ -46,4 +52,6 @@ class Actor {
 	int y;
 
   private:
+	World& world;
+
 };

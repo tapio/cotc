@@ -1,6 +1,9 @@
 #pragma once
 
+
 #include <cstdlib>
+#include <iostream>
+#include <curses.h>
 #include <boost/noncopyable.hpp>
 
 
