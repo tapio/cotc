@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <vector>
+#include <cmath>
 
 #define BLOCKS true
 
@@ -27,4 +28,8 @@ int inline randint(int hi) { return rand() % hi; }
 
 int inline randint(int lo, int hi) {
 	return (rand() % (hi - lo + 1)) + lo;
+}
+
+template<typename T> T distance2d(T x1, T y1, T x2, T y2) {
+	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }

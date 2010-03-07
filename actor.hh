@@ -8,7 +8,7 @@ class Actor {
   public:
 	enum Type { HUMAN, ANGEL, ARCHANGEL, IMP, DEMON, ARCHDEMON } type;
 
-	Actor(World& wd, Type type): world(wd), type(type) {
+	Actor(World& wd, Type type): type(type), x(), y(), viewDist(10), world(wd) {
 		world.addActor(this);
 	}
 
@@ -50,6 +50,7 @@ class Actor {
 
 	int x;
 	int y;
+	int viewDist;
 
   private:
 	World& world;

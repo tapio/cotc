@@ -6,6 +6,7 @@
 #include "actor.hh"
 #include "world.hh"
 #include "screens.hh"
+#include "logger.hh"
 
 #define KEY_ESCAPE 27
 
@@ -31,7 +32,7 @@ void mainLoop() {
 	refresh();
 
 	World world;
-	Actor pl(world, Actor::ANGEL);
+	Actor pl = Actor(world, Actor::ANGEL);
 	pl.position(5,5);
 
 	erase();
