@@ -13,7 +13,6 @@ class World {
 	void addActor(Actor& actor) { actors.push_back(&actor); }
 
 	void draw(Actor& actor) {
-		erase();
 		for (Actors::const_iterator it = actors.begin(); it != actors.end(); it++) {
 			color_set((*it)->getColor(), 0);
 			mvaddch((*it)->y, (*it)->x, (*it)->getChar());

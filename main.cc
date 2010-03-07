@@ -22,9 +22,8 @@ bool handleInput(Actor& actor) {
 void mainLoop() {
 
 	ConsoleWindow cons;
-
-	title();
 	frame();
+	title();
 	refresh();
 
 	World world(cons);
@@ -33,6 +32,7 @@ void mainLoop() {
 	world.addActor(pl);
 
 	do {
+		erase();
 		frame();
 		world.draw(pl);
 		refresh();
