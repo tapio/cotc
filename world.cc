@@ -141,7 +141,6 @@ void World::draw(Actor& actor) {
 	setColor(worldwin, actor.getColor());
 	mvwaddch(worldwin, y2scr(actor.y, actor.y),
 					   x2scr(actor.x, actor.x), actor.getChar());
-
 	// Flush
 	wrefresh(worldwin);
 }

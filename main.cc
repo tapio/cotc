@@ -23,7 +23,7 @@ bool handleInput(Actor& pl) {
 	else if (k == '1') pl.move(-1, 1);
 	else if (k == '3') pl.move( 1, 1);
 	else if (k == '5') pl.idle();
-	else if (k == '?' || k == 'h') help();
+	else if (k == '?' || k == 'h') { help(); frame(); }
 	return true;
 }
 
@@ -51,6 +51,8 @@ void mainLoop() {
 	refresh();
 
 	do {
+		frame(true);
+		refresh();
 		world->update();
 		world->draw(pl);
 	} while(handleInput(pl));

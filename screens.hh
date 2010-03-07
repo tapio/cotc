@@ -1,5 +1,11 @@
+#include <curses.h>
 
-
+void addcstr(std::string str) {
+	int x, y;
+	getyx(stdscr, y, x);
+	x = COLS / 2 - str.length() / 2;
+	mvaddstr(y, x, str.c_str());
+}
 
 void title() {
 	//addstr("        ___  ____  ____  _  _\n");
@@ -18,10 +24,16 @@ void title() {
 }
 
 
-void frame() {
-	box(stdscr, 0, 0);
+void frame(bool O = false) {
+	if (O) { move(0,1); hline(0, COLS-2); }
+	else box(stdscr, 0, 0);
 }
 
 void help() {
-
+	erase();
+	box(stdscr, 0, 0);
+	move(0,2);
+	addcstr("HELP!");
+	refresh();
+	getch();
 }
