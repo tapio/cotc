@@ -22,6 +22,7 @@ bool handleInput(Actor& pl) {
 	else if (k == '9') pl.move( 1,-1);
 	else if (k == '1') pl.move(-1, 1);
 	else if (k == '3') pl.move( 1, 1);
+	else if (k == '5') pl.idle();
 	else if (k == '?' || k == 'h') help();
 	return true;
 }

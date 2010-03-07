@@ -33,6 +33,8 @@ class Actor {
 		}
 	}
 
+	void idle() {}
+
 	void move(int dx, int dy) {
 		if (world->isFreeTile(x+dx, y+dy)) {
 			x+=dx;
