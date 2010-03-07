@@ -8,8 +8,8 @@
 #define BLOCKS true
 
 class Actor;
-typedef std::vector<Actor> Actors;
-typedef boost::ptr_vector<Actor> ActorPtrs;
+typedef std::vector<Actor*> ActorPtrs;
+typedef boost::ptr_vector<Actor> Actors;
 
 struct Tile {
 	char ch;
@@ -18,6 +18,7 @@ struct Tile {
 	bool visible;
 	bool blocks_movement;
 	bool blocks_vision;
+	Actor* actor;
 
 	Tile(char ch = ' ', int color = 0, bool blocker = true):
 	ch(ch), color(color), explored(false), visible(false),

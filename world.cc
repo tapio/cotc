@@ -55,12 +55,12 @@ void World::updateView(Actor& actor) {
 /// Function updateVisibleActors
 /// Updates all visibile actors lists of all actors
 void World::updateVisibleActors() {
-	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); it++)
+	for (Actors::iterator it = actors.begin(); it != actors.end(); it++)
 		it->visible_actors.clear();
-	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); it++) {
-		for (ActorPtrs::iterator it2 = it+1; it2 != actors.end(); it2++) {
+	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
+		for (Actors::iterator it2 = it+1; it2 != actors.end(); it2++) {
 			if (it->getConstView()[it2->y][it2->x].visible) {
-				it->visible_actors.push_back(*it2);
+				it->visible_actors.push_back(&(*it2));
 			}
 		}
 	}
@@ -91,14 +91,14 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 /// Updates the world - views, visibilities and AI
 void World::update(bool skipAI) {
 	// Update views
-	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); ++it) {
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it) {
 		updateView(*it);
 	}
 	// Update visible actors
 	updateVisibleActors();
 	// Do AI
 	if (skipAI) return;
-	for (ActorPtrs::iterator it = actors.begin(); it != actors.end(); ++it)
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it)
 		if (it->useAI) it->AI();
 }
 
@@ -123,11 +123,11 @@ void World::draw(Actor& actor) {
 			mvwaddch(worldwin, y2scr(j, actor.y), x2scr(i, actor.x), tile.ch);
 		}
 	}
-	// Actors
-	for (Actors::const_iterator it = actor.visible_actors.begin(); it != actor.visible_actors.end(); ++it) {
-		setColor(worldwin, it->getColor());
-		mvwaddch(worldwin, y2scr(it->y, actor.y),
-						   x2scr(it->x, actor.x), it->getChar());
+	// ActorPtrs
+	for (ActorPtrs::const_iterator it = actor.visible_actors.begin(); it != actor.visible_actors.end(); ++it) {
+		setColor(worldwin, (*it)->getColor());
+		mvwaddch(worldwin, y2scr((*it)->y, actor.y),
+						   x2scr((*it)->x, actor.x), (*it)->getChar());
 	}
 	// Player
 	setColor(worldwin, actor.getColor());

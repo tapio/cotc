@@ -86,7 +86,7 @@ class Actor {
 	int viewDist;
 	bool useAI;
 
-	Actors visible_actors;
+	ActorPtrs visible_actors;
 
   private:
 	WorldPtr world;

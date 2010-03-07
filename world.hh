@@ -63,7 +63,7 @@ class World: boost::noncopyable {
 	int viewXDist;
 	int viewYDist;
 	tilearray tiles;
-	ActorPtrs actors;
+	Actors actors;
 };
 
 typedef boost::shared_ptr<World> WorldPtr;
