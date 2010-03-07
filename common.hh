@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <cmath>
+#include <cstring>
 #include <curses.h>
 #include <boost/ptr_container/ptr_vector.hpp>
 
@@ -22,7 +23,9 @@ struct Tile {
 
 	Tile(char ch = ' ', int color = 0, bool blocker = true):
 	ch(ch), color(color), explored(false), visible(false),
-	blocks_movement(blocker), blocks_vision(blocker) {}
+	blocks_movement(blocker), blocks_vision(blocker), actor(NULL) {}
+
+	bool isFree() const { return (!blocks_movement) && (actor == NULL); }
 
 	bool operator==(const Tile& rhs) {
 		return ch == rhs.ch && color == rhs.color;

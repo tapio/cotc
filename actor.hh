@@ -34,14 +34,14 @@ class Actor {
 	}
 
 	void move(int dx, int dy) {
-		if (!world->getTile(x+dx, y+dy).blocks_movement) {
+		if (world->isFreeTile(x+dx, y+dy)) {
 			x+=dx;
 			y+=dy;
 		}
 	}
 
 	bool position(int newx, int newy) {
-		if (!world->getTile(newx, newy).blocks_movement) {
+		if (world->isFreeTile(newx, newy)) {
 			x = newx; y = newy;
 			return true;
 		}

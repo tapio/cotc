@@ -46,6 +46,7 @@ void World::updateView(Actor& actor) {
 			bool explored = visible ? true : actor.hasExplored(i,j);
 			Tile& tile = view[j][i];
 			if (visible || explored) tile = getTile(i, j);
+			if (!visible) tile.actor = NULL;
 			tile.visible = visible;
 			tile.explored = explored;
 		}
@@ -55,8 +56,9 @@ void World::updateView(Actor& actor) {
 /// Function updateVisibleActors
 /// Updates all visibile actors lists of all actors
 void World::updateVisibleActors() {
-	for (Actors::iterator it = actors.begin(); it != actors.end(); it++)
+	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
 		it->visible_actors.clear();
+	}
 	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
 		for (Actors::iterator it2 = it+1; it2 != actors.end(); it2++) {
 			if (it->getConstView()[it2->y][it2->x].visible) {
@@ -90,10 +92,16 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 /// Function: update
 /// Updates the world - views, visibilities and AI
 void World::update(bool skipAI) {
+	// Reset tiles' actor pointers
+	int w = getWidth(), h = getHeight();
+	for (int j = 0; j < h; j++)
+		for (int i = 0; i < w; i++) tiles[j][i].actor = NULL;
+	// Update tiles' actor pointers
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it)
+		tiles[it->y][it->x].actor = &(*it);
 	// Update views
-	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it) {
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it)
 		updateView(*it);
-	}
 	// Update visible actors
 	updateVisibleActors();
 	// Do AI

@@ -34,6 +34,8 @@ class World: boost::noncopyable {
 		return tiles[y][x];
 	}
 
+	bool isFreeTile(int x, int y) const { return getTile(x,y).isFree(); }
+
 	void updateView(Actor& actor);
 
 	void updateVisibleActors();
