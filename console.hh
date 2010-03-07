@@ -11,10 +11,20 @@ class ConsoleWindow: boost::noncopyable {
 			std::cerr << "-!- Error initializing ncurses." << std::endl;
 			exit(1);
 		}
+		oldcur = curs_set(0);
+
+		if (COLS < 80 || LINES < 24) {
+			cleanup();
+			std::cerr << "-!- Error with console size:" << std::endl;
+			std::cerr << "    COLS: " << COLS << ", minimum 80" << std::endl;
+			std::cerr << "    LINES: " << LINES << ", minimum 24" << std::endl;
+			exit(2);
+
+		}
+
 		cbreak(); // No line buffering
 		noecho(); // Turn off key echoing
 		keypad(window, true); // Enable the keypad for non-char keys
-		oldcur = curs_set(0);
 
 		start_color(); // Initialize colours
 		if (has_colors() && COLOR_PAIRS >= 16 && COLORS >= 8) {
@@ -26,7 +36,7 @@ class ConsoleWindow: boost::noncopyable {
 			std::cerr << "    has_colors: " << has_colors() << std::endl;
 			std::cerr << "    COLOR_PAIRS: " << COLOR_PAIRS << std::endl;
 			std::cerr << "    COLORS: " << COLORS << std::endl;
-			exit(2);
+			exit(3);
 		}
 	}
 
