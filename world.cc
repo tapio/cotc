@@ -32,21 +32,17 @@ void World::generate(int w, int h) {
 /// Function: updateView
 /// Updates the Actor's view.
 void World::updateView(Actor& actor) {
-	tilearray view = actor.getView();
-	for (int j = 1; j < viewYDist*2 + 2; j++) {
-		tilerow row;
-		for (int i = 1; i < viewXDist*2 + 2; i++) {
-			Tile tile;
-			int x = scr2x(i, actor.x);
-			int y = scr2y(j, actor.y);
-			bool visible = hasLOS(actor, x, y);
-			bool explored = actor.hasExplored(x,y);
-			if (visible || explored) tile = getTile(x, y);
+	tilearray& view = actor.getView();
+	for (int j = actor.y - viewYDist; j <= actor.y + viewYDist; j++) {
+		for (int i = actor.x - viewXDist; i <= actor.x + viewXDist; i++) {
+			if (i < 0 || j < 0 || i >= width || j >= height) continue;
+			bool visible = hasLOS(actor, i, j);
+			bool explored = visible ? true : actor.hasExplored(i,j);
+			Tile& tile = view[j][i];
+			if (visible || explored) tile = getTile(i, j);
 			tile.visible = visible;
 			tile.explored = explored;
-			row.push_back(tile);
 		}
-		view.push_back(row);
 	}
 }
 
@@ -77,18 +73,29 @@ void World::draw(const Actor& actor) const {
 	// Cls
 	werase(worldwin);
 	// Border
+	wattroff(worldwin, A_BOLD);
 	wcolor_set(worldwin, COLOR_GREEN, 0);
 	box(worldwin, 0 , 0);
 	// Tiles
 	const tilearray& view = actor.getConstView();
-	for (int j = 0; j < viewYDist*2 + 1; j++) {
-		for (int i = 0; i < viewXDist*2 + 1; i++) {
-			Tile tile = view[j][i];
+	for (int j = actor.y - viewYDist; j <= actor.y + viewYDist; j++) {
+		for (int i = actor.x - viewXDist; i <= actor.x + viewXDist; i++) {
+			Tile tile;
+			if (i >= 0 && j >= 0 && i < width && j < height) tile = view[j][i];
 			if (tile.visible) wattron(worldwin, A_BOLD);
+			else wattroff(worldwin, A_BOLD);
 			wcolor_set(worldwin, tile.color, 0);
-			mvwaddch(worldwin, j+1, i+1, tile.ch);
+			mvwaddch(worldwin, y2scr(j, actor.y), x2scr(i, actor.x), tile.ch);
 		}
 	}
+	//for (int j = 0; j < viewYDist*2 + 1; j++) {
+		//for (int i = 0; i < viewXDist*2 + 1; i++) {
+			//Tile tile = view[j][i];
+			//if (tile.visible) wattron(worldwin, A_BOLD);
+			//wcolor_set(worldwin, tile.color, 0);
+			//mvwaddch(worldwin, j+1, i+1, tile.ch);
+		//}
+	//}
 	// Actors
 	for (Actors::const_iterator it = actors.begin(); it != actors.end(); it++) {
 		setColor(worldwin, (*it)->getColor());
