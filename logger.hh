@@ -5,8 +5,8 @@
 
 class Logger {
   public:
-	Logger(const char* msg = "", const char* filename = "log.log") {
-		m_stream.open(filename, std::fstream::app);
+	Logger(const char* msg = "", const bool fresh = true, const char* filename = "log.log") {
+		m_stream.open(filename, fresh ? std::fstream::out : std::fstream::app);
 		if (msg) m_stream << msg << std::endl;
 	}
 	~Logger() { m_stream.close(); }
