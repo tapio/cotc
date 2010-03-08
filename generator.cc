@@ -35,16 +35,17 @@ namespace {
 }
 
 void World::createCity(int xhouses, int yhouses) {
-	int housew = 12;
-	int househ = 9;
-	int streetwidth = 5;
-	int offset = 2;
-	int maxfurnit = 8;
+	int housew = 8;
+	int househ = 6;
+	int streetwidth = 3;
+	int offset = 1;
+	int maxfurnit = 6;
 
 	if (xhouses < 0) xhouses = 10;
 	if (yhouses < 0) yhouses = 10;
-	width = xhouses * (housew + streetwidth) + streetwidth + 2;
-	height = yhouses * (househ + streetwidth) + streetwidth + 2;
+	width = xhouses * (housew + streetwidth + 1) + streetwidth + 2;
+	height = yhouses * (househ + streetwidth + 1) + streetwidth + 2;
+	int xyhouses = xhouses * yhouses;
 
 	for (int j = 0; j < height; j++) {
 		tilerow row;
@@ -63,13 +64,13 @@ void World::createCity(int xhouses, int yhouses) {
 	int total = 0;
 	// Create amounts for special buildings
 	do {
-		BuildingPlan[1] = randint(1,5); // plazas
+		BuildingPlan[1] = xyhouses / randint(6,12); // plazas
 		BuildingPlan[2] = randint(1,2) + randint(0,4); // inns
 		BuildingPlan[3] = randint(1,2) + randint(0,4); // smiths/shops
-		BuildingPlan[4] = randint(0,1) + randint(0,1) + randint(0,1); // churches
-		BuildingPlan[5] = randint(0,1) + randint(0,1) + randint(0,1); // stables
+		BuildingPlan[4] = randint(1,2) + randint(0,1) + randint(0,1); // churches
+		BuildingPlan[5] = randint(1,2) + randint(0,1) + randint(0,1); // stables
 		total = BuildingPlan[1]+BuildingPlan[2]+BuildingPlan[3]+BuildingPlan[4]+BuildingPlan[5];
-	} while (total > xhouses * yhouses - 4);
+	} while (total > xhouses * yhouses - 4); // 4 is for town hall
 	// Put Town Hall in the middle
 	int townhallx, townhally;
 	if ((xhouses % 2) == 0) townhallx = xhouses/2; else townhallx = floor(xhouses/2.0) + randint(2);
@@ -89,11 +90,11 @@ void World::createCity(int xhouses, int yhouses) {
 	// Fine tune positioning and generate the structures
 	for (int j = 0; j < yhouses; ++j) {
 		for (int i = 0; i < xhouses; ++i) {
-			int x1 = 1 + streetwidth + i * (housew+streetwidth);
-			int y1 = 1 + streetwidth + j * (househ+streetwidth);
+			int x1 = 1 + streetwidth + i * (housew+streetwidth+1);
+			int y1 = 1 + streetwidth + j * (househ+streetwidth+1);
 			int x2 = x1 + housew;
 			int y2 = y1 + househ;
-			switch (CityPlan[i-1][j-1]) {
+			switch (CityPlan[i][j]) {
 				case 1:
 					createPlaza(x1, y1, x2, y2); break;
 				//case 2:
@@ -170,12 +171,14 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 
 
 void World::createPlaza(int x1, int y1, int x2, int y2) {
-	if (randint(1)) {
-		Tile tex = randint(3) ? plaza : grass;
-		for (int j = y1; j <= y2; ++j) {
-			for (int i = x1; i <= x2; ++i) {
-				tiles[j][i] = tex;
-			}
+	bool park = randint(2);
+	bool style = randint(2);
+	for (int j = y1; j <= y2; ++j) {
+		for (int i = x1; i <= x2; ++i) {
+			Tile tile(ground);
+			if (park) tile = randint(6) ? grass : tree;
+			else if (style) tile = plaza;
+			tiles[j][i] = tile;
 		}
 	}
 }
