@@ -52,3 +52,5 @@ void setColor(WINDOW* scr, int color);
 void setColor(int color);
 
 void addcstr(std::string str);
+
+void box2(int x, int y, int w, int h);
