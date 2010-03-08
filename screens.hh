@@ -41,6 +41,7 @@ int title() {
 	addcstr("[q] Quit                   ");
 	setColor(COLOR_RED);
 	box(stdscr, 0, 0);
+	setColor(COLOR_BLACK);
 	while (true) {
 		int k = getch();
 		if (k == 'a' || k == 'A') return 1;
@@ -51,6 +52,7 @@ int title() {
 
 
 void frame(bool O = false) {
+	setColor(COLOR_BLACK);
 	if (O) { move(0,1); hline(0, COLS-2); }
 	else box(stdscr, 0, 0);
 }
