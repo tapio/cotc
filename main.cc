@@ -39,7 +39,7 @@ void mainLoop() {
 
 	boost::shared_ptr<World> world(new World());
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
-	pl.position(5,5);
+	pl.position(abc == 1 ? world->getWidth()-3 : 2, world->getHeight() / 2);
 
 	// Actors
 	for (int i = 0; i < 30; i++) {

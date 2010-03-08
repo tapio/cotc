@@ -19,12 +19,12 @@ struct Tile {
 	bool explored;
 	bool visible;
 	bool blocks_movement;
-	bool blocks_vision;
+	int blocks_vision_dist;
 	Actor* actor;
 
 	Tile(char ch = ' ', int color = 0, bool blocker = true):
 	ch(ch), color(color), explored(false), visible(false),
-	blocks_movement(blocker), blocks_vision(blocker), actor(NULL) {}
+	blocks_movement(blocker), blocks_vision_dist(blocker ? 0 : 255), actor(NULL) {}
 
 	bool isFree() const { return (!blocks_movement) && (actor == NULL); }
 

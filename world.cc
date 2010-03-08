@@ -3,19 +3,9 @@
 #include "common.hh"
 #include "logger.hh"
 
-void World::generate(int w, int h) {
-	width = w; height = h;
-	for (int j = 0; j < h; j++) {
-		tilerow row;
-		for (int i = 0; i < w; i++) {
-			Tile tile;
-			if (i == 0 || i == w-1 || j == 0 || j == h-1 || randint(8) == 0) {
-				tile = Tile('#', COLOR_CYAN, BLOCKS);
-			} else tile = Tile('.', COLOR_GREEN, !BLOCKS);
-			row.push_back(tile);
-		}
-		tiles.push_back(row);
-	}
+void World::generate(int seed) {
+	srand(seed);
+	createCity(10, 10);
 }
 
 Actor& World::addActor(Actor* actor) {
@@ -71,10 +61,12 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 	float dy = float(y - actor.y) / (dist * 2.0);
 	float xx = actor.x + dx;
 	float yy = actor.y + dy;
+	float dd = distance2d(0.0f,0.0f,dx,dy);
+	float d = dd;
 	do {
-		if (getTile(xx, yy).blocks_vision) return false;
-		xx += dx; yy += dy;
-		if (distance2d<float>(x,y,xx,yy) < 0.5) return true;
+		if (d > getTile(xx, yy).blocks_vision_dist) return false;
+		xx += dx; yy += dy; d += dd;
+		if (distance2d<float>(float(x),float(y),xx,yy) < 1.0) return true;
 	} while (int(xx) != x || int(yy) != y);
 	return true;
 }

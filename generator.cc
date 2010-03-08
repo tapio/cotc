@@ -2,34 +2,66 @@
 #include "world.hh"
 #include "actor.hh"
 #include "common.hh"
+#include "logger.hh"
 
 namespace {
-	static const Tile housefloor('.', COLOR_YELLOW, !BLOCKS);
-	static const Tile wall('#', COLOR_CYAN, BLOCKS);
-	static const Tile window('#', COLOR_BLUE, BLOCKS);
+
+	Tile TileBuilder(std::string type) {
+		Tile tile;
+		if (type == "window") {
+			tile = Tile('*', COLOR_BLUE, BLOCKS);
+			tile.blocks_vision_dist = 2;
+		} else if (type == "door_open") {
+			tile = Tile('/', COLOR_YELLOW, !BLOCKS);
+		} else if (type.substr(0,4) == "door") {
+			tile = Tile('+', COLOR_RED, BLOCKS);
+		}
+		return tile;
+	}
+
+	static const Tile ground('.', COLOR_GREEN, !BLOCKS);
 	static const Tile grass('"', COLOR_GREEN, !BLOCKS);
-	static const Tile door('+', COLOR_YELLOW, BLOCKS);
-	static const Tile door_locked('+', COLOR_RED, BLOCKS);
-	static const Tile plaza('o', COLOR_GREEN, !BLOCKS);
+	static const Tile plaza(':', COLOR_GREEN, !BLOCKS);
+	static const Tile housefloor('.', COLOR_YELLOW, !BLOCKS);
+
+	static const Tile wall('#', COLOR_CYAN, BLOCKS);
+	static const Tile window(TileBuilder("window"));
+	static const Tile tree('T', COLOR_GREEN, BLOCKS);
+
+	static const Tile door_open(TileBuilder("door_open"));
+	static const Tile door_closed(TileBuilder("door_closed"));
+	static const Tile door_locked(TileBuilder("door_locked"));
 
 }
 
 void World::createCity(int xhouses, int yhouses) {
-
-	int housesize = 12;
+	int housew = 12;
+	int househ = 9;
 	int streetwidth = 5;
 	int offset = 2;
 	int maxfurnit = 8;
 
-	// TODO: x/ysize doesn't work
-	if (xhouses == 0) xhouses = randint(8,10);
-	if (yhouses == 0) yhouses = randint(8,10);
-	int xsize = xhouses * (housesize+streetwidth) + streetwidth + 4;
-	int ysize = yhouses * (housesize+streetwidth) + streetwidth + 4;
+	if (xhouses < 0) xhouses = 10;
+	if (yhouses < 0) yhouses = 10;
+	width = xhouses * (housew + streetwidth) + streetwidth + 2;
+	height = yhouses * (househ + streetwidth) + streetwidth + 2;
 
+	for (int j = 0; j < height; j++) {
+		tilerow row;
+		for (int i = 0; i < width; i++) row.push_back(Tile());
+		tiles.push_back(row);
+	}
+
+	// Array for special house locations
 	int CityPlan[xhouses][yhouses];
+	for (int j = 0; j < yhouses; ++j)
+		for (int i = 0; i < xhouses; ++i)
+			CityPlan[i][j] = 0;
+
+	// Array for amounts of special buildings
 	int BuildingPlan[6];
 	int total = 0;
+	// Create amounts for special buildings
 	do {
 		BuildingPlan[1] = randint(1,5); // plazas
 		BuildingPlan[2] = randint(1,2) + randint(0,4); // inns
@@ -38,34 +70,30 @@ void World::createCity(int xhouses, int yhouses) {
 		BuildingPlan[5] = randint(0,1) + randint(0,1) + randint(0,1); // stables
 		total = BuildingPlan[1]+BuildingPlan[2]+BuildingPlan[3]+BuildingPlan[4]+BuildingPlan[5];
 	} while (total > xhouses * yhouses - 4);
+	// Put Town Hall in the middle
 	int townhallx, townhally;
-	if ((xhouses % 2) == 0) townhallx = xhouses/2; else townhallx = floor(xhouses/2) + randint(1);
-	if ((yhouses % 2) == 0) townhally = yhouses/2; else townhally = floor(yhouses/2) + randint(1);
+	if ((xhouses % 2) == 0) townhallx = xhouses/2; else townhallx = floor(xhouses/2.0) + randint(2);
+	if ((yhouses % 2) == 0) townhally = yhouses/2; else townhally = floor(yhouses/2.0) + randint(2);
 	CityPlan[townhallx][townhally] = 10;
 	CityPlan[townhallx+1][townhally] = 11;
 	CityPlan[townhallx][townhally+1] = 11;
 	CityPlan[townhallx+1][townhally+1] = 11;
-	for (int k = 1; k <= total; ++k) {
+	// Position rest of the special buildings (roughly)
+	for (int k = 0; k < total; ++k) {
 		int i,j,b;
 		while (CityPlan[i=randint(xhouses)][j=randint(yhouses)]);
 		while (!BuildingPlan[b = randint(1,5)]);
-		BuildingPlan[b] = BuildingPlan[b] - 1;
+		BuildingPlan[b]--;
 		CityPlan[i][j] = b;
 	}
-
-	for (int j = 1; j < getWidth()-1; ++j) {
-		for (int i = 1; i < getWidth()-1; ++i) {
-			tiles[j][i] = grass;
-		}
-	}
-
+	// Fine tune positioning and generate the structures
 	for (int j = 0; j < yhouses; ++j) {
 		for (int i = 0; i < xhouses; ++i) {
-			int x1 = 2 + streetwidth + (i-1) * (housesize+streetwidth);
-			int y1 = 2 + streetwidth + (j-1) * (housesize+streetwidth);
-			int x2 = x1 + housesize;
-			int y2 = y1 + housesize;
-			switch (CityPlan[i][j]) {
+			int x1 = 1 + streetwidth + i * (housew+streetwidth);
+			int y1 = 1 + streetwidth + j * (househ+streetwidth);
+			int x2 = x1 + housew;
+			int y2 = y1 + househ;
+			switch (CityPlan[i-1][j-1]) {
 				case 1:
 					createPlaza(x1, y1, x2, y2); break;
 				//case 2:
@@ -81,19 +109,16 @@ void World::createCity(int xhouses, int yhouses) {
 				case 11:
 					break;
 				default:
-					createHouse(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset), randint(4,maxfurnit), randint(0,1)); break;
+					createHouse(x1 + randint(-offset,offset), y1 + randint(-offset,offset), x2 - randint(-offset,offset), y2 - randint(-offset,offset), randint(4,maxfurnit), randint(0,1)); break;
 			}
 		}
 	}
-
-	// outer wall
-	for (int i = 0; i < getWidth(); ++i) {
-		tiles[0][i] = wall;
-		tiles[getHeight()-1][i] = wall;
-	}
-	for (int j = 0; j < getHeight(); ++j) {
-		tiles[j][0] = wall;
-		tiles[getWidth()-1][j] = wall;
+	// Do outer wall and make rest of tiles ground
+	for (int j = 0; j < height; ++j) {
+		for (int i = 0; i < width; ++i) {
+			if (i == 0 || j == 0 || i == width-1 || j == height-1) tiles[j][i] = wall;
+			else if (tiles[j][i].ch == ' ') tiles[j][i] = ground;
+		}
 	}
 }
 
@@ -101,41 +126,43 @@ void World::createCity(int xhouses, int yhouses) {
 void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) {
 	makeWallsAndFloor(x1,y1,x2,y2,housefloor);
 	int housetype = randint(0,2);
-	if (housetype) {
-		if (randint(1)) { // horizontal wall
+	if (housetype) { // Split house
+		bool horiz = randint(1);
+		int doorx, doory;
+		if (horiz) { // Horizontal wall
 			int wy = randint(y1+3,y2-3);
-			int doorx = randint(x1+1,x2-1);
-			int doory = wy;
+			doorx = randint(x1+1,x2-1);
+			doory = wy;
 			for (int i = x1; i <= x2; ++i) {
 				if (i != doorx || housetype == 2) tiles[wy][i] = wall;
 			}
 			//AddFurniture(x1+1,y1+1,x2-1,wy-1,furnit/2);
 			//AddFurniture(x1+1,wy+1,x2-1,y2-1,furnit/2);
-			if (housetype == 1) {
-				makeDoor(doorx,doory,randint(-1,1));
-				randDoor(x1,y1,x2,y2,(randint(0,9)==0));
-			} else if (housetype == 2) {
-				makeDoor(randint(x1+1,x2-1),y1,(randint(0,9)==0));
-				makeDoor(randint(x1+1,x2-1),y2,(randint(0,9)==0));
-			}
-		} else { // vertical wall
+		} else { // Vertical wall
 			int wx = randint(x1+3,x2-3);
-			int doory = randint(y1+1,y2-1);
-			int doorx = wx;
+			doory = randint(y1+1,y2-1);
+			doorx = wx;
 			for (int j = y1; j <= y2; ++j) {
 				if (j != doory || housetype == 2) tiles[j][wx] = wall;
 			}
 			//AddFurniture(x1+1,y1+1,wx-1,y2-1,furnit/2);
 			//AddFurniture(wx+1,y1+1,x2-1,y2-1,furnit/2);
-			if (housetype == 1) {
-				makeDoor(doorx,doory,randint(-1,1));
-				randDoor(x1,y1,x2,y2,(randint(0,9)==0));
-			} else if (housetype == 2) {
+		}
+		// Create doors
+		if (housetype == 1) { // Two-room house
+			makeDoor(doorx,doory,randint(-1,1));
+			randDoor(x1,y1,x2,y2,(randint(0,9)==0));
+		} else if (housetype == 2) { // Two separate houses
+			if (horiz) { // Horizontal wall
+				makeDoor(randint(x1+1,x2-1),y1,(randint(0,9)==0));
+				makeDoor(randint(x1+1,x2-1),y2,(randint(0,9)==0));
+			} else { // Vertical wall
 				makeDoor(x1,randint(y1+1,y2-1),(randint(0,9)==0));
 				makeDoor(x2,randint(y1+1,y2-1),(randint(0,9)==0));
 			}
 		}
-	} else { // no wall
+
+	} else { // No wall / single-room house
 		//AddFurniture(x1+1,y1+1,x2-1,y2-1,furnit)
 		randDoor(x1,y1,x2,y2,(randint(0,9)==0));
 	}
@@ -144,8 +171,7 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 
 void World::createPlaza(int x1, int y1, int x2, int y2) {
 	if (randint(1)) {
-		//tex = randint(1) ? tiles : diamonds;
-		Tile tex = plaza;
+		Tile tex = randint(3) ? plaza : grass;
 		for (int j = y1; j <= y2; ++j) {
 			for (int i = x1; i <= x2; ++i) {
 				tiles[j][i] = tex;
@@ -682,8 +708,9 @@ void World::randDoor(int x1, int y1, int x2, int y2, int locked) {
 
 
 void World::makeDoor(int doorx, int doory, int locked, Tile floortype) {
-	if (locked == 0) tiles[doory][doorx] = door;
-	else if (locked == 1) tiles[doory][doorx] = door_locked;
+	if (locked == 0) tiles[doory][doorx] = door_open;
+	else if (locked == 1) tiles[doory][doorx] = door_closed;
+	else if (locked == 2) tiles[doory][doorx] = door_locked;
 	else tiles[doory][doorx] = floortype;
 	//if (tiles[doorx,doory-1) = bedL) tiles[doorx+1,doory-1) = floortype;
 	//if (tiles[doorx,doory-1) = bedR) tiles[doorx-1,doory-1) = floortype;

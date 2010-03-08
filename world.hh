@@ -17,7 +17,7 @@ class World: boost::noncopyable {
 		worldwin = newwin(windowH, windowW, scrY, scrX);
 		viewXDist = windowW / 2 - 1;
 		viewYDist = windowH / 2 - 1;
-		generate(50,50);
+		generate();
 	}
 
 	~World() {
@@ -28,8 +28,8 @@ class World: boost::noncopyable {
 	/**
 	 * Functions: Generators
 	 */
-	void generate(int w, int h);
-	void createCity(int xhouses, int yhouses);
+	void generate(int seed = 1);
+	void createCity(int xhouses = -1, int yhouses = -1);
 	void createHouse(int x1, int y1, int x2, int y2, int furnit = 0, int locked = 0);
 	void createPlaza(int x1, int y1, int x2, int y2);
 	void randDoor(int x1, int y1, int x2, int y2, int locked = 0);
