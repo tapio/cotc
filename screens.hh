@@ -11,37 +11,37 @@ void addflamestr(std::string str, bool letter = true) {
 	for (size_t i = 0; i < str.length(); ++i) {
 		if (str[i] == '(') setColor(flamecolors[randint(3)]);
 		else if (str[i] == ')') setColor(flamecolors[randint(3)]);
-		else if (str[i] == '_' && !letter) setColor(flamecolors[randint(3)]);
+		else if ((str[i] == '_' || str[i] == '\'') && !letter) setColor(flamecolors[randint(3)]);
 		else if (str[i] == '/' && !letter) setColor(flamecolors[randint(3)]);
 		else if (str[i] == '\\' && !letter) setColor(flamecolors[randint(3)]);
-		else setColor(COLOR_GREEN);
+		else setColor(COLOR_RED+8);
 		addch(str[i]);
 	}
 }
 
 int title() {
 	move(1,0);
-	addflamestr("     (          )             (         )    )           \n", false);
-	addflamestr("     )\\  (   ( /( (           )\\ )   ( /( ( /(    (      \n", false);
-	addflamestr("   (((_) )\\  )\\()))\\ )    (  (()/(   )\\()))\\())  ))\\     \n", false);
-	addflamestr("   )\\___((_)(_))/(()/(    )\\  /(_)) (_))/((_)\\  /((_)    \n", false);
-	addflamestr("  ((/ __|(_)| |_  )(_))  ((_)(_) _| | |_ | |(_)(_))      \n");
-	addflamestr("   | (__ | ||  _|| || | / _ \\ |  _| |  _|| ' \\ / -_)     \n");
-	addflamestr("    \\___||_| \\__| \\_, | \\___/ |_|    \\__||_||_|\\___|     \n");
-	addflamestr("   (              |__(                              (    \n");
+	addflamestr("     (          )              (          )    )          \n", false);
+	addflamestr("     )\\  (   ( /( (            )\\ )    ( /( ( /(    (     \n", false);
+	addflamestr("   (((_) )\\  )\\()))\\ )     (  (()/(    )\\()))\\())  ))\\    \n", false);
+	addflamestr("   )\\___((_)(_))/(()/(     )\\  /(_))  (_))/((_)\\  /((_)   \n", false);
+	addflamestr("  ((/ __|(_)| |_  )(_))   ((_)()  _|  | |_ | |_))(_))     \n");
+	addflamestr("   | (__ | ||  _|| || |  / _ \\ |  _|  |  _|| ' \\ / -_)    \n");
+	addflamestr("    \\___||_| \\__| \\_, |  \\___/ |_|     \\__||_||_|\\___|    \n");
+	addflamestr("   (               |__|(                              (   \n");
 	addflamestr("   )\\                )\\ )   (     )             (   )\\ ) \n", false);
-	addflamestr(" (((_)   (    (     (()/(  ))\\   (      (      ))\\ (()/( \n", false);
-	addflamestr(" )\\___   )\\   )\\ )   ((_))/((_)  )\\  '  )\\ )  /((_) ((_))\n", false);
-	addflamestr("((/ __| ((_) _(_/(   _| |(_))  _((_))  _(_/( (_))   _| | \n");
-	addflamestr(" | (__ / _ \\| ' \\))/ _` |/ -_)| '  \\()| ' \\))/ -_)/ _` | \n");
+	addflamestr(" (((_)   ( '  (     (()/(  ))\\   (      (      ))\\ (()/( \n", false);
+	addflamestr(" )\\_/_   )\\   )\\ )   ((_))/((_)  )\\  '  )\\ )  /((_) ((_))\n", false);
+	addflamestr("((/ __| ((_) _(_((   _| |(_))  _((_))  _(_/( (_))   _| | \n");
+	addflamestr(" | (__ / _ \\| ' \\) / _` |/ -_)| '  \\()| ' \\) / -_)/ _` | \n");
 	addflamestr("  \\___|\\___/|_||_| \\__,_|\\___||_|_|_| |_||_| \\___|\\__,_| \n");
-	move(LINES-8, 0);
+	move(LINES-7, 0);
 	setColor(COLOR_GREEN+8);
 	addcstr("[a] Join the Heavenly Host   "); addstr("\n");
 	addcstr("[b] Join the forces of Hell  "); addstr("\n\n");
 	addcstr("[c] Toggle default background"); addstr("\n");
 	addcstr("[q] Quit                     ");
-	setColor(COLOR_RED);
+	setColor(COLOR_GREEN);
 	box(stdscr, 0, 0);
 	setColor(COLOR_BLACK);
 	while (true) {
