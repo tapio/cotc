@@ -54,3 +54,5 @@ void setColor(int color);
 void addcstr(std::string str);
 
 void box2(int x, int y, int w, int h);
+
+bool toggleDefaultColors();

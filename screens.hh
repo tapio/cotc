@@ -35,11 +35,12 @@ int title() {
 	addflamestr("((/ __| ((_) _(_/(   _| |(_))  _((_))  _(_/( (_))   _| | \n");
 	addflamestr(" | (__ / _ \\| ' \\))/ _` |/ -_)| '  \\()| ' \\))/ -_)/ _` | \n");
 	addflamestr("  \\___|\\___/|_||_| \\__,_|\\___||_|_|_| |_||_| \\___|\\__,_| \n");
-	move(LINES-7, 0);
+	move(LINES-8, 0);
 	setColor(COLOR_GREEN+8);
-	addcstr("[a] Join the Heavenly Host "); addstr("\n\n");
-	addcstr("[b] Join the forces of Hell"); addstr("\n\n");
-	addcstr("[q] Quit                   ");
+	addcstr("[a] Join the Heavenly Host   "); addstr("\n");
+	addcstr("[b] Join the forces of Hell  "); addstr("\n\n");
+	addcstr("[c] Toggle default background"); addstr("\n");
+	addcstr("[q] Quit                     ");
 	setColor(COLOR_RED);
 	box(stdscr, 0, 0);
 	setColor(COLOR_BLACK);
@@ -48,6 +49,7 @@ int title() {
 		if (k == 'a' || k == 'A') return 1;
 		if (k == 'b' || k == 'B') return 2;
 		if (k == 'q' || k == 'Q' || k == KEY_ESCAPE) return 0;
+		if (k == 'c' || k == 'C') { toggleDefaultColors(); return title(); }
 	}
 }
 

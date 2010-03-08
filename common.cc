@@ -35,3 +35,12 @@ void box2(int x, int y, int w, int h) {
 	for (int i = x; i < x+w-2; ++i) echochar(ACS_HLINE);
 	echochar(ACS_LRCORNER);
 }
+
+bool toggleDefaultColors() {
+	static bool use_defaults = true;
+	use_defaults = !use_defaults;
+	if (use_defaults) use_default_colors();
+	else assume_default_colors(0,0);
+	clear();
+	return use_defaults;
+}
