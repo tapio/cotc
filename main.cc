@@ -21,7 +21,7 @@ bool handleInput(Actor& pl) {
 	else if (k == '1') pl.move(-1, 1);
 	else if (k == '3') pl.move( 1, 1);
 	else if (k == '5') pl.idle();
-	else if (k == '?' || k == 'h') { help(); frame(pl); }
+	else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
 
 	// Cheats
 	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;

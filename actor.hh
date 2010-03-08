@@ -2,6 +2,7 @@
 
 #include "world.hh"
 #include "logger.hh"
+#include "common.hh"
 
 #define NO_AI false
 
@@ -13,7 +14,18 @@ class Actor {
 		IMP = 8, DEMON = 16, ARCHDEMON = 32, ALL = 63 } type;
 
 	Actor(Type type, bool ai = true): type(type), x(), y(),
-	  viewDist(10), useAI(ai), world(), moves() { }
+	  viewDist(10), useAI(ai), world(), moves() {
+		switch (type) {
+			case HUMAN: maxhealth = randint(3,7); break;
+			case ANGEL: maxhealth = 16; break;
+			case ARCHANGEL: maxhealth = 24; break;
+			case IMP: maxhealth = randint(5,9); break;
+			case DEMON: maxhealth = randint(13,16); break;
+			case ARCHDEMON: maxhealth = randint(22,24); break;
+			case ALL: break;
+		}
+		health = maxhealth*0.5;
+	}
 
 	void setWorld(World* wd) {
 		world.reset(wd);
@@ -121,6 +133,11 @@ class Actor {
 
 	ActorPtrs visible_actors;
 
+	int getExp() const { return exp; }
+	int getHealth() const { return health; }
+	int getMaxHealth() const { return maxhealth; }
+	float getCond() const { return float(health) / maxhealth; }
+
   private:
 	Actor* getClosestActor(int types = ALL);
 	void moveTowards(int tx, int ty);
@@ -132,5 +149,9 @@ class Actor {
 
 	WorldPtr world;
 	tilearray view;
+
+	int maxhealth;
+	int health;
+	int exp;
 	unsigned long moves;
 };

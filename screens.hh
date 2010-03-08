@@ -55,31 +55,50 @@ int title() {
 
 
 void frame(const Actor& pl, bool O = false) {
+	int x = 2;
 	setColor(COLOR_BLACK);
 	move(1,0);
 	if (!O) {
-		addstr("  Player - "); addstr(pl.getTypeName().c_str());
+		setColor(COLOR_GREEN);
+		addstr("  Player - ");
+		setColor(pl.getColor()); addstr(pl.getTypeName().c_str());
+		setColor(COLOR_GREEN);
 		addstr("\n\n");
-		addstr("  Condition:\n");
-		addstr("   IIIIIIIIIII");
-		addstr("\n\n");
-		addstr("  Experience:\n");
-		addstr("   IIIIIIIIIII");
-		addstr("\n\n");
-		addstr("  Abilities:\n");
-		addstr("  [o] Open door\n");
-		addstr("  [k] Kick door\n");
-		addstr("\n\n");
+		addstr("  Condition:");
 	}
-	if (O) { move(0,1); hline(0, COLS-2); }
-	else box(stdscr, 0, 0);
+	// Health bar
+	move(4,x);
+	if (pl.getCond() < 0.2 || pl.getHealth() < 3) setColor(COLOR_RED+8);
+	else if (pl.getCond() < 0.5) setColor(COLOR_YELLOW+8);
+	else setColor(COLOR_GREEN+8);
+	for (int i = 1; i <= pl.getMaxHealth(); ++i) {
+		if (i > pl.getHealth()) setColor(COLOR_RED);
+		echochar(i <= pl.getHealth() ? 'I' : '-');
+		if ((i % 12) == 0) move(getcury(stdscr)+1, x);
+	}
+	// Experience
+	setColor(COLOR_GREEN);
+	move(getcury(stdscr)+2, x);
+	if (!O) addstr("Experience:");
+	move(getcury(stdscr)+1, x);
+	// TODO
 
+	// Abilities
+	setColor(COLOR_YELLOW);
+	move(getcury(stdscr)+2, x);
+	if (!O) addstr("Abilities:");
+	move(getcury(stdscr)+1, x);
+	// TODO
+
+	setColor(COLOR_RED);
+	if (!O) box(stdscr, 0, 0);
 }
 
 void help() {
 	erase();
+	setColor(COLOR_CYAN+8);
 	box(stdscr, 0, 0);
-	move(0,2);
+	move(1,2);
 	addcstr("HELP!");
 	refresh();
 	getch();

@@ -13,10 +13,8 @@ void setColor(int color) {
 }
 
 void addcstr(std::string str) {
-	int x, y;
-	getyx(stdscr, y, x);
-	x = COLS / 2 - str.length() / 2;
-	mvaddstr(y, x, str.c_str());
+	int x = COLS / 2 - str.length() / 2;
+	mvaddstr(getcury(stdscr), x, str.c_str());
 }
 
 void box2(int x, int y, int w, int h) {
