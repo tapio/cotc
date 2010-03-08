@@ -27,6 +27,7 @@ bool handleInput(Actor& pl) {
 	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;
 	else if (k == KEY_F(6)) pl.type = Actor::ANGEL;
 	else if (k == KEY_F(7)) pl.type = Actor::DEMON;
+	else if (k == KEY_F(4)) pl.viewDist = 100;
 	return true;
 }
 

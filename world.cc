@@ -51,7 +51,7 @@ void World::updateVisibleActors() {
 /// Function: hasLOS
 /// Tests if given coordinates are visible for a player.
 bool World::hasLOS(const Actor& actor, int x, int y) const {
-	int dist = distance2d(x, y, actor.x, actor.y);
+	float dist = distance2d(float(x), float(y), float(actor.x), float(actor.y));
 
 	if (dist > actor.viewDist) return false; // Out of reach
 	if (x < 0 || y < 0 || x >= width || y >= height) return false; // Out of world
@@ -62,12 +62,11 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 	float xx = actor.x + dx;
 	float yy = actor.y + dy;
 	float dd = distance2d(0.0f,0.0f,dx,dy);
-	float d = dd;
+	float d = 0.5 + dd;
 	do {
-		if (d > getTile(xx, yy).blocks_vision_dist) return false;
+		if (d > getTile(round(xx), round(yy)).blocks_vision_dist) return false;
 		xx += dx; yy += dy; d += dd;
-		if (distance2d<float>(float(x),float(y),xx,yy) < 1.0) return true;
-	} while (int(xx) != x || int(yy) != y);
+	} while (distance2d(float(x), float(y), xx, yy) > 0.5);
 	return true;
 }
 
