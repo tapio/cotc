@@ -8,8 +8,6 @@
 #include "screens.hh"
 #include "logger.hh"
 
-#define KEY_ESCAPE 27
-
 bool handleInput(Actor& pl) {
 	int k = getch();
 
@@ -36,12 +34,15 @@ bool handleInput(Actor& pl) {
 void mainLoop() {
 
 	ConsoleWindow cons;
+	int abc = title();
+	if (abc == 0) return;
+
+	erase();
 	frame();
-	title();
 	refresh();
 
 	boost::shared_ptr<World> world(new World());
-	Actor& pl(world->addActor(new Actor(Actor::ANGEL, NO_AI)));
+	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
 	pl.position(5,5);
 
 	// Actors

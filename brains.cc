@@ -20,6 +20,7 @@ Actor* Actor::getClosestActor(int types) {
 	return closest;
 }
 
+// TODO: Make slide along the wall
 void Actor::moveTowards(int tx, int ty) {
 	int dx = 0, dy = 0;
 	if (tx > x) dx = 1;

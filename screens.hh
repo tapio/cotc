@@ -1,4 +1,5 @@
 #include <curses.h>
+#include "common.hh"
 
 void addcstr(std::string str) {
 	int x, y;
@@ -7,20 +8,33 @@ void addcstr(std::string str) {
 	mvaddstr(y, x, str.c_str());
 }
 
-void title() {
-	//addstr("        ___  ____  ____  _  _\n");
-	//addstr("       / __)(_  _)(_  _)( \/ )\n");
-	//addstr("      ( (__  _)(_   )(   \  /\n");
-	//addstr("       \___)(____) (__)  (__)\n");
-	//addstr("   _____  ____    ____  _   _  ____\n");
-	//addstr("  (  _  )( ___)  (_  _)( )_( )( ___)\n");
-	//addstr("   )(_)(  )__)     )(   ) _ (  )__)\n");
-	//addstr("  (_____)(__)     (__) (_) (_)(____)\n");
-	//addstr(" ____    __    __  __  _  _  ____  ____\n");
-	//addstr("(  _ \  /__\  (  \/  )( \( )( ___)(  _ \ \n");
-	//addstr(" )(_) )/(__)\  )    (  )  (  )__)  )(_) )\n");
-	//addstr("(____/(__)(__)(_/\/\_)(_)\_)(____)(____/ \n");
-	//getch();
+int title() {
+	move(1,0);
+	addcstr("     (          )             (         )    )           \n");
+	addcstr("     )\\  (   ( /( (           )\\ )   ( /( ( /(    (      \n");
+	addcstr("   (((_) )\\  )\\()))\\ )    (  (()/(   )\\()))\\())  ))\\     \n");
+	addcstr("   )\\___((_)(_))/(()/(    )\\  /(_)) (_))/((_)\\  /((_)    \n");
+	addcstr("  ((/ __|(_)| |_  )(_))  ((_)(_) _| | |_ | |(_)(_))      \n");
+	addcstr("   | (__ | ||  _|| || | / _ \\ |  _| |  _|| ' \\ / -_)     \n");
+	addcstr("    \\___||_| \\__| \\_, | \\___/ |_|    \\__||_||_|\\___|     \n");
+	addcstr("   (              |__(                              (    \n");
+	addcstr("   )\\                )\\ )   (     )             (   )\\ ) \n");
+	addcstr(" (((_)   (    (     (()/(  ))\\   (      (      ))\\ (()/( \n");
+	addcstr(" )\\___   )\\   )\\ )   ((_))/((_)  )\\  '  )\\ )  /((_) ((_))\n");
+	addcstr("((/ __| ((_) _(_/(   _| |(_))  _((_))  _(_/( (_))   _| | \n");
+	addcstr(" | (__ / _ \\| ' \\))/ _` |/ -_)| '  \\()| ' \\))/ -_)/ _` | \n");
+	addcstr("  \\___|\\___/|_||_| \\__,_|\\___||_|_|_| |_||_| \\___|\\__,_| \n");
+	move(LINES-7, 0);
+	addcstr("[a] Join the Heavenly Host "); addstr("\n\n");
+	addcstr("[b] Join the forces of Hell"); addstr("\n\n");
+	addcstr("[q] Quit                   ");
+	box(stdscr, 0, 0);
+	while (true) {
+		int k = getch();
+		if (k == 'a') return 1;
+		if (k == 'b') return 2;
+		if (k == 'q' || k == KEY_ESCAPE) return 0;
+	}
 }
 
 

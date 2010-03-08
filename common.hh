@@ -6,6 +6,7 @@
 #include <curses.h>
 #include <boost/ptr_container/ptr_vector.hpp>
 
+#define KEY_ESCAPE 27
 #define BLOCKS true
 
 class Actor;
