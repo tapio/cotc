@@ -47,3 +47,8 @@ template<typename T> T distance2d(T x1, T y1, T x2, T y2) {
 	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }
 
+void setColor(WINDOW* scr, int color);
+
+void setColor(int color);
+
+void addcstr(std::string str);

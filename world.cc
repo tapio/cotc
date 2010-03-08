@@ -3,17 +3,6 @@
 #include "common.hh"
 #include "logger.hh"
 
-void setColor(WINDOW* scr, int color) {
-	if (color < 0 || color > 15) return;
-	if (color > 7) wattron(scr, A_BOLD);
-	color = color % 8;
-	wcolor_set(scr, color, 0);
-}
-
-void setColor(int color) {
-	setColor(stdscr, color);
-}
-
 void World::generate(int w, int h) {
 	width = w; height = h;
 	for (int j = 0; j < h; j++) {
