@@ -21,7 +21,7 @@ bool handleInput(Actor& pl) {
 	else if (k == '1') pl.move(-1, 1);
 	else if (k == '3') pl.move( 1, 1);
 	else if (k == '5') pl.idle();
-	else if (k == '?' || k == 'h') { help(); frame(); }
+	else if (k == '?' || k == 'h') { help(); frame(pl); }
 
 	// Cheats
 	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;
@@ -36,10 +36,6 @@ void mainLoop() {
 	ConsoleWindow cons;
 	int abc = title();
 	if (abc == 0) return;
-
-	erase();
-	frame();
-	refresh();
 
 	boost::shared_ptr<World> world(new World());
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
@@ -63,11 +59,11 @@ void mainLoop() {
 	}
 
 	erase();
-	frame();
+	frame(pl);
 	refresh();
 
 	do {
-		frame(true);
+		frame(pl, true);
 		refresh();
 		world->update();
 		world->draw(pl);

@@ -1,5 +1,6 @@
 #include <curses.h>
 #include "common.hh"
+#include "actor.hh"
 
 void addflamestr(std::string str, bool letter = true) {
 	static int flamecolors[] = { COLOR_RED, COLOR_YELLOW, COLOR_YELLOW+8 };
@@ -51,10 +52,26 @@ int title() {
 }
 
 
-void frame(bool O = false) {
+void frame(const Actor& pl, bool O = false) {
 	setColor(COLOR_BLACK);
+	move(1,0);
+	if (!O) {
+		addstr("  Player - "); addstr(pl.getTypeName().c_str());
+		addstr("\n\n");
+		addstr("  Condition:\n");
+		addstr("   IIIIIIIIIII");
+		addstr("\n\n");
+		addstr("  Experience:\n");
+		addstr("   IIIIIIIIIII");
+		addstr("\n\n");
+		addstr("  Abilities:\n");
+		addstr("  [o] Open door\n");
+		addstr("  [k] Kick door\n");
+		addstr("\n\n");
+	}
 	if (O) { move(0,1); hline(0, COLS-2); }
 	else box(stdscr, 0, 0);
+
 }
 
 void help() {

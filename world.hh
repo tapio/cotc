@@ -12,7 +12,7 @@ class Actor;
 class World: boost::noncopyable {
   public:
 	World(): windowW(45), windowH(21) {
-		scrX = COLS / 2 - windowW / 2;
+		scrX = COLS - 2 - windowW;
 		scrY = LINES / 2 - windowH / 2 - 1;
 		worldwin = newwin(windowH, windowW, scrY, scrX);
 		viewXDist = windowW / 2 - 1;
