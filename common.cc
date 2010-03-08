@@ -1,5 +1,19 @@
 #include "common.hh"
 
+Tile TileBuilder(std::string type) {
+	Tile tile;
+	if (type == "window") {
+		tile = Tile('*', COLOR_BLUE, BLOCKS);
+		tile.blocks_vision_dist = 2;
+	} else if (type == "door_open") {
+		tile = Tile('/', COLOR_YELLOW, !BLOCKS);
+	} else if (type.substr(0,4) == "door") {
+		tile = Tile('+', COLOR_RED, BLOCKS);
+	}
+	return tile;
+}
+
+
 void setColor(WINDOW* scr, int color) {
 	if (color < 0 || color > 15) return;
 	if (color > 7) wattron(scr, A_BOLD);

@@ -13,6 +13,8 @@ class Actor;
 typedef std::vector<Actor*> ActorPtrs;
 typedef boost::ptr_vector<Actor> Actors;
 
+/// Tiles
+
 struct Tile {
 	char ch;
 	int color;
@@ -37,6 +39,11 @@ struct Tile {
 typedef std::vector<Tile> tilerow;
 typedef std::vector<tilerow> tilearray;
 
+Tile TileBuilder(std::string type);
+
+
+/// Math
+
 int inline randint(int hi) { return rand() % hi; }
 
 int inline randint(int lo, int hi) {
@@ -49,6 +56,9 @@ template<typename T> T distance2d(T x1, T y1, T x2, T y2) {
 
 /** Implement C99 mathematical rounding (which C++ unfortunately currently lacks) **/
 template <typename T> T round(T val) { return int(val + (val >= 0 ? 0.5 : -0.5)); }
+
+
+/// Console
 
 void setColor(WINDOW* scr, int color);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "world.hh"
+#include "ability.hh"
 #include "logger.hh"
 #include "common.hh"
 
@@ -25,6 +26,8 @@ class Actor {
 			case ALL: break;
 		}
 		health = maxhealth*0.5;
+
+		abilities.push_back(Ability(Ability::OPEN_DOOR));
 	}
 
 	void setWorld(World* wd) {
@@ -51,11 +54,15 @@ class Actor {
 	void idle() { moves++; }
 
 	void move(int dx, int dy) {
-		if (world->isFreeTile(x+dx, y+dy)) {
+		int tx = x+dx, ty = y+dy;
+		if (world->isFreeTile(tx, ty)) {
 			world->getTilePtr(x, y)->actor = NULL;
-			x+=dx;
-			y+=dy;
+			x = tx; y = ty;
 			world->getTilePtr(x, y)->actor = this;
+		} else {
+			for (Abilities::iterator it = abilities.begin(); it != abilities.end(); ++it) {
+				it->use(world->getTilePtr(tx, ty));
+			}
 		}
 		moves++;
 	}
@@ -132,6 +139,7 @@ class Actor {
 	bool useAI;
 
 	ActorPtrs visible_actors;
+	Abilities abilities;
 
 	int getExp() const { return exp; }
 	int getHealth() const { return health; }

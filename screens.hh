@@ -1,6 +1,7 @@
 #include <curses.h>
 #include "common.hh"
 #include "actor.hh"
+#include "ability.hh"
 
 void addflamestr(std::string str, bool letter = true) {
 	static int flamecolors[] = { COLOR_RED, COLOR_YELLOW, COLOR_YELLOW+8 };
@@ -88,8 +89,12 @@ void frame(const Actor& pl, bool O = false) {
 	move(getcury(stdscr)+2, x);
 	if (!O) addstr("Abilities:");
 	move(getcury(stdscr)+1, x);
-	// TODO
-
+	if (!O) {
+		for (Abilities::const_iterator it = pl.abilities.begin(); it != pl.abilities.end(); ++it) {
+			addstr("* "); addstr(it->toString().c_str());
+			move(getcury(stdscr)+1, x);
+		}
+	}
 	setColor(COLOR_RED);
 	if (!O) box(stdscr, 0, 0);
 }

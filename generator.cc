@@ -6,19 +6,6 @@
 
 namespace {
 
-	Tile TileBuilder(std::string type) {
-		Tile tile;
-		if (type == "window") {
-			tile = Tile('*', COLOR_BLUE, BLOCKS);
-			tile.blocks_vision_dist = 2;
-		} else if (type == "door_open") {
-			tile = Tile('/', COLOR_YELLOW, !BLOCKS);
-		} else if (type.substr(0,4) == "door") {
-			tile = Tile('+', COLOR_RED, BLOCKS);
-		}
-		return tile;
-	}
-
 	static const Tile ground('.', COLOR_GREEN, !BLOCKS);
 	static const Tile grass('"', COLOR_GREEN, !BLOCKS);
 	static const Tile plaza(':', COLOR_GREEN, !BLOCKS);
@@ -155,17 +142,17 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 			randDoor(x1,y1,x2,y2,(randint(0,9)==0));
 		} else if (housetype == 2) { // Two separate houses
 			if (horiz) { // Horizontal wall
-				makeDoor(randint(x1+1,x2-1),y1,(randint(0,9)==0));
-				makeDoor(randint(x1+1,x2-1),y2,(randint(0,9)==0));
+				makeDoor(randint(x1+1,x2-1),y1,randint(0,2));
+				makeDoor(randint(x1+1,x2-1),y2,randint(0,2));
 			} else { // Vertical wall
-				makeDoor(x1,randint(y1+1,y2-1),(randint(0,9)==0));
-				makeDoor(x2,randint(y1+1,y2-1),(randint(0,9)==0));
+				makeDoor(x1,randint(y1+1,y2-1),randint(0,2));
+				makeDoor(x2,randint(y1+1,y2-1),randint(0,2));
 			}
 		}
 
 	} else { // No wall / single-room house
 		//AddFurniture(x1+1,y1+1,x2-1,y2-1,furnit)
-		randDoor(x1,y1,x2,y2,(randint(0,9)==0));
+		randDoor(x1,y1,x2,y2,randint(0,2));
 	}
 }
 
