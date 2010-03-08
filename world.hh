@@ -25,7 +25,16 @@ class World: boost::noncopyable {
 		delwin(worldwin);
 	}
 
+	/**
+	 * Functions: Generators
+	 */
 	void generate(int w, int h);
+	void createCity(int xhouses, int yhouses);
+	void createHouse(int x1, int y1, int x2, int y2, int furnit = 0, int locked = 0);
+	void createPlaza(int x1, int y1, int x2, int y2);
+	void randDoor(int x1, int y1, int x2, int y2, int locked = 0);
+	void makeDoor(int doorx, int doory, int locked = 0, Tile floortype = Tile('.', COLOR_YELLOW, !BLOCKS));
+	void makeWallsAndFloor(int x1, int y1, int x2, int y2, Tile floortype = Tile('.', COLOR_YELLOW, !BLOCKS), bool nowindows = false, bool nowalls = false);
 
 	Actor& addActor(Actor* actor);
 
