@@ -2,6 +2,44 @@
 #include "actor.hh"
 #include "common.hh"
 
+namespace {
+	// FOV algorithm from reflexivelos roguelike engine under MIT License.
+	// Based on generalization of Bresenham, runs in O(N^3).
+	void fov_dir(int dir, int dis, int px, int py, tilearray& view, World& world) {
+		int cx, cy;
+		for (int q = 1; q <= dis; ++q) for (int p = 0; p < q+1; p++) {
+			for (int ad1 = 1, ad2[2] = {0, 0}, s[2] = {0, q-1}, eps[2] = {0, q-1}; ad1 <= dis && s[0] <= s[1]; ++ad1)
+			  for (int i = 0; i < 2; i++) {
+				eps[i] += p;
+				if (eps[i] >= q) { // This should look familiar
+					eps[i] -= q;
+					++ad2[i];
+				}
+				cx = ad1, cy = ad2[i];
+				if (dir&1) cx = -cx;
+				if (dir&2) cy = -cy;
+				if (dir&4) cx ^= cy ^= cx ^= cy;
+				cx += px, cy += py;
+				int d = (cx-px)*(cx-px) + (cy-py)*(cy-py); // Squared distance from origin
+				// Visible
+				if (!(cx < 0 || cy < 0 || cx >= world.getWidth() || cy >= world.getHeight())) {
+					if (d <= dis*dis + 1) {
+						view[cy][cx] = world.getTile(cx, cy);
+						view[cy][cx].explored = true;
+						view[cy][cx].visible = true;
+					}
+				}
+				// Update range of possibilities for s
+				int dd = world.getTile(cx, cy).blocks_vision_dist;
+				if (d > dd*dd) { // if blocks_vision
+					if (i == 0) s[i] += q-eps[i], eps[i] = 0, ++ad2[0];
+					if (i == 1) s[i] -= eps[i]+1, eps[i] = q-1, --ad2[1];
+				}
+			}
+		}
+	}
+}
+
 void World::generate(int seed) {
 	srand(seed);
 	createCity(10, 10);
@@ -17,18 +55,15 @@ Actor& World::addActor(Actor* actor) {
 /// Updates the Actor's view.
 void World::updateView(Actor& actor) {
 	tilearray& view = actor.getView();
+	// Reset light
 	for (int j = actor.y - viewYDist; j <= actor.y + viewYDist; j++) {
 		for (int i = actor.x - viewXDist; i <= actor.x + viewXDist; i++) {
 			if (i < 0 || j < 0 || i >= width || j >= height) continue;
-			bool visible = hasLOS(actor, i, j);
-			bool explored = visible ? true : actor.hasExplored(i,j);
-			Tile& tile = view[j][i];
-			if (visible || explored) tile = getTile(i, j);
-			if (!visible) tile.actor = NULL;
-			tile.visible = visible;
-			tile.explored = explored;
+			view[j][i].visible = false;
 		}
 	}
+	// Calculate FOV
+	for (int i = 0; i < 8; ++i) fov_dir(i, actor.viewDist, actor.x, actor.y, view, *this);
 }
 
 /// Function updateVisibleActors
