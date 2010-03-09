@@ -1,4 +1,4 @@
-PROJ = City of the Condemned
+PROJ = "City of the Condemned"
 EXENAME = 7drl
 
 ARCH := $(shell uname -m)
@@ -19,10 +19,12 @@ all: main
 rebuildall: cleanall main
 
 main: objdir $(OBJS)
-	$(CXX) -o $(EXENAME) $(OBJS) $(LIBS)
+	@echo "Linking $(EXENAME)"
+	@$(CXX) -o $(EXENAME) $(OBJS) $(LIBS)
 
 $(OBJDIR)/%.o: %.cc
-	$(COMPILE) -o $@ $<
+	@echo "Compiling $<"
+	@$(COMPILE) -o $@ $<
 
 objdir:
 	@mkdir -p $(OBJDIR)
