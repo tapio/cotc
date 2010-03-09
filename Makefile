@@ -12,8 +12,11 @@ COMPILE = $(CXX) $(CXXFLAGS) -c
 LIBS = -lncurses
 OBJS := $(patsubst %.cc,$(OBJDIR)/%.o,$(wildcard *.cc))
 
+.PHONY: all rebuildall objdir cleanall clean cleanobj cleanbin
+
 all: main
-.PHONY: all
+
+rebuildall: cleanall main
 
 main: objdir $(OBJS)
 	$(CXX) -o $(EXENAME) $(OBJS) $(LIBS)
@@ -21,11 +24,8 @@ main: objdir $(OBJS)
 $(OBJDIR)/%.o: %.cc
 	$(COMPILE) -o $@ $<
 
-.PHONY: objdir
 objdir:
-	mkdir -p $(OBJDIR)
-
-.PHONY: cleanall clean cleanobj cleanbin
+	@mkdir -p $(OBJDIR)
 
 cleanall: cleanobj cleanbin
 
