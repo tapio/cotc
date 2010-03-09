@@ -300,7 +300,7 @@ void World::CreateTownHall(x1,y1,x2,y2)
 		}
 	}
 }
-/* */
+*/
 
 /*
 void World::CreateInn(x1,y1,x2,y2)
@@ -397,7 +397,7 @@ void World::CreateInn(x1,y1,x2,y2)
 		}
 	}
 }
-/* */
+*/
 
 /*
 void World::CreateShop(x1,y1,x2,y2)
@@ -467,7 +467,7 @@ void World::CreateShop(x1,y1,x2,y2)
 	makeDoor(doorx,doory,1)
 	makeDoor(doorx2,doory2)
 }
-/* */
+*/
 
 /*
 void World::CreateStable(x1,y1,x2,y2)
@@ -533,7 +533,7 @@ void World::CreateStable(x1,y1,x2,y2)
 	makeDoor(doorx,doory,1)
 	tiles[stableboyX,stableboyY) = stableboy
 }
-/* */
+*/
 
 /*
 void World::CreateChurch(x1,y1,x2,y2)
@@ -618,7 +618,7 @@ void World::CreateChurch(x1,y1,x2,y2)
 		}
 	}
 }
-/* */
+*/
 
 /*
 void World::AddFurniture(x1,y1,x2,y2,furnit,Tile floortype=12,nobed=0)

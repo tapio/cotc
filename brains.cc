@@ -8,7 +8,7 @@ Actor* Actor::getClosestActor(int types) {
 	Actor* closest = NULL;
 	int mindist = viewDist+1;
 	for (ActorPtrs::const_iterator it = visible_actors.begin(); it != visible_actors.end(); ++it) {
-		int dist;
+		int dist = mindist;
 		if ((*it)->type & types) {
 			if (closest == NULL ||
 			  (dist = distance2d(x, y, (*it)->x, (*it)->y)) < mindist) {
