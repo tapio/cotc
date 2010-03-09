@@ -1,5 +1,6 @@
 #include <curses.h>
 
+#include "version.h"
 #ifndef VERSION_STRING
 	#define VERSION_STRING "unknown"
 #endif
