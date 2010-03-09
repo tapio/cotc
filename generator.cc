@@ -1,8 +1,6 @@
-
 #include "world.hh"
 #include "actor.hh"
 #include "common.hh"
-#include "logger.hh"
 
 namespace {
 
@@ -41,6 +39,7 @@ void World::createCity(int xhouses, int yhouses) {
 	height = yhouses * (househ + streetwidth + 1) + streetwidth + 2;
 	int xyhouses = xhouses * yhouses;
 
+	// Initialize tile array
 	for (int j = 0; j < height; j++) {
 		tilerow row;
 		for (int i = 0; i < width; i++) row.push_back(Tile());

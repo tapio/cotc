@@ -1,11 +1,17 @@
 #pragma once
 
+#include <curses.h>
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
-#include <curses.h>
+#include <vector>
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/noncopyable.hpp>
+
+#include "logger.hh"
 
 #define KEY_ESCAPE 27
 #define BLOCKS true

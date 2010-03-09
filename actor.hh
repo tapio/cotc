@@ -2,7 +2,6 @@
 
 #include "world.hh"
 #include "ability.hh"
-#include "logger.hh"
 #include "common.hh"
 
 #define NO_AI false
@@ -33,7 +32,7 @@ class Actor: boost::noncopyable {
 	~Actor() { abilities.clear(); }
 
 	void setWorld(World* wd) {
-		world.reset(wd);
+		world = wd;
 		// Construct view array
 		int w = world->getWidth();
 		int h = world->getHeight();

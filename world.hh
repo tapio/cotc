@@ -1,9 +1,5 @@
 #pragma once
 
-#include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
-#include <vector>
-
 #include "console.hh"
 #include "common.hh"
 
@@ -83,4 +79,4 @@ class World: boost::noncopyable {
 	Actors actors;
 };
 
-typedef boost::shared_ptr<World> WorldPtr;
+typedef World* WorldPtr;

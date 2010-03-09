@@ -1,5 +1,4 @@
 #include <curses.h>
-#include <boost/shared_ptr.hpp>
 
 #ifndef VERSION_STRING
 	#define VERSION_STRING "unknown"
@@ -10,7 +9,6 @@
 #include "actor.hh"
 #include "world.hh"
 #include "screens.hh"
-#include "logger.hh"
 
 bool handleInput(Actor& pl) {
 	int k = getch();
@@ -42,7 +40,7 @@ void mainLoop() {
 	int abc = title();
 	if (abc == 0) return;
 
-	boost::shared_ptr<World> world(new World());
+	boost::scoped_ptr<World> world(new World());
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
 	pl.position(abc == 1 ? world->getWidth()-3 : 2, world->getHeight() / 2);
 

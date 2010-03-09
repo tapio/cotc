@@ -1,7 +1,6 @@
 #include "world.hh"
 #include "actor.hh"
 #include "common.hh"
-#include "logger.hh"
 
 void World::generate(int seed) {
 	srand(seed);
