@@ -1,6 +1,10 @@
 #include <curses.h>
 #include <boost/shared_ptr.hpp>
 
+#ifndef VERSION_STRING
+	#define VERSION_STRING "unknown"
+#endif
+
 #include "common.hh"
 #include "console.hh"
 #include "actor.hh"
@@ -73,7 +77,23 @@ void mainLoop() {
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
+	// Process commandline
+	if (argc > 1) {
+		for (int i = 1; i < argc; ++i) {
+			std::string arg(argv[i]);
+			if (arg == "-v" || arg == "--version") {
+				std::cout << "Version: " << VERSION_STRING << std::endl;
+				exit(0);
+			} else if (arg == "-h" || arg == "--help") {
+				std::cout << "Usage: " << argv[0] << " [-v|--version] [-h|--help]" << std::endl;
+				exit(0);
+			} else {
+				std::cout << "Unrecognized parameter: " << arg << std::endl;
+				exit(-1);
+			}
+		}
+	}
 
 	mainLoop();
 

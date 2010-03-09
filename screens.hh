@@ -44,6 +44,8 @@ int title() {
 	addcstr("[q] Quit                     ");
 	setColor(COLOR_GREEN);
 	box(stdscr, 0, 0);
+	std::string vstr("Version: "); vstr += VERSION_STRING;
+	mvaddstr(LINES-1, COLS-1-vstr.length(), vstr.c_str());
 	setColor(COLOR_BLACK);
 	while (true) {
 		int k = getch();
