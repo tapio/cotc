@@ -9,7 +9,7 @@
 
 class World;
 
-class Actor {
+class Actor: boost::noncopyable {
   public:
 	enum Type { HUMAN = 1, ANGEL = 2, ARCHANGEL = 4,
 		IMP = 8, DEMON = 16, ARCHDEMON = 32, ALL = 63 } type;
@@ -27,8 +27,10 @@ class Actor {
 		}
 		health = maxhealth*0.5;
 
-		abilities.push_back(Ability(Ability::OPEN_DOOR));
+		abilities.push_back(newAbility(Ability_OpenDoor));
 	}
+
+	~Actor() { abilities.clear(); }
 
 	void setWorld(World* wd) {
 		world.reset(wd);
@@ -61,7 +63,7 @@ class Actor {
 			world->getTilePtr(x, y)->actor = this;
 		} else {
 			for (Abilities::iterator it = abilities.begin(); it != abilities.end(); ++it) {
-				it->use(world->getTilePtr(tx, ty));
+				if ((*it)(world->getTilePtr(tx, ty))) break;
 			}
 		}
 		moves++;

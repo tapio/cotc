@@ -1,29 +1,28 @@
 #pragma once
 
-#include <vector>
-
 #include "common.hh"
+
+#define newAbility(a) dynamic_cast<Ability*>(new a)
 
 class Actor;
 
 class Ability {
   public:
-	enum Type { OPEN_DOOR } type;
 	enum TargetType { SELF, ACTOR, WORLD } targetType;
 
-	Ability(Type type): type(type) {
-		switch (type) {
-			case OPEN_DOOR: targetType = WORLD;
-		}
-	}
+	virtual bool operator()(Actor* target, bool force = false) { return false; }
+	virtual bool operator()(Tile* target, bool force = false) { return false; }
 
-	bool use(Actor* target, bool force = false);
-	bool use(Tile* target, bool force = false);
-
-	std::string toString() const { return "Generic Ability"; }
-
-  private:
-
+	virtual std::string toString() const { return "Generic Ability"; }
 };
 
-typedef std::vector<Ability> Abilities ;
+typedef boost::ptr_vector<Ability> Abilities;
+
+class Ability_OpenDoor: public Ability {
+  public:
+	bool operator()(Tile* target, bool force = false);
+	std::string toString() const { return "Open door"; }
+};
+class Ability_CloseDoor: public Ability { };
+class Ability_KickDoor: public Ability { };
+class Ability_Talk: public Ability { };
