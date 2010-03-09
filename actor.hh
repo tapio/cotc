@@ -79,7 +79,7 @@ class Actor {
 
 	char getChar() const {
 		switch(type) {
-			case HUMAN:     return 'h';
+			case HUMAN:     return '@';
 			case ANGEL:     return 'a';
 			case ARCHANGEL: return 'A';
 			case IMP:       return 'i';
