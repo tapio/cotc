@@ -7,13 +7,21 @@
 namespace {
 
 	static const Tile ground('.', COLOR_GREEN, !BLOCKS);
-	static const Tile grass('"', COLOR_GREEN, !BLOCKS);
+	static const Tile grass(',', COLOR_GREEN, !BLOCKS);
 	static const Tile plaza(':', COLOR_GREEN, !BLOCKS);
 	static const Tile housefloor('.', COLOR_YELLOW, !BLOCKS);
 
 	static const Tile wall('#', COLOR_CYAN, BLOCKS);
 	static const Tile window(TileBuilder("window"));
 	static const Tile tree('T', COLOR_GREEN, BLOCKS);
+
+	static const Tile chair('h', COLOR_YELLOW, BLOCKS);
+	static const Tile table('O', COLOR_YELLOW, BLOCKS);
+	static const Tile barrel('o', COLOR_YELLOW, BLOCKS);
+	static const Tile closet('%', COLOR_YELLOW, BLOCKS);
+	static const Tile closet_locked('%', COLOR_YELLOW, BLOCKS);
+	static const Tile bedL('[', COLOR_YELLOW, BLOCKS);
+	static const Tile bedR(']', COLOR_YELLOW, BLOCKS);
 
 	static const Tile door_open(TileBuilder("door_open"));
 	static const Tile door_closed(TileBuilder("door_closed"));
@@ -26,7 +34,6 @@ void World::createCity(int xhouses, int yhouses) {
 	int househ = 6;
 	int streetwidth = 3;
 	int offset = 1;
-	int maxfurnit = 6;
 
 	if (xhouses < 0) xhouses = 10;
 	if (yhouses < 0) yhouses = 10;
@@ -97,7 +104,7 @@ void World::createCity(int xhouses, int yhouses) {
 				case 11:
 					break;
 				default:
-					createHouse(x1 + randint(-offset,offset), y1 + randint(-offset,offset), x2 - randint(-offset,offset), y2 - randint(-offset,offset), randint(4,maxfurnit), randint(0,1)); break;
+					createHouse(x1 + randint(-offset,offset), y1 + randint(-offset,offset), x2 - randint(-offset,offset), y2 - randint(-offset,offset), randint(1,2), randint(0,1)); break;
 			}
 		}
 	}
@@ -124,8 +131,8 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 			for (int i = x1; i <= x2; ++i) {
 				if (i != doorx || housetype == 2) tiles[wy][i] = wall;
 			}
-			//AddFurniture(x1+1,y1+1,x2-1,wy-1,furnit/2);
-			//AddFurniture(x1+1,wy+1,x2-1,y2-1,furnit/2);
+			AddFurniture(x1+1,y1+1,x2-1,wy-1,furnit/2);
+			AddFurniture(x1+1,wy+1,x2-1,y2-1,furnit/2);
 		} else { // Vertical wall
 			int wx = randint(x1+3,x2-3);
 			doory = randint(y1+1,y2-1);
@@ -133,8 +140,8 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 			for (int j = y1; j <= y2; ++j) {
 				if (j != doory || housetype == 2) tiles[j][wx] = wall;
 			}
-			//AddFurniture(x1+1,y1+1,wx-1,y2-1,furnit/2);
-			//AddFurniture(wx+1,y1+1,x2-1,y2-1,furnit/2);
+			AddFurniture(x1+1,y1+1,wx-1,y2-1,furnit/2);
+			AddFurniture(wx+1,y1+1,x2-1,y2-1,furnit/2);
 		}
 		// Create doors
 		if (housetype == 1) { // Two-room house
@@ -151,7 +158,7 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 		}
 
 	} else { // No wall / single-room house
-		//AddFurniture(x1+1,y1+1,x2-1,y2-1,furnit)
+		AddFurniture(x1+1,y1+1,x2-1,y2-1,furnit);
 		randDoor(x1,y1,x2,y2,randint(0,2));
 	}
 }
@@ -620,67 +627,63 @@ void World::CreateChurch(x1,y1,x2,y2)
 }
 */
 
-/*
-void World::AddFurniture(x1,y1,x2,y2,furnit,Tile floortype=12,nobed=0)
-	furniturecount = 0
-	While furniturecount < furnit
-		RandFurnit:
-		i = randint((x1+x2)/2,x2); j = randint((y1+y2)/2,y2)
-		if (furniturecount < furnit*.75) { i = randint(x1 , (x1+x2)/2); j = randint((y1+y2)/2, y2)
-		if (furniturecount < furnit*.50) { i = randint((x1+x2)/2, x2); j = randint(y1 , (y1+y2)/2)
-		if (furniturecount < furnit*.25) { i = randint(x1 , (x1+x2)/2); j = randint(y1 , (y1+y2)/2)
-		// i = randint(x1,x2); j = randint(y1,y2)
-		if (tiles[j][i] != floortype) { Goto RandFurnit
-		furniturecount+1
-		if ((furniturecount = 1 || randint(1,10) = 1) && nobed = 0) {
+
+void World::AddFurniture(int x1, int y1, int x2, int y2, int furnit, Tile floortype, bool nobed) {
+	int furniturecount = 0;
+	while (furniturecount < furnit) {
+		int i, j;
+		do {
+			i = randint((x1+x2)/2,x2);
+			j = randint((y1+y2)/2,y2);
+			if (furniturecount < furnit*.75) { i = randint(x1, (x1+x2)/2); j = randint((y1+y2)/2, y2); }
+			if (furniturecount < furnit*.50) { i = randint((x1+x2)/2, x2); j = randint(y1, (y1+y2)/2); }
+			if (furniturecount < furnit*.25) { i = randint(x1, (x1+x2)/2); j = randint(y1, (y1+y2)/2); }
+			// i = randint(x1,x2); j = randint(y1,y2)
+		} while (tiles[j][i] != floortype);
+		furniturecount++;
+		// Bed?
+		if ((randint(1,3) == 1) && !nobed) {
+			nobed = true;
 			int temp = 0;
-			do {
+			while (temp < 30) {
 				temp++;
-				i = randint(x1,x2-1); j = randint(y1,y2)
-				if (temp > 30) { Goto nospace
-			} while (!!! tiles[j][i] = floor && tiles[i+1,j) = floortype
-			tiles[j][i] = bedL
-			tiles[i+1,j) = bedR
-			nospace:
-		} else if ( (j = y1 || j = y2 || i = x1 || i = x2) {
-			if (randint(1,4) = 1) { tiles[j][i] = randint(table,chair) } else { tiles[j][i] = closet
-			if (tiles[j][i] = closet && randint(1,3) = 1) { tiles[j][i] = barrel
-			if (tiles[j][i] = closet && randint(0,1) = 1) { tiles[j][i] = closet_locked
-		} else {
-			if (randint(1,4) = 4) {
-				tiles[j][i] = randint(table,chair)
-				if (randint(1,4) = 4) { tiles[j][i] = barrel
-			} else {
-				tiles[j][i] = table
-				rnd1 = randint(0,1)
-				rnd2 = randint(0,1)
-				if (rnd2 = 0) {
-					if (tiles[i-1+rnd1*2,j) = floortype) {
-						tiles[i-1+rnd1*2,j) = chair
-					} else if ( (tiles[i-1+(!rnd1)*2,j) = floortype) {
-						tiles[i-1+(!rnd1)*2,j) = chair
-					} else if ( (tiles[i,j-1+rnd1*2) = floortype) {
-						tiles[i,j-1+rnd1*2) = chair
-					} else if ( (tiles[i,j-1+(!rnd1)*2) = floortype) {
-						tiles[i,j-1+(!rnd1)*2) = chair
-					}
-				} else {
-					if (tiles[i,j-1+rnd1*2) = floortype) {
-						tiles[i,j-1+rnd1*2) = chair
-					} else if ( (tiles[i,j-1+(!rnd1)*2) = floortype) {
-						tiles[i,j-1+(!rnd1)*2) = chair
-					} else if ( (tiles[i-1+rnd1*2,j) = floortype) {
-						tiles[i-1+rnd1*2,j) = chair
-					} else if ( (tiles[i-1+(!rnd1)*2,j) = floortype) {
-						tiles[i-1+(!rnd1)*2,j) = chair
-					}
+				i = randint(x1,x2-1);
+				j = randint(y1,y2);
+				if (tiles[j][i] == floortype && tiles[j][i+1] == floortype) {
+					tiles[j][i] = bedL;
+					tiles[j][i+1] = bedR;
+					break;
 				}
-				furniturecount+1
+			}
+			furniturecount++;
+		// Things placed next to a wall
+		} else if (j == y1 || j == y2 || i == x1 || i == x2) {
+			if (randint(1,4) == 1) tiles[j][i] = randint(2) ? table : chair; else tiles[j][i] = closet;
+			if (tiles[j][i] == closet && randint(1,3) == 1) tiles[j][i] = barrel;
+			if (tiles[j][i] == closet && randint(0,1) == 1) tiles[j][i] = closet_locked;
+		// Things going to the center
+		} else {
+			if (randint(1,4) == 4) {
+				tiles[j][i] = randint(2) ? table : chair;
+				if (randint(1,4) == 4) tiles[j][i] = barrel;
+			} else {
+				tiles[j][i] = table;
+				int newchairs = 0, tries = 0;
+				while (furniturecount < furnit && newchairs < 2 && tries < 10) {
+					bool vaxis = randint(2);
+					int dx = vaxis ? 0 : randint(-1,1);
+					int dy = vaxis ? randint(-1,1) : 0;
+					if (tiles[j+dy][i+dx] == floortype) {
+						tiles[j+dy][i+dx] = chair;
+						furniturecount++; newchairs++;
+					}
+					tries++;
+				}
 			}
 		}
-	Wend
+	}
 }
-*/
+
 
 void World::randDoor(int x1, int y1, int x2, int y2, int locked) {
 	int doorx, doory, rnd1;
@@ -694,7 +697,6 @@ void World::randDoor(int x1, int y1, int x2, int y2, int locked) {
 	} while (false);
 	makeDoor(doorx,doory,locked);
 }
-
 
 
 void World::makeDoor(int doorx, int doory, int locked, Tile floortype) {

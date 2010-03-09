@@ -33,6 +33,7 @@ class World: boost::noncopyable {
 	void createHouse(int x1, int y1, int x2, int y2, int furnit = 0, int locked = 0);
 	void createPlaza(int x1, int y1, int x2, int y2);
 	void randDoor(int x1, int y1, int x2, int y2, int locked = 0);
+	void AddFurniture(int x1, int y1, int x2, int y2, int furnit, Tile floortype = Tile('.', COLOR_YELLOW, !BLOCKS), bool nobed = false);
 	void makeDoor(int doorx, int doory, int locked = 0, Tile floortype = Tile('.', COLOR_YELLOW, !BLOCKS));
 	void makeWallsAndFloor(int x1, int y1, int x2, int y2, Tile floortype = Tile('.', COLOR_YELLOW, !BLOCKS), bool nowindows = false, bool nowalls = false);
 
