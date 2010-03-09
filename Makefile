@@ -1,4 +1,7 @@
 PROJ = "City of the Condemned"
+VERSION_MAJOR = 0
+VERSION_REVISION = $(shell git log --pretty=oneline | wc -l)
+VERSION_FULL = "\"$(VERSION_MAJOR).$(VERSION_REVISION)\""
 EXENAME = 7drl
 
 ARCH := $(shell uname -m)
@@ -6,7 +9,7 @@ OBJBASE = obj
 OBJDIR = $(OBJBASE)/$(ARCH)
 
 CXX = g++
-CXXFLAGS = -Wall -O2
+CXXFLAGS = -Wall -O2 -DVERSION_STRING=$(VERSION_FULL)
 COMPILE = $(CXX) $(CXXFLAGS) -c
 
 LIBS = -lncurses
