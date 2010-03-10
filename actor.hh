@@ -17,7 +17,8 @@ class Actor: boost::noncopyable {
 	Type realType;
 
 	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(),
-	  viewDist(10), useAI(ai), confirmAction(false), exp(35), msgs(20), world(), moves() {
+	  viewDist(10), useAI(ai), confirmAction(false), exp(35), blessed(), possess(),
+	  msgs(20), world(), moves() {
 		switch (type) {
 			case HUMAN: maxhealth = randint(3,7); break;
 			case ANGEL: maxhealth = 16; break;
@@ -30,12 +31,12 @@ class Actor: boost::noncopyable {
 		health = maxhealth/2;
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
-		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_TouchOfGod));
-		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_Bless));
-		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_HealSelf));
-		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_ConcealDivinity));
-		if (type & (IMP|DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_Possess));
-		if (type & (DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_DemonFire));
+		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_TouchOfGod));
+		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_Bless));
+		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_HealSelf));
+		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_ConcealDivinity));
+		if (type & (EVIL_ACTORS)) abilities.push_back(newAbility(Ability_Possess));
+		if (type & (IMP|DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_DemonFire));
 		abilities.push_back(newAbility(Ability_CloseDoor));
 	}
 
@@ -167,6 +168,7 @@ class Actor: boost::noncopyable {
 	bool confirmAction;
 	int exp;
 	int blessed;
+	int possess;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;
