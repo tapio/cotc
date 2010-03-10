@@ -41,12 +41,15 @@ bool handleInput(Actor& pl) {
 	}
 
 	// Cheats
+	else if (k == KEY_F(4)) pl.viewDist = 100;
 	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;
 	else if (k == KEY_F(6)) pl.type = Actor::ANGEL;
 	else if (k == KEY_F(7)) pl.type = Actor::DEMON;
-	else if (k == KEY_F(4)) pl.viewDist = 100;
+	else if (k == KEY_F(8)) pl.addExp(1);
+	else if (k == KEY_F(9)) pl.hurt(1);
 
 	flushinp();
+	if (pl.isDead()) return false;
 	return true;
 }
 

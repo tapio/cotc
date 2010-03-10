@@ -17,18 +17,10 @@ class Actor: boost::noncopyable {
 	Type realType;
 
 	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(),
-	  viewDist(10), useAI(ai), confirmAction(false), exp(35), blessed(), possess(),
+	  viewDist(10), useAI(ai), confirmAction(false), exp(), blessed(), possess(),
 	  msgs(20), world(), moves() {
-		switch (type) {
-			case HUMAN: maxhealth = randint(3,7); break;
-			case ANGEL: maxhealth = 16; break;
-			case ARCHANGEL: maxhealth = 24; break;
-			case IMP: maxhealth = randint(5,9); break;
-			case DEMON: maxhealth = randint(13,16); break;
-			case ARCHDEMON: maxhealth = randint(22,24); break;
-			case ALL: break;
-		}
-		health = maxhealth/2;
+
+		setInitialHealth();
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_TouchOfGod));
@@ -134,6 +126,19 @@ class Actor: boost::noncopyable {
 		return "";
 	}
 
+	void setInitialHealth() {
+		switch (realType) {
+			case HUMAN: maxhealth = randint(3,7); break;
+			case ANGEL: maxhealth = 16; break;
+			case ARCHANGEL: maxhealth = 24; break;
+			case IMP: maxhealth = randint(5,9); break;
+			case DEMON: maxhealth = randint(13,16); break;
+			case ARCHDEMON: maxhealth = randint(22,24); break;
+			case ALL: break;
+		}
+		health = maxhealth;
+	}
+
 	tilearray& getView() { return view; }
 
 	const tilearray&  getConstView() const { return view; }
@@ -149,6 +154,22 @@ class Actor: boost::noncopyable {
 		health -= dmg;
 		dmg = clamp(dmg, 0, maxhealth);
 		return isDead();
+	}
+
+	void addExp(int howmuch) {
+		exp += howmuch;
+		if (realType == HUMAN);
+		else if (realType == IMP && exp > 10) evolve(DEMON);
+		else if (realType == DEMON && exp > 32) evolve(ARCHDEMON);
+		else if (realType == ANGEL && exp > 32) evolve(ARCHANGEL);
+	}
+
+	void evolve(Type toType) {
+		realType = toType;
+		type = realType;
+		setInitialHealth();
+		exp = 0;
+		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
 	}
 
 	bool isDead() const { return health <= 0; }

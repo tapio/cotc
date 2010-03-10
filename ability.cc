@@ -56,7 +56,7 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		std::string("You vanquished the ") + target->getTypeName() + "." :
 		std::string("You punish the ") + target->getTypeName() + " by " + num2str(dmg) + "."
 		);
-	if (died) self->exp++;
+	if (died) self->addExp(1);
 	return true;
 }
 
@@ -69,14 +69,14 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 	int blessing = randint(2,3) + (self->realType == Actor::ARCHANGEL) ? randint(2,4) : 0;
 	target->blessed += blessing;
 	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
-	self->exp++;
+	self->addExp(1);
 	return true;
 }
 
 
 bool Ability_HealSelf::operator()(Actor* self, bool force) {
 	if (self->getExp() > 1 && self->getHealth() < self->getMaxHealth()) {
-		self->exp--; self->hurt(-1);
+		self->addExp(-1); self->hurt(-1);
 	}
 	return true;
 }
@@ -109,6 +109,6 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		std::string("You burnt the ") + target->getTypeName() + " to oblivion." :
 		std::string("You burn the ") + target->getTypeName() + " by " + num2str(dmg) + "."
 		);
-	if (died) self->exp++;
+	if (died) self->addExp(1);
 	return true;
 }
