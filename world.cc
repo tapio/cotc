@@ -53,7 +53,7 @@ Actor& World::addActor(Actor* actor) {
 
 void World::removeDeadActors() {
 	for (Actors::iterator it = actors.begin(); it != actors.end(); ) {
-		if (it->isDead()) { it = actors.erase(it); }
+		if (it->isDead()) { it = actors.erase(it); continue; }
 		it++;
 	}
 }
@@ -89,7 +89,7 @@ void World::updateVisibleActors() {
 	}
 }
 
-/// Function: hasLOS
+/// Function: hasLOS (deprecated)
 /// Tests if given coordinates are visible for a player.
 bool World::hasLOS(const Actor& actor, int x, int y) const {
 	float dist = distance2d(float(x), float(y), float(actor.x), float(actor.y));
