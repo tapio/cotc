@@ -1,6 +1,9 @@
 #!/bin/sh
 # Script name: generate-version.sh
 # Description: Generates version.h file that has a proper version string
+# ***
+# Note: This is run automatically by CMake, don't do it manually.
+# ***
 
 VERSION_H="version.h"
 
