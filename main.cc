@@ -61,18 +61,13 @@ void mainLoop() {
 	pl.abilities.push_back(newAbility(Ability_LookAt));
 
 	// Actors
-	for (int i = 0; i < 30; i++) {
-		Actor& a(world->addActor(new Actor(Actor::HUMAN)));
-		while (!a.position(randint(world->getWidth()),
-		                   randint(world->getHeight())));
-	}
-	for (int i = 0; i < 20; i++) {
-		Actor& a(world->addActor(new Actor(Actor::IMP)));
-		while (!a.position(randint(world->getWidth()),
-		                   randint(world->getHeight())));
-	}
-	for (int i = 0; i < 20; i++) {
-		Actor& a(world->addActor(new Actor(Actor::ANGEL)));
+	Actor::Type actor_types[] = {
+		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
+		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
+		Actor::IMP,   Actor::IMP,   Actor::DEMON, Actor::ANGEL
+	};
+	for (int i = 0; i < 100; i++) {
+		Actor& a(world->addActor(new Actor(actor_types[randint(12)])));
 		while (!a.position(randint(world->getWidth()),
 		                   randint(world->getHeight())));
 	}
