@@ -164,6 +164,7 @@ class Actor: boost::noncopyable {
 
   private:
 	Actor* getClosestActor(int types = ALL);
+	int countActors(int types = ALL);
 	void moveTowards(int tx, int ty);
 	void moveAway(int tx, int ty);
 
