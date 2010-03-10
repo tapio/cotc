@@ -69,6 +69,13 @@ int inline randint(int lo, int hi) {
 	return (rand() % (hi - lo + 1)) + lo;
 }
 
+int inline randdir() { return randbool() ? 1 : -1; }
+void inline swapdir(int& dir) { if (dir == 1) dir = -1; else dir = 1; }
+void inline randdir(int& dx, int &dy) {
+	if (randbool()) { dx = randdir(); dy = randint(-1,1); }
+	else { dx = randint(-1,1); dy = randdir(); }
+}
+
 template<typename T> T distance2d(T x1, T y1, T x2, T y2) {
 	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }
