@@ -64,3 +64,8 @@ struct Ability_ConcealDivinity: public Ability {
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Conceal divinity"; }
 };
+
+struct Ability_HealSelf: public Ability {
+	bool operator()(Actor* self, bool force = false);
+	std::string toString() const { return "Heal self"; }
+};

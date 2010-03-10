@@ -59,3 +59,10 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 	if (died) self->exp++;
 	return true;
 }
+
+bool Ability_HealSelf::operator()(Actor* self, bool force) {
+	if (self->getExp() > 1 && self->getHealth() < self->getMaxHealth()) {
+		self->exp--; self->hurt(-1);
+	}
+	return true;
+}
