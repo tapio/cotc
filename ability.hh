@@ -33,7 +33,7 @@ struct Ability_OpenDoor: public Ability {
 };
 
 struct Ability_CloseDoor: public Ability {
-
+	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Close door"; }
 };
 

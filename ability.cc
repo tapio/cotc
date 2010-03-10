@@ -17,6 +17,17 @@ bool Ability_OpenDoor::operator()(Actor* self, Tile* target, bool force) {
 	return false;
 }
 
+bool Ability_CloseDoor::operator()(Actor* self, bool force) {
+	Tile* target = self->getTilePtr();
+	if (*target == TileBuilder("Open door")) {
+		Tile tile = TileBuilder("Closed door");
+		*target = tile;
+		self->msgs.push_back("Door closed.");
+		return true;
+	}
+	return false;
+}
+
 bool Ability_LookAt::operator()(Actor* self, Tile* target, bool force) {
 	self->msgs.push_back(target->desc + ".");
 	return true;

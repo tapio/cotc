@@ -29,11 +29,11 @@ class Actor: boost::noncopyable {
 		health = maxhealth*0.5;
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
-
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_TouchOfGod));
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_ConcealDivinity));
 		if (type & (IMP|DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_Possess));
 		if (type & (DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_DemonFire));
+		abilities.push_back(newAbility(Ability_CloseDoor));
 	}
 
 	~Actor() { abilities.clear(); }
@@ -128,6 +128,8 @@ class Actor: boost::noncopyable {
 	tilearray& getView() { return view; }
 
 	const tilearray&  getConstView() const { return view; }
+
+	Tile* getTilePtr() { return world->getTilePtr(x,y); }
 
 	bool hasExplored(int x, int y) const {
 		if (x < 0 || y < 0 || x >= world->getWidth() || y >= world->getHeight()) return false;
