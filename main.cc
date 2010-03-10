@@ -15,8 +15,11 @@
 bool handleInput(Actor& pl) {
 	int k = getch();
 
-	if (!pl.possessing || pl.possession()) {
-		if      (k == KEY_ESCAPE || k == 'q') return false;
+	if      (k == KEY_ESCAPE || k == 'q') return false;
+	else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
+
+	else if (!pl.possessing || pl.possession()) {
+		if (k == ' ' || k == '5') pl.idle();
 		else if (k == KEY_LEFT   || k == '4') pl.move(-1,0);
 		else if (k == KEY_RIGHT  || k == '6') pl.move(1,0);
 		else if (k == KEY_UP     || k == '8') pl.move(0,-1);
@@ -25,8 +28,6 @@ bool handleInput(Actor& pl) {
 		else if (k == '9') pl.move( 1,-1);
 		else if (k == '1') pl.move(-1, 1);
 		else if (k == '3') pl.move( 1, 1);
-		else if (k == '5') pl.idle();
-		else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
 		// Abilities
 		else if (ability_keys.find(k) != std::string::npos) {
 			size_t i = 0;
