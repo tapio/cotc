@@ -31,6 +31,7 @@ class Actor: boost::noncopyable {
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_TouchOfGod));
+		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_Bless));
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_HealSelf));
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_ConcealDivinity));
 		if (type & (IMP|DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_Possess));
@@ -165,6 +166,7 @@ class Actor: boost::noncopyable {
 	bool useAI;
 	bool confirmAction;
 	int exp;
+	int blessed;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;

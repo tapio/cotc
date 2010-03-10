@@ -49,10 +49,12 @@ struct Ability_KickDoor: public Ability { };
 struct Ability_Talk: public Ability { };
 
 struct Ability_Possess: public Ability {
+	//bool operator()(Actor* self, Actor* target, bool force = false);
 	std::string toString() const { return "Possess soul"; }
 };
 
 struct Ability_DemonFire: public Ability {
+	//bool operator()(Actor* self, Actor* target, bool force = false);
 	std::string toString() const { return "Demon fire"; }
 };
 
@@ -71,4 +73,9 @@ struct Ability_HealSelf: public Ability {
 	Ability_HealSelf(): Ability(false) { }
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Heal self"; }
+};
+
+struct Ability_Bless: public Ability {
+	bool operator()(Actor* self, Actor* target, bool force = false);
+	std::string toString() const { return "Bless"; }
 };

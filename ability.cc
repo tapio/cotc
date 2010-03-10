@@ -60,6 +60,20 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 	return true;
 }
 
+bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
+	//if (self->realType != self->type) {
+		//self->msgs.push_back("You must be in your true form to use Bless.");
+		//return false;
+	//}
+	if (!(target->type & Actor::HUMAN) || target->blessed > 0) return false;
+	int blessing = randint(5,8) + (self->realType == Actor::ARCHANGEL) ? randint(5,8) : 0;
+	target->blessed += blessing;
+	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
+	self->exp++;
+	return true;
+}
+
+
 bool Ability_HealSelf::operator()(Actor* self, bool force) {
 	if (self->getExp() > 1 && self->getHealth() < self->getMaxHealth()) {
 		self->exp--; self->hurt(-1);
