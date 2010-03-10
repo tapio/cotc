@@ -49,7 +49,7 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		self->msgs.push_back("You must be in your true form to use Touch of God.");
 		return false;
 	}
-	if (!(target->type & EVIL_ACTORS)) return false;
+	if (!(target->realType & EVIL_ACTORS)) return false;
 	int dmg = randint(5,8) + (self->realType == Actor::ARCHANGEL) ? randint(5,8) : 0;
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?
@@ -65,7 +65,7 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 		//self->msgs.push_back("You must be in your true form to use Bless.");
 		//return false;
 	//}
-	if (!(target->type & Actor::HUMAN) || target->blessed > 0) return false;
+	if (!(target->realType & Actor::HUMAN) || target->blessed > 0 || target->possessed) return false;
 	int blessing = randint(2,3) + (self->realType == Actor::ARCHANGEL) ? randint(2,4) : 0;
 	target->blessed += blessing;
 	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
@@ -83,22 +83,29 @@ bool Ability_HealSelf::operator()(Actor* self, bool force) {
 
 
 bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
-	if (target->type != Actor::HUMAN || self->possess) return false;
+	if (target->realType != Actor::HUMAN || self->possessing) return false;
 	if (target->blessed > 0) {
 		self->hurt(target->blessed);
 		self->msgs.push_back("You hurt yourself trying to possess a human blessed by an angel.");
 		return true;
 	}
-	// TODO: Temporary hack
 	self->msgs.push_back("You are now possessing the human.");
-	self->possess = 1;
+	self->possessing = target;
+	target->possessed = self;
+	self->type = Actor::HUMAN;
+	self->addExp(1);
+	// Move in-place
+	self->getTilePtr()->actor = NULL;
+	target->getTilePtr()->actor = self;
+	self->x = target->x;
+	self->y = target->y;
 	return true;
 }
 
 
 bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
-	if (!(target->type & (Actor::HUMAN | GOOD_ACTORS))) return false;
-	if (!self->possess) {
+	if (!(target->realType & (Actor::HUMAN | GOOD_ACTORS))) return false;
+	if (!self->possessing) {
 		self->msgs.push_back("You must be possessing a body to use demon fire.");
 		return false;
 	}
@@ -109,6 +116,11 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		std::string("You burnt the ") + target->getTypeName() + " to oblivion." :
 		std::string("You burn the ") + target->getTypeName() + " by " + num2str(dmg) + "."
 		);
-	if (died) self->addExp(1);
+	if (died) {
+		int expadd = 1;
+		if (target->realType == Actor::ANGEL) expadd++;
+		if (target->realType == Actor::ARCHANGEL) expadd++;
+		self->addExp(expadd);
+	}
 	return true;
 }

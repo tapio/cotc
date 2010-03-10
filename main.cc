@@ -15,38 +15,40 @@
 bool handleInput(Actor& pl) {
 	int k = getch();
 
-	if      (k == KEY_ESCAPE || k == 'q') return false;
-	else if (k == KEY_LEFT   || k == '4') pl.move(-1,0);
-	else if (k == KEY_RIGHT  || k == '6') pl.move(1,0);
-	else if (k == KEY_UP     || k == '8') pl.move(0,-1);
-	else if (k == KEY_DOWN   || k == '2') pl.move(0,1);
-	else if (k == '7') pl.move(-1,-1);
-	else if (k == '9') pl.move( 1,-1);
-	else if (k == '1') pl.move(-1, 1);
-	else if (k == '3') pl.move( 1, 1);
-	else if (k == '5') pl.idle();
-	else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
-	// Abilities
-	else if (ability_keys.find(k) != std::string::npos) {
-		size_t i = 0;
-		// Find the ability
-		for (Abilities::iterator it = pl.abilities.begin();
-		  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
-			if (it->hidden || it->automatic) continue; // Only explicitly usable skills have a key
-			if (ability_keys[i] == k) {
-				(*it)(&pl); break; // Do action
+	if (!pl.possessing || pl.possession()) {
+		if      (k == KEY_ESCAPE || k == 'q') return false;
+		else if (k == KEY_LEFT   || k == '4') pl.move(-1,0);
+		else if (k == KEY_RIGHT  || k == '6') pl.move(1,0);
+		else if (k == KEY_UP     || k == '8') pl.move(0,-1);
+		else if (k == KEY_DOWN   || k == '2') pl.move(0,1);
+		else if (k == '7') pl.move(-1,-1);
+		else if (k == '9') pl.move( 1,-1);
+		else if (k == '1') pl.move(-1, 1);
+		else if (k == '3') pl.move( 1, 1);
+		else if (k == '5') pl.idle();
+		else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
+		// Abilities
+		else if (ability_keys.find(k) != std::string::npos) {
+			size_t i = 0;
+			// Find the ability
+			for (Abilities::iterator it = pl.abilities.begin();
+			  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
+				if (it->hidden || it->automatic) continue; // Only explicitly usable skills have a key
+				if (ability_keys[i] == k) {
+					(*it)(&pl); break; // Do action
+				}
+				i++;
 			}
-			i++;
 		}
-	}
 
-	// Cheats
-	else if (k == KEY_F(4)) pl.viewDist = 100;
-	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;
-	else if (k == KEY_F(6)) pl.type = Actor::ANGEL;
-	else if (k == KEY_F(7)) pl.type = Actor::DEMON;
-	else if (k == KEY_F(8)) pl.addExp(1);
-	else if (k == KEY_F(9)) pl.hurt(1);
+		// Cheats
+		else if (k == KEY_F(4)) pl.viewDist = 100;
+		else if (k == KEY_F(5)) pl.type = Actor::HUMAN;
+		else if (k == KEY_F(6)) pl.type = Actor::ANGEL;
+		else if (k == KEY_F(7)) pl.type = Actor::DEMON;
+		else if (k == KEY_F(8)) pl.addExp(1);
+		else if (k == KEY_F(9)) pl.hurt(1);
+	} else pl.msgs.push_back("The possessed soul revolts.");
 
 	flushinp();
 	if (pl.isDead()) return false;

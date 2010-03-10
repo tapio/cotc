@@ -82,7 +82,7 @@ void World::updateVisibleActors() {
 	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
 		for (Actors::iterator it2 = actors.begin(); it2 != actors.end(); it2++) {
 			if (it == it2) continue;
-			if (it->getConstView()[it2->y][it2->x].visible) {
+			if (it->getConstView()[it2->y][it2->x].visible && !it2->possessed) {
 				it->visible_actors.push_back(&(*it2));
 			}
 		}
@@ -122,7 +122,7 @@ void World::update(bool skipAI) {
 		for (int i = 0; i < w; i++) tiles[j][i].actor = NULL;
 	// Update tiles' actor pointers
 	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it)
-		tiles[it->y][it->x].actor = &(*it);
+		if (!it->possessed) tiles[it->y][it->x].actor = &(*it);
 	// Update views
 	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it)
 		updateView(*it);
@@ -131,7 +131,7 @@ void World::update(bool skipAI) {
 	// Do AI
 	if (skipAI) return;
 	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it)
-		if (it->useAI) it->AI();
+		if (it->useAI && !it->possessed && (!it->possessing || it->possession())) it->AI();
 }
 
 /// Function: draw

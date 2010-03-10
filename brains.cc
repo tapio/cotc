@@ -2,7 +2,6 @@
 #include "common.hh"
 #include "logger.hh"
 
-
 Actor* Actor::getClosestActor(int types) {
 	if (visible_actors.empty()) return NULL;
 	if (types == 0) types = ALL;

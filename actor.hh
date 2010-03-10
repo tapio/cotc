@@ -17,7 +17,7 @@ class Actor: boost::noncopyable {
 	Type realType;
 
 	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(),
-	  viewDist(10), useAI(ai), confirmAction(false), exp(), blessed(), possess(),
+	  viewDist(10), useAI(ai), confirmAction(false), exp(), blessed(), possessed(NULL), possessing(NULL),
 	  msgs(20), world(), moves() {
 
 		setInitialHealth();
@@ -55,9 +55,21 @@ class Actor: boost::noncopyable {
 		}
 	}
 
+	bool possession() {
+		int odds = 6;
+		if (realType == DEMON) odds += 6;
+		if (realType == ARCHDEMON) odds += 6;
+		if (randint(odds) == 0) {
+			this->move(randint(-1,1),randint(-1,1));
+			return false;
+		}
+		return true;
+	}
+
 	void idle() { moves++; }
 
 	bool move(int dx, int dy) {
+		if (dx == 0 && dy == 0) return false;
 		int tx = x+dx, ty = y+dy;
 		if (world->isFreeTile(tx, ty)) {
 			world->getTilePtr(x, y)->actor = NULL;
@@ -90,6 +102,7 @@ class Actor: boost::noncopyable {
 	}
 
 	char getChar() const {
+		if (possessing) return '@';
 		switch(type) {
 			case HUMAN:     return '@';
 			case ANGEL:     return 'a';
@@ -103,6 +116,7 @@ class Actor: boost::noncopyable {
 	}
 
 	int getColor() const {
+		if (possessing) return COLOR_RED;
 		switch(type) {
 			case HUMAN:     return COLOR_YELLOW;
 			case ANGEL:     return COLOR_WHITE;
@@ -155,7 +169,12 @@ class Actor: boost::noncopyable {
 	bool hurt(int dmg) {
 		health -= dmg;
 		dmg = clamp(dmg, 0, maxhealth);
-		return isDead();
+		if (isDead()) {
+			// Free possessed
+			if (possessing) possessing->possessed = NULL;
+			return true;
+		}
+		return false;
 	}
 
 	void addExp(int howmuch) {
@@ -193,7 +212,8 @@ class Actor: boost::noncopyable {
 	bool confirmAction;
 	int exp;
 	int blessed;
-	int possess;
+	Actor* possessed;
+	Actor* possessing;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;
