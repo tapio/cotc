@@ -17,6 +17,11 @@ bool Ability_OpenDoor::operator()(Actor* self, Tile* target, bool force) {
 	return false;
 }
 
+bool Ability_LookAt::operator()(Actor* self, Tile* target, bool force) {
+	self->msgs.push_back(target->desc + ".");
+	return true;
+}
+
 bool Ability_ConcealDivinity::operator()(Actor* self, bool force) {
 	if (self->realType == self->type) {
 		self->type = Actor::HUMAN;

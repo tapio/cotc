@@ -58,6 +58,7 @@ void mainLoop() {
 	boost::scoped_ptr<World> world(new World());
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
 	pl.position(abc == 1 ? world->getWidth()-3 : 2, world->getHeight() / 2);
+	pl.abilities.push_back(newAbility(Ability_LookAt));
 
 	// Actors
 	for (int i = 0; i < 30; i++) {

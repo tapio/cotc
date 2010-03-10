@@ -31,28 +31,33 @@ struct Ability_OpenDoor: public Ability {
 	Ability_OpenDoor(): Ability(true) { }
 	bool operator()(Actor* self, Tile* target, bool force = false);
 };
-/*
-class Ability_CloseDoor: public Ability {
+
+struct Ability_CloseDoor: public Ability {
 
 	std::string toString() const { return "Close door"; }
 };
 
-class Ability_LookAt: public Ability {
-	Ability_LookAt(): hidden(true) { }
+struct Ability_LookAt: public Ability {
+	Ability_LookAt(): Ability(true) { }
+	bool operator()(Actor* self, Tile* target, bool force = false);
 };
-*/
-class Ability_KickDoor: public Ability { };
-class Ability_Talk: public Ability { };
 
-class Ability_Possess: public Ability {
+struct Ability_KickDoor: public Ability { };
+struct Ability_Talk: public Ability { };
+
+struct Ability_Possess: public Ability {
 	std::string toString() const { return "Possess soul"; }
 };
 
-class Ability_DemonFire: public Ability {
+struct Ability_DemonFire: public Ability {
 	std::string toString() const { return "Demon fire"; }
 };
 
-class Ability_ConcealDivinity: public Ability {
+struct Ability_TouchOfGod: public Ability {
+	std::string toString() const { return "Touch of God"; }
+};
+
+struct Ability_ConcealDivinity: public Ability {
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Conceal divinity"; }
 };

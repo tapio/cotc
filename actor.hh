@@ -30,7 +30,9 @@ class Actor: boost::noncopyable {
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
 
+		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_TouchOfGod));
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_ConcealDivinity));
+		if (type & (IMP|DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_Possess));
 		if (type & (DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_DemonFire));
 	}
 
