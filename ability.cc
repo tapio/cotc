@@ -83,14 +83,16 @@ bool Ability_HealSelf::operator()(Actor* self, bool force) {
 
 
 bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
-	if (target->type != Actor::HUMAN) return false;
+	if (target->type != Actor::HUMAN || self->possess) return false;
 	if (target->blessed > 0) {
 		self->hurt(target->blessed);
 		self->msgs.push_back("You hurt yourself trying to possess a human blessed by an angel.");
+		return true;
 	}
 	// TODO: Temporary hack
+	self->msgs.push_back("You are now possessing the human.");
 	self->possess = 1;
-	return false;
+	return true;
 }
 
 
