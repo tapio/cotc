@@ -83,6 +83,7 @@ bool mainLoop() {
 		world->update();
 		world->draw(pl);
 	} while(!pl.isDead() && handleInput(pl));
+	if (pl.isDead()) death();
 
 	return true; // Come back to main loop for the title screen
 }

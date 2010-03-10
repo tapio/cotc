@@ -55,8 +55,21 @@ int title() {
 		if (k == 'q' || k == 'Q' || k == KEY_ESCAPE) return 0;
 		if (k == 'c' || k == 'C') { toggleDefaultColors(); return title(); }
 	}
+	flushinp();
 }
 
+void death() {
+	clear();
+	move(LINES/2,0);
+	setColor(COLOR_RED);
+	addcstr("You failed!");
+	box(stdscr, 0, 0);
+	while (true) {
+		int k = getch();
+		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
+	}
+	flushinp();
+}
 
 void frame(const Actor& pl, bool O = false) {
 	int x = 2;
