@@ -57,24 +57,26 @@ class Actor: boost::noncopyable {
 
 	void idle() { moves++; }
 
-	void move(int dx, int dy) {
+	bool move(int dx, int dy) {
 		int tx = x+dx, ty = y+dy;
 		if (world->isFreeTile(tx, ty)) {
 			world->getTilePtr(x, y)->actor = NULL;
 			x = tx; y = ty;
 			world->getTilePtr(x, y)->actor = this;
 			msgs.push_back(world->getTile(x, y).desc + ".");
+			moves++;
+			return true;
 		} else {
 			Actor* target = world->getTilePtr(tx, ty)->actor;
 			for (Abilities::iterator it = abilities.begin(); it != abilities.end(); ++it) {
 				if (target) {
-					if ((*it)(this, target)) break;
+					if ((*it)(this, target)) { moves++; return true; }
 				} else {
-					if ((*it)(this, world->getTilePtr(tx, ty))) break;
+					if ((*it)(this, world->getTilePtr(tx, ty))) { moves++; return true; }
 				}
 			}
 		}
-		moves++;
+		return false;
 	}
 
 	bool position(int newx, int newy) {
@@ -203,7 +205,7 @@ class Actor: boost::noncopyable {
   private:
 	Actor* getClosestActor(int types = ALL);
 	int countActors(int types = ALL) const;
-	void moveTowards(int tx, int ty);
+	bool moveTowards(int tx, int ty);
 	void moveAway(int tx, int ty);
 
 	void AI_angel();

@@ -30,20 +30,42 @@ int Actor::countActors(int types) const {
 	return cnt;
 }
 
-// TODO: Make slide along the wall
-void Actor::moveTowards(int tx, int ty) {
+bool Actor::moveTowards(int tx, int ty) {
 	int dx = 0, dy = 0;
 	if (tx > x) dx = 1;
 	if (tx < x) dx = -1;
 	if (ty > y) dy = 1;
 	if (ty < y) dy = -1;
-	this->move(dx, dy);
+	if (this->move(dx, dy)) return true;
+	if (dx && dy) { // Try non-diagonal
+		int tdx = dx, tdy = dy;
+		if (randbool()) dx = 0; else dy = 0;
+		if (this->move(dx,dy)) return true;
+		if (dx) { dx = 0; dy = tdy; } else { dx = tdx; ty = tdy; }
+		if (this->move(dx,dy)) return true;
+	} else if (dx) { // Try diagonal
+		dy = randdir();
+		if (this->move(dx,dy)) return true;
+		swapdir(dy);
+		if (this->move(dx,dy)) return true;
+	} else if (dy) { // Try diagonal
+		dx = randdir();
+		if (this->move(dx,dy)) return true;
+		swapdir(dx);
+		if (this->move(dx,dy)) return true;
+	}
+	return false;
 }
 
 void Actor::moveAway(int tx, int ty) {
 	int invx = -(tx - x) + x;
 	int invy = -(ty - y) + y;
-	this->moveTowards(invx, invy);
+	if (this->moveTowards(invx, invy)) return;
+	// Try some random directions
+	for (int i = 0; i < 4; i++) {
+		randdir(tx, ty);
+		if (this->moveTowards(tx,ty)) return;
+	}
 }
 
 void Actor::AI_human() {
