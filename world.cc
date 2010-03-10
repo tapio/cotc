@@ -130,10 +130,6 @@ void World::update(bool skipAI) {
 void World::draw(Actor& actor) {
 	// Cls
 	werase(worldwin);
-	// Border
-	wattroff(worldwin, A_BOLD);
-	wcolor_set(worldwin, COLOR_GREEN, 0);
-	box(worldwin, 0 , 0);
 	// Tiles
 	const tilearray& view = actor.getConstView();
 	for (int j = actor.y - viewYDist; j <= actor.y + viewYDist; j++) {
@@ -152,10 +148,15 @@ void World::draw(Actor& actor) {
 		mvwaddch(worldwin, y2scr((*it)->y, actor.y),
 						   x2scr((*it)->x, actor.x), (*it)->getChar());
 	}
+	// Border
+	wattroff(worldwin, A_BOLD);
+	wcolor_set(worldwin, COLOR_GREEN, 0);
+	box(worldwin, 0 , 0);
 	// Player
 	setColor(worldwin, actor.getColor());
 	mvwaddch(worldwin, y2scr(actor.y, actor.y),
 					   x2scr(actor.x, actor.x), actor.getChar());
+
 	// Flush
 	wrefresh(worldwin);
 }

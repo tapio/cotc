@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstring>
 #include <vector>
+#include <boost/circular_buffer.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -19,6 +20,8 @@
 class Actor;
 typedef std::vector<Actor*> ActorPtrs;
 typedef boost::ptr_vector<Actor> Actors;
+
+typedef boost::circular_buffer_space_optimized<std::string> MsgBuffer;
 
 /// Tiles
 

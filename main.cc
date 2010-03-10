@@ -25,6 +25,19 @@ bool handleInput(Actor& pl) {
 	else if (k == '3') pl.move( 1, 1);
 	else if (k == '5') pl.idle();
 	else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
+	// Abilities
+	else if (ability_keys.find(k) != std::string::npos) {
+		size_t i = 0;
+		// Find the ability
+		for (Abilities::iterator it = pl.abilities.begin();
+		  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
+			if (it->hidden) continue; // Only explicitly usable skills have a key
+			if (ability_keys[i] == k) {
+				(*it)(&pl); break; // Do action
+			}
+			i++;
+		}
+	}
 
 	// Cheats
 	else if (k == KEY_F(5)) pl.type = Actor::HUMAN;

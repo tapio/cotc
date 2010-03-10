@@ -10,11 +10,13 @@ class World;
 
 class Actor: boost::noncopyable {
   public:
+	friend class Ability_ConcealDivinity;
+
 	enum Type { HUMAN = 1, ANGEL = 2, ARCHANGEL = 4,
 		IMP = 8, DEMON = 16, ARCHDEMON = 32, ALL = 63 } type;
 
 	Actor(Type type, bool ai = true): type(type), x(), y(),
-	  viewDist(10), useAI(ai), world(), moves() {
+	  viewDist(10), useAI(ai), confirmAction(false), msgs(20), realType(type), world(), moves() {
 		switch (type) {
 			case HUMAN: maxhealth = randint(3,7); break;
 			case ANGEL: maxhealth = 16; break;
@@ -27,6 +29,9 @@ class Actor: boost::noncopyable {
 		health = maxhealth*0.5;
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
+
+		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_ConcealDivinity));
+		if (type & (DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_DemonFire));
 	}
 
 	~Actor() { abilities.clear(); }
@@ -62,7 +67,7 @@ class Actor: boost::noncopyable {
 			world->getTilePtr(x, y)->actor = this;
 		} else {
 			for (Abilities::iterator it = abilities.begin(); it != abilities.end(); ++it) {
-				if ((*it)(world->getTilePtr(tx, ty))) break;
+				if ((*it)(this, world->getTilePtr(tx, ty))) break;
 			}
 		}
 		moves++;
@@ -138,14 +143,19 @@ class Actor: boost::noncopyable {
 	int y;
 	int viewDist;
 	bool useAI;
+	bool confirmAction;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;
+	MsgBuffer msgs;
 
 	int getExp() const { return exp; }
 	int getHealth() const { return health; }
 	int getMaxHealth() const { return maxhealth; }
 	float getCond() const { return float(health) / maxhealth; }
+
+  protected:
+    Type realType;
 
   private:
 	Actor* getClosestActor(int types = ALL);

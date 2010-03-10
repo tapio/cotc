@@ -92,12 +92,22 @@ void frame(const Actor& pl, bool O = false) {
 	if (!O) addstr("Abilities:");
 	move(getcury(stdscr)+1, x);
 	if (!O) {
-		for (Abilities::const_iterator it = pl.abilities.begin(); it != pl.abilities.end(); ++it) {
-			addstr("* "); addstr(it->toString().c_str());
-			move(getcury(stdscr)+1, x);
+		size_t i = 0;
+		for (Abilities::const_iterator it = pl.abilities.begin();
+		  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
+			if (!it->hidden) {
+				addch('[');addch(ability_keys[i]);addstr("] "); addstr(it->toString().c_str());
+				move(getcury(stdscr)+1, x);
+				i++;
+			}
 		}
 	}
 	setColor(COLOR_RED);
+	if (!pl.msgs.empty()) {
+		move(LINES-2, 1);
+		hline(' ', COLS-2);
+		addcstr(pl.msgs.back().c_str());
+	}
 	if (!O) box(stdscr, 0, 0);
 }
 
