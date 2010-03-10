@@ -118,10 +118,14 @@ void World::createCity(int xhouses, int yhouses) {
 
 
 void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) {
+	const int minsize = 6;
 	makeWallsAndFloor(x1,y1,x2,y2,housefloor);
+	int xsize = x2-x1, ysize = y2-y1;
 	int housetype = randint(0,2);
-	if (housetype) { // Split house
-		bool horiz = randint(1);
+	if (housetype && (xsize > minsize || ysize > minsize)) { // Split house
+		bool horiz = randbool();
+		if (xsize <= minsize) horiz = true;
+		else if (ysize <= minsize) horiz = false;
 		int doorx, doory;
 		if (horiz) { // Horizontal wall
 			int wy = randint(y1+3,y2-3);
@@ -164,8 +168,8 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 
 
 void World::createPlaza(int x1, int y1, int x2, int y2) {
-	bool park = randint(2);
-	bool style = randint(2);
+	bool park = randbool();
+	bool style = randbool();
 	for (int j = y1; j <= y2; ++j) {
 		for (int i = x1; i <= x2; ++i) {
 			Tile tile(ground);
@@ -657,19 +661,19 @@ void World::AddFurniture(int x1, int y1, int x2, int y2, int furnit, Tile floort
 			furniturecount++;
 		// Things placed next to a wall
 		} else if (j == y1 || j == y2 || i == x1 || i == x2) {
-			if (randint(1,4) == 1) tiles[j][i] = randint(2) ? table : chair; else tiles[j][i] = closet;
+			if (randint(1,4) == 1) tiles[j][i] = randbool() ? table : chair; else tiles[j][i] = closet;
 			if (tiles[j][i] == closet && randint(1,3) == 1) tiles[j][i] = barrel;
 			if (tiles[j][i] == closet && randint(0,1) == 1) tiles[j][i] = closet_locked;
 		// Things going to the center
 		} else {
 			if (randint(1,4) == 4) {
-				tiles[j][i] = randint(2) ? table : chair;
+				tiles[j][i] = randbool() ? table : chair;
 				if (randint(1,4) == 4) tiles[j][i] = barrel;
 			} else {
 				tiles[j][i] = table;
 				int newchairs = 0, tries = 0;
 				while (furniturecount < furnit && newchairs < 2 && tries < 10) {
-					bool vaxis = randint(2);
+					bool vaxis = randbool();
 					int dx = vaxis ? 0 : randint(-1,1);
 					int dy = vaxis ? randint(-1,1) : 0;
 					if (tiles[j+dy][i+dx] == floortype) {

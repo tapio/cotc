@@ -55,6 +55,8 @@ Tile TileBuilder(std::string type);
 
 /// Math
 
+bool inline randbool() { return rand() % 2 == 0; }
+
 int inline randint(int hi) { return rand() % hi; }
 
 int inline randint(int lo, int hi) {
