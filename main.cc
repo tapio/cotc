@@ -1,4 +1,5 @@
 #include <curses.h>
+#include <ctime>
 
 #include "version.h"
 #ifndef VERSION_STRING
@@ -106,6 +107,8 @@ int main(int argc, char* argv[]) {
 			}
 		}
 	}
+
+	srand(time(NULL)); // Randomize RNG
 
 	mainLoop();
 

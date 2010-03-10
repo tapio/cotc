@@ -41,7 +41,7 @@ namespace {
 }
 
 void World::generate(int seed) {
-	srand(seed);
+	if (seed) srand(seed);
 	createCity(10, 10);
 }
 
@@ -151,7 +151,7 @@ void World::draw(Actor& actor) {
 	// Border
 	wattroff(worldwin, A_BOLD);
 	wcolor_set(worldwin, COLOR_GREEN, 0);
-	box(worldwin, 0 , 0);
+	box(worldwin, 0, 0);
 	// Player
 	setColor(worldwin, actor.getColor());
 	mvwaddch(worldwin, y2scr(actor.y, actor.y),
