@@ -17,14 +17,14 @@ class Ability {
 	Ability(bool hide = false): hidden(hide) { }
 
 	virtual bool operator()(Actor* target, bool force = false) { return false; }
-	virtual bool operator()(Actor* self, Tile* target, bool force = false) { return false; }
 	virtual bool operator()(Tile* target, bool force = false) { return false; }
+	virtual bool operator()(Actor* self, Actor* target, bool force = false) { return false; }
+	virtual bool operator()(Actor* self, Tile* target, bool force = false) { return false; }
 
 	virtual std::string toString() const { return "Unknown Ability"; }
 };
 
 typedef boost::ptr_vector<Ability> Abilities;
-
 
 
 struct Ability_OpenDoor: public Ability {
@@ -56,6 +56,7 @@ struct Ability_DemonFire: public Ability {
 };
 
 struct Ability_TouchOfGod: public Ability {
+	bool operator()(Actor* self, Actor* target, bool force = false);
 	std::string toString() const { return "Touch of God"; }
 };
 

@@ -51,6 +51,13 @@ Actor& World::addActor(Actor* actor) {
 	return actors.back();
 }
 
+void World::removeDeadActors() {
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ) {
+		if (it->isDead()) { it = actors.erase(it); }
+		it++;
+	}
+}
+
 /// Function: updateView
 /// Updates the Actor's view.
 void World::updateView(Actor& actor) {
@@ -107,6 +114,8 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 /// Function: update
 /// Updates the world - views, visibilities and AI
 void World::update(bool skipAI) {
+	// Clean up dead actors
+	removeDeadActors();
 	// Reset tiles' actor pointers
 	int w = getWidth(), h = getHeight();
 	for (int j = 0; j < h; j++)

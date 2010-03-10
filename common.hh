@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstring>
 #include <vector>
+#include <sstream>
 #include <boost/circular_buffer.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/shared_ptr.hpp>
@@ -57,6 +58,9 @@ Tile TileBuilder(std::string type);
 
 /// Math
 
+template<typename T>
+std::string num2str(T i) { std::ostringstream oss; oss << i; return oss.str(); }
+
 bool inline randbool() { return rand() % 2 == 0; }
 
 int inline randint(int hi) { return rand() % hi; }
@@ -72,6 +76,13 @@ template<typename T> T distance2d(T x1, T y1, T x2, T y2) {
 /** Implement C99 mathematical rounding (which C++ unfortunately currently lacks) **/
 template <typename T> T round(T val) { return int(val + (val >= 0 ? 0.5 : -0.5)); }
 
+/** Limit val to range [min, max] **/
+template <typename T> T clamp(T val, T min = 0, T max = 1) {
+	if (min > max) throw std::logic_error("min > max");
+	if (val < min) return min;
+	if (val > max) return max;
+	return val;
+}
 
 /// Console
 

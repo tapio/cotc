@@ -43,3 +43,19 @@ bool Ability_ConcealDivinity::operator()(Actor* self, bool force) {
 	}
 	return true;
 }
+
+bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
+	if (self->realType != self->type) {
+		self->msgs.push_back("You must be in your true form to use Touch of God.");
+		return false;
+	}
+	if (!(target->type & EVIL_ACTORS)) return false;
+	int dmg = randint(5,8) + (self->realType == Actor::ARCHANGEL) ? randint(5,8) : 0;
+	bool died = target->hurt(dmg);
+	self->msgs.push_back(died ?
+		std::string("You vanquished the ") + target->getTypeName() + "." :
+		std::string("You punish the ") + target->getTypeName() + " by " + num2str(dmg) + "."
+		);
+	if (died) self->exp++;
+	return true;
+}

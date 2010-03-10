@@ -2,8 +2,6 @@
 #include "common.hh"
 #include "logger.hh"
 
-#define EVIL_ACTORS (IMP | DEMON | ARCHDEMON)
-#define GOOD_ACTORS (ANGEL | ARCHANGEL)
 
 Actor* Actor::getClosestActor(int types) {
 	if (visible_actors.empty()) return NULL;
@@ -23,7 +21,7 @@ Actor* Actor::getClosestActor(int types) {
 	return closest;
 }
 
-int Actor::countActors(int types) {
+int Actor::countActors(int types) const {
 	if (visible_actors.empty()) return NULL;
 	if (types == 0) types = ALL;
 	int cnt = 0;

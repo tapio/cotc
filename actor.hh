@@ -5,18 +5,19 @@
 #include "common.hh"
 
 #define NO_AI false
+#define EVIL_ACTORS (Actor::IMP | Actor::DEMON | Actor::ARCHDEMON)
+#define GOOD_ACTORS (Actor::ANGEL | Actor::ARCHANGEL)
 
 class World;
 
 class Actor: boost::noncopyable {
   public:
-	friend class Ability_ConcealDivinity;
-
 	enum Type { HUMAN = 1, ANGEL = 2, ARCHANGEL = 4,
 		IMP = 8, DEMON = 16, ARCHDEMON = 32, ALL = 63 } type;
+	Type realType;
 
-	Actor(Type type, bool ai = true): type(type), x(), y(),
-	  viewDist(10), useAI(ai), confirmAction(false), msgs(20), realType(type), world(), moves() {
+	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(),
+	  viewDist(10), useAI(ai), confirmAction(false), msgs(20), world(), moves() {
 		switch (type) {
 			case HUMAN: maxhealth = randint(3,7); break;
 			case ANGEL: maxhealth = 16; break;
@@ -26,7 +27,7 @@ class Actor: boost::noncopyable {
 			case ARCHDEMON: maxhealth = randint(22,24); break;
 			case ALL: break;
 		}
-		health = maxhealth*0.5;
+		health = maxhealth;
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
 		if (type & (ANGEL|ARCHANGEL)) abilities.push_back(newAbility(Ability_TouchOfGod));
@@ -69,8 +70,13 @@ class Actor: boost::noncopyable {
 			world->getTilePtr(x, y)->actor = this;
 			msgs.push_back(world->getTile(x, y).desc + ".");
 		} else {
+			Actor* target = world->getTilePtr(tx, ty)->actor;
 			for (Abilities::iterator it = abilities.begin(); it != abilities.end(); ++it) {
-				if ((*it)(this, world->getTilePtr(tx, ty))) break;
+				if (target) {
+					if ((*it)(this, target)) break;
+				} else {
+					if ((*it)(this, world->getTilePtr(tx, ty))) break;
+				}
 			}
 		}
 		moves++;
@@ -136,6 +142,14 @@ class Actor: boost::noncopyable {
 		return view[y][x].explored;
 	}
 
+	bool hurt(int dmg) {
+		health -= dmg;
+		dmg = clamp(dmg, 0, maxhealth);
+		return isDead();
+	}
+
+	bool isDead() const { return health <= 0; }
+
 	void dumpDebugInfo() const {
 		Logger log("ACTOR");
 		log("Type: %s", getTypeName().c_str());
@@ -149,6 +163,7 @@ class Actor: boost::noncopyable {
 	int viewDist;
 	bool useAI;
 	bool confirmAction;
+	int exp;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;
@@ -159,12 +174,9 @@ class Actor: boost::noncopyable {
 	int getMaxHealth() const { return maxhealth; }
 	float getCond() const { return float(health) / maxhealth; }
 
-  protected:
-    Type realType;
-
   private:
 	Actor* getClosestActor(int types = ALL);
-	int countActors(int types = ALL);
+	int countActors(int types = ALL) const;
 	void moveTowards(int tx, int ty);
 	void moveAway(int tx, int ty);
 
@@ -177,6 +189,5 @@ class Actor: boost::noncopyable {
 
 	int maxhealth;
 	int health;
-	int exp;
 	unsigned long moves;
 };
