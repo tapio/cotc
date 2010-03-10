@@ -102,7 +102,7 @@ void frame(const Actor& pl, bool O = false) {
 		// Explicitly usable abilities
 		for (Abilities::const_iterator it = pl.abilities.begin();
 		  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
-			if (!it->hidden) {
+			if (!it->hidden && !it->automatic) {
 				addch('[');addch(ability_keys[i]);addstr("] "); addstr(it->toString().c_str());
 				move(getcury(stdscr)+1, x);
 				i++;
@@ -110,7 +110,7 @@ void frame(const Actor& pl, bool O = false) {
 		}
 		// Automatic abilities
 		for (Abilities::const_iterator it = pl.abilities.begin(); it != pl.abilities.end(); ++it) {
-			if (it->hidden) {
+			if (!it->hidden && it->automatic) {
 				addstr(" *  "); addstr(it->toString().c_str());
 				move(getcury(stdscr)+1, x);
 			}

@@ -12,9 +12,10 @@ class Ability {
   public:
 	enum TargetType { SELF, ACTOR, WORLD } targetType;
 
+	bool automatic;
 	bool hidden;
 
-	Ability(bool hide = false): hidden(hide) { }
+	Ability(bool autom = true, bool hide = false): automatic(autom), hidden(hide) { }
 
 	virtual bool operator()(Actor* target, bool force = false) { return false; }
 	virtual bool operator()(Tile* target, bool force = false) { return false; }
@@ -28,12 +29,12 @@ typedef boost::ptr_vector<Ability> Abilities;
 
 
 struct Ability_OpenDoor: public Ability {
-	Ability_OpenDoor(): Ability(true) { }
 	bool operator()(Actor* self, Tile* target, bool force = false);
 	std::string toString() const { return "Open door"; }
 };
 
 struct Ability_CloseDoor: public Ability {
+	Ability_CloseDoor(): Ability(false) { }
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Close door"; }
 };
@@ -61,11 +62,13 @@ struct Ability_TouchOfGod: public Ability {
 };
 
 struct Ability_ConcealDivinity: public Ability {
+	Ability_ConcealDivinity(): Ability(false) { }
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Conceal divinity"; }
 };
 
 struct Ability_HealSelf: public Ability {
+	Ability_HealSelf(): Ability(false) { }
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Heal self"; }
 };

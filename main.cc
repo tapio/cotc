@@ -32,7 +32,7 @@ bool handleInput(Actor& pl) {
 		// Find the ability
 		for (Abilities::iterator it = pl.abilities.begin();
 		  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
-			if (it->hidden) continue; // Only explicitly usable skills have a key
+			if (it->hidden || it->automatic) continue; // Only explicitly usable skills have a key
 			if (ability_keys[i] == k) {
 				(*it)(&pl); break; // Do action
 			}
