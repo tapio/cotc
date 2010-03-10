@@ -165,3 +165,24 @@ void help() {
 	refresh();
 	getch();
 }
+
+
+void msglog(const Actor& pl) {
+	clear();
+	move (1,0);
+	setColor(COLOR_CYAN+8);
+	addcstr("MESSAGE LOG");
+	addch('\n');
+	setColor(COLOR_GREEN);
+	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend(); ++it) {
+		addcstr(*it); addch('\n');
+	}
+	setColor(COLOR_GREEN);
+	box(stdscr, 0, 0);
+	while (true) {
+		int k = getch();
+		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
+	}
+	flushinp();
+	clear();
+}

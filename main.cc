@@ -17,6 +17,7 @@ bool handleInput(Actor& pl) {
 
 	if      (k == KEY_ESCAPE || k == 'q') return false;
 	else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
+	else if (k == 'm' || k == 'l' || k == KEY_F(2)) { msglog(pl); frame(pl); }
 
 	else if (!pl.possessing || pl.possession()) {
 		if (k == ' ' || k == '5') pl.idle();
