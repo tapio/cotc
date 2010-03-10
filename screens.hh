@@ -59,6 +59,8 @@ int title() {
 
 void frame(const Actor& pl, bool O = false) {
 	int x = 2;
+	int barwrap = 24;
+
 	setColor(COLOR_BLACK);
 	move(1,0);
 	if (!O) {
@@ -75,22 +77,26 @@ void frame(const Actor& pl, bool O = false) {
 	else if (pl.getCond() < 0.5) setColor(COLOR_YELLOW+8);
 	else setColor(COLOR_GREEN+8);
 	for (int i = 1; i <= pl.getMaxHealth(); ++i) {
+		if ((i % barwrap) == 0) move(getcury(stdscr)+1, x);
 		if (i > pl.getHealth()) setColor(COLOR_RED);
 		echochar(i <= pl.getHealth() ? 'I' : '-');
-		if ((i % 12) == 0) move(getcury(stdscr)+1, x);
 	}
 	// Experience
-	setColor(COLOR_GREEN);
 	move(getcury(stdscr)+2, x);
-	if (!O) addstr("Experience:");
+	if (!O) { setColor(COLOR_GREEN); addstr("Experience:"); }
 	move(getcury(stdscr)+1, x);
-	// TODO
+	setColor(COLOR_BLUE+8);
+	for (int i = 1; i <= pl.getExp(); ++i) {
+		if ((i % barwrap) == 0) move(getcury(stdscr)+1, x);
+		echochar('I');
+	}
+	echochar(' ');echochar(' ');echochar(' ');echochar(' ');echochar(' ');
 
 	// Abilities
-	setColor(COLOR_YELLOW);
 	move(getcury(stdscr)+2, x);
-	if (!O) addstr("Abilities:");
+	if (!O) { setColor(COLOR_GREEN); addstr("Abilities:"); }
 	move(getcury(stdscr)+1, x);
+	setColor(COLOR_YELLOW);
 	if (!O) {
 		size_t i = 0;
 		// Explicitly usable abilities
