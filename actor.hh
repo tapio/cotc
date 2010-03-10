@@ -186,6 +186,8 @@ class Actor: boost::noncopyable {
 
 	int x;
 	int y;
+	int targetx;
+	int targety;
 	int viewDist;
 	bool useAI;
 	bool confirmAction;

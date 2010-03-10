@@ -60,18 +60,28 @@ bool Actor::moveTowards(int tx, int ty) {
 void Actor::moveAway(int tx, int ty) {
 	int invx = -(tx - x) + x;
 	int invy = -(ty - y) + y;
-	if (this->moveTowards(invx, invy)) return;
+	if (moveTowards(invx, invy)) return;
 	// Try some random directions
 	for (int i = 0; i < 4; i++) {
 		randdir(tx, ty);
-		if (this->moveTowards(tx,ty)) return;
+		if (moveTowards(tx,ty)) return;
 	}
 }
 
 void Actor::AI_human() {
 	Actor* target = getClosestActor(DEMON | ARCHDEMON); // Imps are invisible
 	if (target) { moveAway(target->x, target->y); return; }
-	this->move(randint(-1,1), randint(-1,1));
+	if (targetx && targety && abs(targetx-x)+abs(targety-y) > 2) {
+		if (moveTowards(targetx,targety)) return;
+	}
+	// Move randomly
+	int tx, ty; randdir(tx, ty);
+	this->move(tx, ty);
+	// Acquire new destination
+	if (randint(10) == 0) {
+		targetx = randint(1, world->getWidth()-2);
+		targety = randint(1, world->getHeight()-2);
+	}
 }
 
 void Actor::AI_demon() {
@@ -79,7 +89,7 @@ void Actor::AI_demon() {
 	int enemyCount = countActors(GOOD_ACTORS);
 	Actor* target = getClosestActor(GOOD_ACTORS);
 	if (target) {
-		// Only attack if superioir numbers
+		// Only attack if superior numbers
 		if (friendCount > enemyCount) moveTowards(target->x, target->y);
 		else moveAway(target->x, target->y);
 		return;
