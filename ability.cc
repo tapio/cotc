@@ -56,7 +56,7 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		std::string("You vanquished the ") + target->getTypeName() + "." :
 		std::string("You punish the ") + target->getTypeName() + " by " + num2str(dmg) + "."
 		);
-	if (died) self->addExp(1);
+	if (died) self->addExp(target->realType == Actor::ARCHDEMON ? 2 : 1);
 	return true;
 }
 
