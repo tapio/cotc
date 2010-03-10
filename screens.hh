@@ -93,6 +93,7 @@ void frame(const Actor& pl, bool O = false) {
 	move(getcury(stdscr)+1, x);
 	if (!O) {
 		size_t i = 0;
+		// Explicitly usable abilities
 		for (Abilities::const_iterator it = pl.abilities.begin();
 		  it != pl.abilities.end() && i < ability_keys.length(); ++it) {
 			if (!it->hidden) {
@@ -101,6 +102,14 @@ void frame(const Actor& pl, bool O = false) {
 				i++;
 			}
 		}
+		// Automatic abilities
+		for (Abilities::const_iterator it = pl.abilities.begin(); it != pl.abilities.end(); ++it) {
+			if (it->hidden) {
+				addstr(" *  "); addstr(it->toString().c_str());
+				move(getcury(stdscr)+1, x);
+			}
+		}
+
 	}
 	setColor(COLOR_RED);
 	if (!pl.msgs.empty()) {

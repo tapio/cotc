@@ -30,6 +30,7 @@ typedef boost::ptr_vector<Ability> Abilities;
 struct Ability_OpenDoor: public Ability {
 	Ability_OpenDoor(): Ability(true) { }
 	bool operator()(Actor* self, Tile* target, bool force = false);
+	std::string toString() const { return "Open door"; }
 };
 
 struct Ability_CloseDoor: public Ability {
@@ -40,6 +41,7 @@ struct Ability_CloseDoor: public Ability {
 struct Ability_LookAt: public Ability {
 	Ability_LookAt(): Ability(true) { }
 	bool operator()(Actor* self, Tile* target, bool force = false);
+	std::string toString() const { return "Look at"; }
 };
 
 struct Ability_KickDoor: public Ability { };
