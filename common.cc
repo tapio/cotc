@@ -4,7 +4,7 @@ Tile TileBuilder(std::string type) {
 	Tile tile;
 	if (type == "window") {
 		tile = Tile('-', COLOR_BLUE, BLOCKS);
-		tile.blocks_vision_dist = 2;
+		tile.blocks_vision_dist = 1;
 	} else if (type == "door_open") {
 		tile = Tile('/', COLOR_YELLOW, !BLOCKS);
 	} else if (type.substr(0,4) == "door") {
