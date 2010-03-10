@@ -65,6 +65,7 @@ class Actor: boost::noncopyable {
 			world->getTilePtr(x, y)->actor = NULL;
 			x = tx; y = ty;
 			world->getTilePtr(x, y)->actor = this;
+			msgs.push_back(world->getTile(x, y).desc + ".");
 		} else {
 			for (Abilities::iterator it = abilities.begin(); it != abilities.end(); ++it) {
 				if ((*it)(this, world->getTilePtr(tx, ty))) break;
