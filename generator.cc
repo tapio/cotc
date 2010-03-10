@@ -685,9 +685,9 @@ void World::AddFurniture(int x1, int y1, int x2, int y2, int furnit, Tile floort
 			if (tiles[j][i] == closet && randint(0,1) == 1) tiles[j][i] = closet_locked;
 		// Things going to the center
 		} else {
-			if (randint(1,4) == 4) {
+			if (randint(1,3) == 1) {
 				tiles[j][i] = randbool() ? table : chair;
-				if (randint(1,4) == 4) tiles[j][i] = barrel;
+				if (randint(1,3) == 1) tiles[j][i] = barrel;
 			} else {
 				tiles[j][i] = table;
 				int newchairs = 0, tries = 0;
