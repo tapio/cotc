@@ -15,7 +15,8 @@
 #include "logger.hh"
 
 #define KEY_ESCAPE 27
-#define BLOCKS true
+#define BLOCKS 1
+#define BLOCKSMOVE 100
 
 class Actor;
 typedef std::vector<Actor*> ActorPtrs;
@@ -29,15 +30,16 @@ struct Tile {
 	const static int TRANSPARENT = 255;
 	char ch;
 	int color;
+	std::string desc;
 	bool explored;
 	bool visible;
 	bool blocks_movement;
 	int blocks_vision_dist;
 	Actor* actor;
 
-	Tile(char ch = ' ', int color = 0, bool blocker = true):
+	Tile(char ch = ' ', int color = 0, int blocker = BLOCKS):
 	ch(ch), color(color), explored(false), visible(false),
-	blocks_movement(blocker), blocks_vision_dist(blocker ? 0 : TRANSPARENT), actor(NULL) {}
+	blocks_movement(blocker), blocks_vision_dist(blocker ? (blocker == BLOCKSMOVE ? TRANSPARENT : 0) : TRANSPARENT), actor(NULL) {}
 
 	bool isFree() const { return (!blocks_movement) && (actor == NULL); }
 

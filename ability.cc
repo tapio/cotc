@@ -4,7 +4,7 @@
 bool Ability_OpenDoor::operator()(Actor* self, Tile* target, bool force) {
 	if (target->ch == '+') {
 		if (self->confirmAction || force) {
-			Tile tile = TileBuilder("door_open");
+			Tile tile = TileBuilder("Open door");
 			*target = tile;
 			self->confirmAction = false;
 			self->msgs.push_back("Door opened.");
