@@ -58,6 +58,22 @@ int title() {
 	flushinp();
 }
 
+bool winner(const Actor& pl) {
+	if (pl.getExp() < 50) return false;
+	if (!(pl.realType & (Actor::ARCHANGEL|Actor:: ARCHDEMON))) return false;
+	clear();
+	move(LINES/2,0);
+	setColor(COLOR_BLUE+8);
+	addcstr("You are victorious!");
+	box(stdscr, 0, 0);
+	while (true) {
+		int k = getch();
+		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
+	}
+	flushinp();
+	return true;
+}
+
 void death() {
 	clear();
 	move(LINES/2,0);
