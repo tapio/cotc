@@ -21,6 +21,7 @@ void addflamestr(std::string str, bool letter = true) {
 }
 
 int title() {
+	clear();
 	move(1,0);
 	addflamestr("     (          )              (          )    )          \n", false);
 	addflamestr("     )\\  (   ( /( (            )\\ )    ( /( ( /(    (     \n", false);

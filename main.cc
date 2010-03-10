@@ -51,11 +51,10 @@ bool handleInput(Actor& pl) {
 }
 
 
-void mainLoop() {
+bool mainLoop() {
 
-	ConsoleWindow cons;
 	int abc = title();
-	if (abc == 0) return;
+	if (abc == 0) return false; // Quit game
 
 	boost::scoped_ptr<World> world(new World());
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
@@ -83,8 +82,9 @@ void mainLoop() {
 		refresh();
 		world->update();
 		world->draw(pl);
-	} while(handleInput(pl));
+	} while(!pl.isDead() && handleInput(pl));
 
+	return true; // Come back to main loop for the title screen
 }
 
 
@@ -108,8 +108,10 @@ int main(int argc, char* argv[]) {
 
 	srand(time(NULL)); // Randomize RNG
 
-	mainLoop();
-
+	{
+		ConsoleWindow cons;
+		while (mainLoop());
+	}
 	return 0;
 }
 
