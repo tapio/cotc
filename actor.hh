@@ -248,6 +248,7 @@ class Actor: boost::noncopyable {
 	void AI_angel();
 	void AI_human();
 	void AI_demon();
+	void AI_generic();
 
 	WorldPtr world;
 	tilearray view;

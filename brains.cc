@@ -70,6 +70,41 @@ void Actor::moveAway(int tx, int ty) {
 void Actor::AI_human() {
 	Actor* target = getClosestActor(DEMON | ARCHDEMON); // Imps are invisible
 	if (target) { moveAway(target->x, target->y); return; }
+	AI_generic();
+}
+
+void Actor::AI_demon() {
+	int friendCount = countActors(EVIL_ACTORS);
+	int enemyCount = countActors(GOOD_ACTORS);
+	// Seek angels
+	Actor* target = getClosestActor(GOOD_ACTORS);
+	if (target) {
+		// Only attack if superior numbers
+		if (friendCount > enemyCount) moveTowards(target->x, target->y);
+		else moveAway(target->x, target->y);
+		return;
+	}
+	// Seek humans
+	target = getClosestActor(HUMAN);
+	if (target) {
+		moveTowards(target->x, target->y);
+		return;
+	}
+	AI_generic();
+}
+
+void Actor::AI_angel() {
+	Actor* target = getClosestActor(EVIL_ACTORS);
+	if (target) {
+		// Angels always attack fearlessly
+		moveTowards(target->x, target->y);
+		return;
+	}
+	AI_generic();
+}
+
+void Actor::AI_generic() {
+	// Go towards a random target
 	if (targetx && targety && abs(targetx-x)+abs(targety-y) > 2) {
 		if (moveTowards(targetx,targety)) return;
 	}
@@ -81,32 +116,4 @@ void Actor::AI_human() {
 		targetx = randint(1, world->getWidth()-2);
 		targety = randint(1, world->getHeight()-2);
 	}
-}
-
-void Actor::AI_demon() {
-	int friendCount = countActors(EVIL_ACTORS);
-	int enemyCount = countActors(GOOD_ACTORS);
-	Actor* target = getClosestActor(GOOD_ACTORS);
-	if (target) {
-		// Only attack if superior numbers
-		if (friendCount > enemyCount) moveTowards(target->x, target->y);
-		else moveAway(target->x, target->y);
-		return;
-	}
-	target = getClosestActor(HUMAN);
-	if (target) {
-		moveTowards(target->x, target->y);
-		return;
-	}
-	move(randint(-1,1), randint(-1,1));
-}
-
-void Actor::AI_angel() {
-	Actor* target = getClosestActor(EVIL_ACTORS);
-	if (target) {
-		// Angels always attack fearlessly
-		moveTowards(target->x, target->y);
-		return;
-	}
-	move(randint(-1,1), randint(-1,1));
 }
