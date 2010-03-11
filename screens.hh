@@ -151,12 +151,17 @@ void frame(const Actor& pl, bool O = false) {
 		}
 
 	}
-	setColor(COLOR_RED);
-	if (!pl.msgs.empty()) {
-		move(LINES-2, 1);
+	// Messages
+	setColor(COLOR_RED+8);
+	move(LINES-4, 1);
+	int cnt = 0;
+	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend() && cnt < 3; ++it, ++cnt) {
 		hline(' ', COLS-2);
-		addcstr(pl.msgs.back().c_str());
+		addcstr(it->c_str());
+		move(getcury(stdscr)+1, 1);
+		if (cnt == 0) setColor(COLOR_RED);
 	}
+	setColor(COLOR_RED);
 	if (!O) box(stdscr, 0, 0);
 }
 
