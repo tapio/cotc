@@ -87,7 +87,7 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		std::string("You were hurt by the ") + self->getTypeName() + " (" + num2str(dmg) + ")."
 		);
 
-	if (died) self->addExp(target->realType == Actor::ARCHDEMON ? 2 : 1);
+	if (died) { self->addExp(target->realType == Actor::ARCHDEMON ? 2 : 1); self->kills_enemies++; }
 	return true;
 }
 
@@ -104,6 +104,7 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 	target->blessed += blessing;
 	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
 	self->addExp(1);
+	self->kills_humans++; // Not really kills, but...
 	return true;
 }
 
@@ -180,6 +181,8 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		if (target->realType == Actor::ANGEL) expadd++;
 		if (target->realType == Actor::ARCHANGEL) expadd++;
 		self->addExp(expadd);
+		if (target->realType == Actor::HUMAN) self->kills_humans++;
+		else self->kills_enemies++;
 	}
 	return true;
 }
