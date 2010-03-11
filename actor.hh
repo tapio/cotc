@@ -193,7 +193,7 @@ class Actor: boost::noncopyable {
 
 	void addExp(int howmuch) {
 		exp += howmuch;
-		if (exp > getNextExpLevel()) {
+		if (exp >= getNextExpLevel()) {
 			exp = getNextExpLevel();
 			if (realType == IMP) evolve(DEMON);
 			else if (realType == DEMON) evolve(ARCHDEMON);
