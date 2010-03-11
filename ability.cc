@@ -140,7 +140,7 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 	}
 	// Reveal self when attacking angel
 	if (self->type == Actor::HUMAN && self->possessing && target->realType & GOOD_ACTORS) {
-		self->type == Actor::POSSESSED;
+		self->type = Actor::POSSESSED;
 	}
 	// Do fire
 	int dmg = randint(4,6) + (self->realType == Actor::ARCHDEMON) ? randint(5,8) : 0;
