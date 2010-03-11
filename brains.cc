@@ -79,8 +79,10 @@ void Actor::AI_demon() {
 	// Seek angels
 	Actor* target = getClosestActor(GOOD_ACTORS);
 	if (target) {
-		// Only attack if superior numbers
-		if (friendCount > enemyCount) moveTowards(target->x, target->y);
+		// Only attack if superior numbers, right next to the enemy or archdemon
+		if ((type != IMP || possessing) && (friendCount > enemyCount || realType == ARCHDEMON ||
+		  (abs(target->x-x) <= 1 && abs(target->y-y) <= 1)))
+			moveTowards(target->x, target->y);
 		else moveAway(target->x, target->y);
 		return;
 	}
