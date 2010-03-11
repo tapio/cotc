@@ -20,10 +20,10 @@ The password is 'curse'.
 
 ## Sources ##
 You can download this project in either
-[zip](http://github.com/tapio/rlutil/zipball/master "zip") or
-[tar](http://github.com/tapio/rlutil/tarball/master "tar") formats.
+[zip](http://github.com/tapio/cotc/zipball/master "zip") or
+[tar](http://github.com/tapio/cotc/tarball/master "tar") formats.
 
 You can also clone the project with [Git](http://git-scm.com "Git") by running:
 
-    $ git clone git://github.com/tapio/rlutil
+    $ git clone git://github.com/tapio/cotc
 
