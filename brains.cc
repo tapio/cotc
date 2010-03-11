@@ -104,6 +104,12 @@ void Actor::AI_angel() {
 }
 
 void Actor::AI_generic() {
+	// Check if there is a door underneath
+	if (getTilePtr()->ch == '/' && randint(1,3) < 3) {
+		Ability_CloseDoor close;
+		close(this);
+		return;
+	}
 	// Go towards a random target
 	if (targetx && targety && abs(targetx-x)+abs(targety-y) > 2) {
 		if (moveTowards(targetx,targety)) return;
