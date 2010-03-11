@@ -76,9 +76,14 @@ void inline randdir(int& dx, int &dy) {
 	else { dx = randint(-1,1); dy = randdir(); }
 }
 
-template<typename T> T distance2d(T x1, T y1, T x2, T y2) {
+template<typename T> T inline distance2d(T x1, T y1, T x2, T y2) {
 	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }
+
+template<typename T> T inline manhattan_dist(T x1, T y1, T x2, T y2) {
+	return abs(x2-x1) + abs(y2-y1);
+}
+
 
 /** Implement C99 mathematical rounding (which C++ unfortunately currently lacks) **/
 template <typename T> T round(T val) { return int(val + (val >= 0 ? 0.5 : -0.5)); }

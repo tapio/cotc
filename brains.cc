@@ -68,8 +68,13 @@ void Actor::moveAway(int tx, int ty) {
 }
 
 void Actor::AI_human() {
-	Actor* target = getClosestActor(DEMON | ARCHDEMON); // Imps are invisible
-	if (target) { moveAway(target->x, target->y); return; }
+	Actor* target = getClosestActor(EVIL_ACTORS);
+	if (target) {
+		if (target->type != IMP || manhattan_dist(x,y,target->x,target->y) < 3) {
+			moveAway(target->x, target->y);
+			return;
+		}
+	}
 	AI_generic();
 }
 
@@ -80,8 +85,8 @@ void Actor::AI_demon() {
 	Actor* target = getClosestActor(GOOD_ACTORS);
 	if (target) {
 		// Only attack if superior numbers, right next to the enemy or archdemon
-		if ((type != IMP || possessing) && (friendCount > enemyCount || realType == ARCHDEMON ||
-		  (abs(target->x-x) <= 1 && abs(target->y-y) <= 1)))
+		if ((type != IMP || possessing) && (friendCount > enemyCount || realType == ARCHDEMON
+		  || manhattan_dist(x,y,target->x,target->y) <= 1))
 			moveTowards(target->x, target->y);
 		else moveAway(target->x, target->y);
 		return;
@@ -97,11 +102,24 @@ void Actor::AI_demon() {
 
 void Actor::AI_angel() {
 	Actor* target = getClosestActor(EVIL_ACTORS);
+	if (!target) target = getClosestActor(HUMAN);
 	if (target) {
-		// Angels always attack fearlessly
+		// Decloak if near
+		if (type != realType && manhattan_dist(x,y,target->x,target->y) <= 1) {
+			Ability_ConcealDivinity decloak;
+			decloak(this);
+		}
+		// Angels always attack fearlessly (or go blessing)
 		moveTowards(target->x, target->y);
 		return;
 	}
+	// Cloak
+	if (type == realType) {
+		Ability_ConcealDivinity cloak;
+		cloak(this);
+		return;
+	}
+	// Start search
 	AI_generic();
 }
 
@@ -113,14 +131,14 @@ void Actor::AI_generic() {
 		return;
 	}
 	// Go towards a random target
-	if (targetx && targety && abs(targetx-x)+abs(targety-y) > 2) {
+	if (targetx && targety && manhattan_dist(x,y,targetx,targety) >= 2) {
 		if (moveTowards(targetx,targety)) return;
 	}
 	// Move randomly
 	int tx, ty; randdir(tx, ty);
 	this->move(tx, ty);
 	// Acquire new destination
-	if (randint(10) == 0) {
+	if (randint(realType == HUMAN ? 10 : 4) == 0) {
 		targetx = randint(1, world->getWidth()-2);
 		targety = randint(1, world->getHeight()-2);
 	}
