@@ -16,7 +16,7 @@ class Actor: boost::noncopyable {
 		IMP = 16, DEMON = 32, ARCHDEMON = 64, POSSESSED = 128, ALL = 255 } type;
 	Type realType;
 
-	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(),
+	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(), targetx(), targety(),
 	  viewDist(10), useAI(ai), confirmAction(false), exp(), blessed(), possessed(NULL), possessing(NULL),
 	  msgs(20), world(), moves() {
 

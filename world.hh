@@ -62,6 +62,11 @@ class World: boost::noncopyable {
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 
+	int angels;
+	int demons;
+	int humans;
+	int blessed;
+
   private:
 	int inline x2scr(int coord, int ref) const { return viewXDist + coord - ref + 1; }
 	int inline y2scr(int coord, int ref) const { return viewYDist + coord - ref + 1; }
