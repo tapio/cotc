@@ -23,10 +23,12 @@ class Actor: boost::noncopyable {
 		setInitialHealth();
 
 		abilities.push_back(newAbility(Ability_OpenDoor));
+		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_DetectEvil));
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_TouchOfGod));
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_Bless));
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_HealSelf));
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_ConcealDivinity));
+		if (type & (EVIL_ACTORS)) abilities.push_back(newAbility(Ability_DetectDivinity));
 		if (type & (EVIL_ACTORS)) abilities.push_back(newAbility(Ability_Possess));
 		if (type & (EVIL_ACTORS)) abilities.push_back(newAbility(Ability_DemonFire));
 		abilities.push_back(newAbility(Ability_CloseDoor));

@@ -48,6 +48,13 @@ struct Ability_LookAt: public Ability {
 struct Ability_KickDoor: public Ability { };
 struct Ability_Talk: public Ability { };
 
+/// Section: Evil abilities
+
+struct Ability_DetectDivinity: public Ability {
+	bool operator()(Actor* self, Actor* target, bool force = false);
+	std::string toString() const { return "Detect divinity"; }
+};
+
 struct Ability_Possess: public Ability {
 	bool operator()(Actor* self, Actor* target, bool force = false);
 	std::string toString() const { return "Possess soul"; }
@@ -58,9 +65,21 @@ struct Ability_DemonFire: public Ability {
 	std::string toString() const { return "Demon fire"; }
 };
 
+/// Section: Angel abilities
+
+struct Ability_DetectEvil: public Ability {
+	bool operator()(Actor* self, Actor* target, bool force = false);
+	std::string toString() const { return "Detect Evil"; }
+};
+
 struct Ability_TouchOfGod: public Ability {
 	bool operator()(Actor* self, Actor* target, bool force = false);
 	std::string toString() const { return "Touch of God"; }
+};
+
+struct Ability_Bless: public Ability {
+	bool operator()(Actor* self, Actor* target, bool force = false);
+	std::string toString() const { return "Bless"; }
 };
 
 struct Ability_ConcealDivinity: public Ability {
@@ -73,9 +92,4 @@ struct Ability_HealSelf: public Ability {
 	Ability_HealSelf(): Ability(false) { }
 	bool operator()(Actor* self, bool force = false);
 	std::string toString() const { return "Heal self"; }
-};
-
-struct Ability_Bless: public Ability {
-	bool operator()(Actor* self, Actor* target, bool force = false);
-	std::string toString() const { return "Bless"; }
 };

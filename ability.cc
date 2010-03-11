@@ -44,7 +44,7 @@ bool Ability_ConcealDivinity::operator()(Actor* self, bool force) {
 	return true;
 }
 
-bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
+bool Ability_DetectEvil::operator()(Actor* self, Actor* target, bool force) {
 	if (!(target->realType & EVIL_ACTORS)) return false;
 	// Reveal possessed
 	if (target->type == Actor::HUMAN) {
@@ -53,6 +53,23 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		target->type = Actor::POSSESSED;
 		return true;
 	}
+	return false;
+}
+
+bool Ability_DetectDivinity::operator()(Actor* self, Actor* target, bool force) {
+	if (!(target->realType & GOOD_ACTORS)) return false;
+	// Reveal angels in disguise
+	if (target->type == Actor::HUMAN) {
+		self->msgs.push_back("The human is an angel in disguise!");
+		target->msgs.push_back("Your disguise has been revealed!");
+		target->type = Actor::CLOAKEDANGEL;
+		return true;
+	}
+	return false;
+}
+
+bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
+	if (!(target->realType & EVIL_ACTORS)) return false;
 	// Check form
 	if (self->realType != self->type) {
 		self->msgs.push_back("You must be in your true form to use Touch of God.");
@@ -75,16 +92,11 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 }
 
 bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
-	//if (self->realType != self->type) {
-		//self->msgs.push_back("You must be in your true form to use Bless.");
-		//return false;
-	//}
-	// Reveal possessed
-	if (target->type == Actor::HUMAN && (target->realType & EVIL_ACTORS)) {
-		self->msgs.push_back("The human is possessed!");
-		target->msgs.push_back("You possessing the human is revealed!");
-		target->type = Actor::POSSESSED;
-		return true;
+	if (target->realType != Actor::HUMAN) return false;
+	// Check form
+	if (self->realType != self->type) {
+		self->msgs.push_back("You must be in your true form to use Bless.");
+		return false;
 	}
 	if (!(target->realType & Actor::HUMAN) || target->blessed > 0 || target->possessed) return false;
 	// Bless
