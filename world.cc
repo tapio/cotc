@@ -51,9 +51,16 @@ Actor& World::addActor(Actor* actor) {
 	return actors.back();
 }
 
-void World::removeDeadActors() {
+void World::updateActorsMeta() {
+	angels = 0;
+	demons = 0;
+	humans = 0;
+	blessed = 0;
 	for (Actors::iterator it = actors.begin(); it != actors.end(); ) {
 		if (it->isDead()) { it = actors.erase(it); continue; }
+		if (it->realType & Actor::HUMAN) { humans++; if (it->blessed) blessed++; }
+		else if (it->realType & GOOD_ACTORS) angels++;
+		else if (it->realType & EVIL_ACTORS) demons++;
 		it++;
 	}
 }
@@ -114,8 +121,8 @@ bool World::hasLOS(const Actor& actor, int x, int y) const {
 /// Function: update
 /// Updates the world - views, visibilities and AI
 void World::update(bool skipAI) {
-	// Clean up dead actors
-	removeDeadActors();
+	// Clean up dead actors, update counts
+	updateActorsMeta();
 	// Reset tiles' actor pointers
 	int w = getWidth(), h = getHeight();
 	for (int j = 0; j < h; j++)

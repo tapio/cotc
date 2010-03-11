@@ -40,12 +40,20 @@ void setColor(WINDOW* scr, int color) {
 	wcolor_set(scr, color, 0);
 }
 
-void setColor(int color) {
-	setColor(stdscr, color);
+void setColor(int color) { setColor(stdscr, color); }
+
+void addnum(int num) {
+	std::string stnum = num2str(num);
+	for (int i = 0; i < stnum.length(); ++i) echochar(stnum[i]);
 }
 
 void addcstr(std::string str) {
 	int x = COLS / 2 - str.length() / 2;
+	mvaddstr(getcury(stdscr), x, str.c_str());
+}
+
+void addrstr(std::string str) {
+	int x = COLS - str.length() - 2;
 	mvaddstr(getcury(stdscr), x, str.c_str());
 }
 

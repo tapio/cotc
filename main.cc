@@ -81,6 +81,7 @@ bool mainLoop() {
 		while (!a.position(randint(world->getWidth()),
 		                   randint(world->getHeight())));
 	}
+	world->updateActorsMeta();
 
 	erase();
 	frame(pl);

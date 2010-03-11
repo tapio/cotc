@@ -97,7 +97,15 @@ void setColor(WINDOW* scr, int color);
 
 void setColor(int color);
 
+/// Function: addcstr
+/// Draws a centered string.
 void addcstr(std::string str);
+
+/// Function: addrstr
+/// Draws the string justified to the right.
+void addrstr(std::string str);
+
+void addnum(int num);
 
 void box2(int x, int y, int w, int h);
 

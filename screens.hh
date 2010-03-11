@@ -157,10 +157,24 @@ void frame(const Actor& pl, bool O = false) {
 	int cnt = 0;
 	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend() && cnt < 3; ++it, ++cnt) {
 		hline(' ', COLS-2);
-		addcstr(it->c_str());
+		addrstr(it->c_str());
 		move(getcury(stdscr)+1, 1);
 		if (cnt == 0) setColor(COLOR_RED);
 	}
+	// World status
+	setColor(COLOR_GREEN);
+	move(LINES - 5, x);         addstr("Humans:       ");
+	move(getcury(stdscr)+1, x); addstr("Blessed:      ");
+	move(getcury(stdscr)+1, x); addstr("Angels:       ");
+	move(getcury(stdscr)+1, x); addstr("Demons:       ");
+	const WorldPtr wptr(pl.getConstWorldPtr());
+	if (wptr) {
+		move(LINES - 5, x + 9);         addnum(wptr->humans);
+		move(getcury(stdscr)+1, x + 9); addnum(wptr->blessed);
+		move(getcury(stdscr)+1, x + 9); addnum(wptr->angels);
+		move(getcury(stdscr)+1, x + 9); addnum(wptr->demons);
+	}
+	// Frame
 	setColor(COLOR_RED);
 	if (!O) box(stdscr, 0, 0);
 }

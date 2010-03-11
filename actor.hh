@@ -170,6 +170,8 @@ class Actor: boost::noncopyable {
 
 	Tile* getTilePtr() { return world->getTilePtr(x,y); }
 
+	const WorldPtr getConstWorldPtr() const { return world; }
+
 	bool hasExplored(int x, int y) const {
 		if (x < 0 || y < 0 || x >= world->getWidth() || y >= world->getHeight()) return false;
 		return view[y][x].explored;
