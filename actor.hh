@@ -5,15 +5,15 @@
 #include "common.hh"
 
 #define NO_AI false
-#define EVIL_ACTORS (Actor::IMP | Actor::DEMON | Actor::ARCHDEMON)
-#define GOOD_ACTORS (Actor::ANGEL | Actor::ARCHANGEL)
+#define EVIL_ACTORS (Actor::IMP | Actor::DEMON | Actor::ARCHDEMON | Actor::POSSESSED)
+#define GOOD_ACTORS (Actor::ANGEL | Actor::ARCHANGEL | Actor::CLOAKEDANGEL)
 
 class World;
 
 class Actor: boost::noncopyable {
   public:
-	enum Type { HUMAN = 1, ANGEL = 2, ARCHANGEL = 4,
-		IMP = 8, DEMON = 16, ARCHDEMON = 32, ALL = 63 } type;
+	enum Type { HUMAN = 1, ANGEL = 2, ARCHANGEL = 4, CLOAKEDANGEL = 8,
+		IMP = 16, DEMON = 32, ARCHDEMON = 64, POSSESSED = 128, ALL = 255 } type;
 	Type realType;
 
 	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(),
@@ -28,7 +28,7 @@ class Actor: boost::noncopyable {
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_HealSelf));
 		if (type & (GOOD_ACTORS)) abilities.push_back(newAbility(Ability_ConcealDivinity));
 		if (type & (EVIL_ACTORS)) abilities.push_back(newAbility(Ability_Possess));
-		if (type & (IMP|DEMON|ARCHDEMON)) abilities.push_back(newAbility(Ability_DemonFire));
+		if (type & (EVIL_ACTORS)) abilities.push_back(newAbility(Ability_DemonFire));
 		abilities.push_back(newAbility(Ability_CloseDoor));
 	}
 
@@ -47,10 +47,10 @@ class Actor: boost::noncopyable {
 	}
 
 	void AI() {
-		switch (type) {
+		switch (realType) {
 			case HUMAN: AI_human(); break;
-			case ANGEL: case ARCHANGEL: AI_angel(); break;
-			case IMP: case DEMON: case ARCHDEMON: AI_demon(); break;
+			case ANGEL: case ARCHANGEL: case CLOAKEDANGEL: AI_angel(); break;
+			case IMP: case DEMON: case ARCHDEMON: case POSSESSED: AI_demon(); break;
 			case ALL: break;
 		}
 	}
@@ -101,43 +101,52 @@ class Actor: boost::noncopyable {
 		return false;
 	}
 
+	/// Function: getType
+	/// Returns the apparant type taking into account askers side.
+	Type getType(const Actor* asker = NULL) {
+		if (asker && type == HUMAN) { // Handle same side
+			if (asker->realType & GOOD_ACTORS && realType & GOOD_ACTORS) return realType;
+			else if (asker->realType & EVIL_ACTORS && realType & EVIL_ACTORS) return realType;
+		}
+		// Normally, just return the apparant type
+		return type;
+	}
+
 	char getChar() const {
-		if (possessing) return '@';
+		if (type & (HUMAN | POSSESSED | CLOAKEDANGEL)) return '@';
 		switch(type) {
-			case HUMAN:     return '@';
 			case ANGEL:     return 'a';
 			case ARCHANGEL: return 'A';
 			case IMP:       return 'i';
 			case DEMON:     return 'd';
 			case ARCHDEMON: return 'D';
-			case ALL:       return '\0';
+			default:        return '\0';
 		}
-		return '\0';
 	}
 
-	int getColor() const {
-		if (possessing) return COLOR_RED;
-		switch(type) {
-			case HUMAN:     return COLOR_YELLOW;
-			case ANGEL:     return COLOR_WHITE;
-			case ARCHANGEL: return COLOR_WHITE;
-			case IMP:       return COLOR_RED;
-			case DEMON:     return COLOR_RED;
-			case ARCHDEMON: return COLOR_RED;
-			case ALL:       return -1;
+	int getColor(const Actor* asker = NULL) const {
+		// Note: Bold colors are reserved for player
+		if (asker && type == HUMAN) { // Handle same side
+			if (asker->realType & GOOD_ACTORS && realType & GOOD_ACTORS) return COLOR_WHITE;
+			else if (asker->realType & EVIL_ACTORS && realType & EVIL_ACTORS) return COLOR_RED;
 		}
+		if (type & HUMAN) return COLOR_YELLOW;
+		else if (type & GOOD_ACTORS) return COLOR_WHITE;
+		else if (type & EVIL_ACTORS) return COLOR_RED;
 		return -1;
 	}
 
 	std::string getTypeName() const {
 		switch(type) {
-			case HUMAN:     return "Human";
-			case ANGEL:     return "Angel";
-			case ARCHANGEL: return "Archangel";
-			case IMP:       return "Imp";
-			case DEMON:     return "Demon";
-			case ARCHDEMON: return "Archdemon";
-			case ALL:       return "";
+			case HUMAN:        return "Human";
+			case CLOAKEDANGEL: return "Angel in disguise";
+			case ANGEL:        return "Angel";
+			case ARCHANGEL:    return "Archangel";
+			case POSSESSED:    return "Possessed";
+			case IMP:          return "Imp";
+			case DEMON:        return "Demon";
+			case ARCHDEMON:    return "Archdemon";
+			case ALL:          return "";
 		}
 		return "";
 	}
@@ -150,7 +159,7 @@ class Actor: boost::noncopyable {
 			case IMP: maxhealth = randint(5,9); break;
 			case DEMON: maxhealth = randint(13,16); break;
 			case ARCHDEMON: maxhealth = randint(22,24); break;
-			case ALL: break;
+			default: break;
 		}
 		health = maxhealth;
 	}
@@ -171,7 +180,12 @@ class Actor: boost::noncopyable {
 		dmg = clamp(dmg, 0, maxhealth);
 		if (isDead()) {
 			// Free possessed
-			if (possessing) possessing->possessed = NULL;
+			if (possessing) {
+				possessing->possessed = NULL;
+				possessing->x = x;
+				possessing->y = y;
+				possessing->getTilePtr()->actor = possessing;
+			}
 			return true;
 		}
 		return false;

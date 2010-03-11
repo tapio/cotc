@@ -153,7 +153,7 @@ void World::draw(Actor& actor) {
 	}
 	// ActorPtrs
 	for (ActorPtrs::const_iterator it = actor.visible_actors.begin(); it != actor.visible_actors.end(); ++it) {
-		setColor(worldwin, (*it)->getColor());
+		setColor(worldwin, (*it)->getColor(&actor));
 		mvwaddch(worldwin, y2scr((*it)->y, actor.y),
 						   x2scr((*it)->x, actor.x), (*it)->getChar());
 	}
@@ -162,7 +162,7 @@ void World::draw(Actor& actor) {
 	wcolor_set(worldwin, COLOR_GREEN, 0);
 	box(worldwin, 0, 0);
 	// Player
-	setColor(worldwin, actor.getColor());
+	setColor(worldwin, actor.getColor()+8);
 	mvwaddch(worldwin, y2scr(actor.y, actor.y),
 					   x2scr(actor.x, actor.x), actor.getChar());
 

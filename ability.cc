@@ -50,6 +50,13 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		return false;
 	}
 	if (!(target->realType & EVIL_ACTORS)) return false;
+	// Reveal possessed
+	if (target->type == Actor::HUMAN) {
+		self->msgs.push_back("The human is possessed!");
+		target->type = Actor::POSSESSED;
+		return true;
+	}
+	// Do some damage!
 	int dmg = randint(5,8) + (self->realType == Actor::ARCHANGEL) ? randint(5,8) : 0;
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?
@@ -65,7 +72,14 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 		//self->msgs.push_back("You must be in your true form to use Bless.");
 		//return false;
 	//}
+	// Reveal possessed
+	if (target->type == Actor::HUMAN && (target->realType & EVIL_ACTORS)) {
+		self->msgs.push_back("The human is possessed!");
+		target->type = Actor::POSSESSED;
+		return true;
+	}
 	if (!(target->realType & Actor::HUMAN) || target->blessed > 0 || target->possessed) return false;
+	// Bless
 	int blessing = randint(2,3) + (self->realType == Actor::ARCHANGEL) ? randint(2,4) : 0;
 	target->blessed += blessing;
 	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
@@ -75,20 +89,28 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 
 
 bool Ability_HealSelf::operator()(Actor* self, bool force) {
-	if (self->getExp() > 1 && self->getHealth() < self->getMaxHealth()) {
-		self->addExp(-1); self->hurt(-1);
+	if (self->getExp() >= 2 && self->getHealth() < self->getMaxHealth()) {
+		self->addExp(-2); self->hurt(-1);
 	}
 	return true;
 }
 
 
 bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
-	if (target->realType != Actor::HUMAN || self->possessing) return false;
+	if (target->type != Actor::HUMAN || self->possessing) return false;
+	// Reveal cloaked angel
+	if (target->realType & (Actor::ANGEL | Actor::ARCHANGEL)) {
+		self->msgs.push_back("The human is an angel in disguise!");
+		target->type = Actor::CLOAKEDANGEL;
+		return true;
+	}
+	// Handle blessed humans
 	if (target->blessed > 0) {
 		self->hurt(target->blessed);
 		self->msgs.push_back("You hurt yourself trying to possess a human blessed by an angel.");
 		return true;
 	}
+	// Do possession
 	self->msgs.push_back("You are now possessing the human.");
 	self->possessing = target;
 	target->possessed = self;
@@ -104,11 +126,23 @@ bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
 
 
 bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
-	if (!(target->realType & (Actor::HUMAN | GOOD_ACTORS))) return false;
+	if (target->realType & EVIL_ACTORS) return false;
+	// Handle no body
 	if (!self->possessing) {
 		self->msgs.push_back("You must be possessing a body to use demon fire.");
 		return false;
 	}
+	// Reveal cloaked angel
+	if (target->type == Actor::HUMAN && (target->realType & GOOD_ACTORS)) {
+		self->msgs.push_back("The human is an angel in disguise!");
+		target->type = Actor::CLOAKEDANGEL;
+		return true;
+	}
+	// Reveal self when attacking angel
+	if (self->type == Actor::HUMAN && self->possessing && target->realType & GOOD_ACTORS) {
+		self->type == Actor::POSSESSED;
+	}
+	// Do fire
 	int dmg = randint(4,6) + (self->realType == Actor::ARCHDEMON) ? randint(5,8) : 0;
 	if (self->realType == Actor::IMP) dmg = randint(1,2);
 	bool died = target->hurt(dmg);
