@@ -18,7 +18,7 @@ class Actor: boost::noncopyable {
 
 	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(), targetx(), targety(),
 	  viewDist(10), useAI(ai), confirmAction(false), exp(), blessed(), possessed(NULL), possessing(NULL),
-	  msgs(20), world(), moves() {
+	  forceRedrawUI(false), msgs(20), world(), moves() {
 
 		setInitialHealth();
 
@@ -215,6 +215,7 @@ class Actor: boost::noncopyable {
 		setInitialHealth();
 		exp = 0;
 		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
+		forceRedrawUI = true;
 	}
 
 	int getNextExpLevel() const {
@@ -248,6 +249,7 @@ class Actor: boost::noncopyable {
 	int blessed;
 	Actor* possessed;
 	Actor* possessing;
+	bool forceRedrawUI;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;

@@ -88,7 +88,7 @@ bool mainLoop() {
 	refresh();
 
 	do {
-		frame(pl, true);
+		frame(pl, !pl.forceRedrawUI); pl.forceRedrawUI = false;
 		refresh();
 		world->update();
 		world->draw(pl);

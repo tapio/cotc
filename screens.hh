@@ -88,6 +88,7 @@ void death() {
 }
 
 void frame(const Actor& pl, bool O = false) {
+	if (!O) erase();
 	int x = 2;
 	int barwrap = 24;
 
