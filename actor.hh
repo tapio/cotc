@@ -207,7 +207,7 @@ class Actor: boost::noncopyable {
 	void evolve(Type toType) {
 		realType = toType;
 		type = realType;
-		if (possessing) possessed->hurt(1000); // Kill possessed
+		if (possessing) possessing->hurt(1000); // Kill possessed
 		setInitialHealth();
 		exp = 0;
 		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
