@@ -88,7 +88,7 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 	}
 	if (!(target->realType & Actor::HUMAN) || target->blessed > 0 || target->possessed) return false;
 	// Bless
-	int blessing = randint(2,3) + (self->realType == Actor::ARCHANGEL) ? randint(2,4) : 0;
+	int blessing = randint(1,2) + (self->realType == Actor::ARCHANGEL) ? randint(2,3) : 0;
 	target->blessed += blessing;
 	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
 	self->addExp(1);
@@ -116,7 +116,7 @@ bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
 	// Handle blessed humans
 	if (target->blessed > 0) {
 		self->hurt(target->blessed);
-		self->msgs.push_back("You hurt yourself trying to possess a human blessed by an angel.");
+		self->msgs.push_back("You hurt yourself trying to possess a human blessed by an angel!");
 		return true;
 	}
 	// Do possession

@@ -153,12 +153,12 @@ class Actor: boost::noncopyable {
 
 	void setInitialHealth() {
 		switch (realType) {
-			case HUMAN: maxhealth = randint(3,7); break;
+			case HUMAN: maxhealth = randint(4,7); break;
 			case ANGEL: maxhealth = 16; break;
-			case ARCHANGEL: maxhealth = 24; break;
-			case IMP: maxhealth = randint(5,9); break;
-			case DEMON: maxhealth = randint(13,16); break;
-			case ARCHDEMON: maxhealth = randint(22,24); break;
+			case ARCHANGEL: maxhealth = 28; break;
+			case IMP: maxhealth = randint(6,9); break;
+			case DEMON: maxhealth = randint(14,16); break;
+			case ARCHDEMON: maxhealth = randint(24,27); break;
 			default: break;
 		}
 		health = maxhealth;
