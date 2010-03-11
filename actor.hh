@@ -193,10 +193,15 @@ class Actor: boost::noncopyable {
 
 	void addExp(int howmuch) {
 		exp += howmuch;
-		if (realType == HUMAN);
-		else if (realType == IMP && exp > 10) evolve(DEMON);
-		else if (realType == DEMON && exp > 32) evolve(ARCHDEMON);
-		else if (realType == ANGEL && exp > 32) evolve(ARCHANGEL);
+		if (exp > getNextExpLevel()) {
+			exp = getNextExpLevel();
+			if (realType == IMP) evolve(DEMON);
+			else if (realType == DEMON) evolve(ARCHDEMON);
+			else if (realType == ANGEL) evolve(ARCHANGEL);
+			else if (realType & (ARCHANGEL | ARCHDEMON)) {
+				// Ascension, handled in winner();
+			}
+		}
 	}
 
 	void evolve(Type toType) {
@@ -206,6 +211,16 @@ class Actor: boost::noncopyable {
 		setInitialHealth();
 		exp = 0;
 		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
+	}
+
+	int getNextExpLevel() const {
+		if (realType == HUMAN);
+		else if (realType == IMP) return 6;
+		else if (realType == DEMON) return 10;
+		else if (realType == ANGEL) return 16;
+		else if (realType == ARCHANGEL) return 16;
+		else if (realType == ARCHDEMON) return 16;
+		return 1000;
 	}
 
 	bool isDead() const { return health <= 0; }

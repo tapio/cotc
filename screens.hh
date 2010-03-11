@@ -113,15 +113,19 @@ void frame(const Actor& pl, bool O = false) {
 	}
 	// Experience
 	move(getcury(stdscr)+2, x);
-	if (!O) { setColor(COLOR_GREEN); addstr("Experience:"); }
+	if (!O) {
+		std::string exptitle = "Experience:";
+		if (pl.realType & EVIL_ACTORS) exptitle = "Chaos:";
+		else if (pl.realType & GOOD_ACTORS) exptitle = "Divinity:";
+		setColor(COLOR_GREEN);
+		addstr(exptitle.c_str());
+	}
 	move(getcury(stdscr)+1, x);
 	setColor(COLOR_BLUE+8);
-	for (int i = 1; i <= pl.getExp(); ++i) {
+	for (int i = 1; i <= pl.getNextExpLevel(); ++i) {
 		if ((i % barwrap) == 0) move(getcury(stdscr)+1, x);
-		echochar('I');
+		echochar(i <= pl.getExp() ? 'I' : '-');
 	}
-	echochar(' ');echochar(' ');echochar(' ');echochar(' ');echochar(' ');
-
 	// Abilities
 	move(getcury(stdscr)+2, x);
 	if (!O) { setColor(COLOR_GREEN); addstr("Abilities:"); }
