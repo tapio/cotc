@@ -211,13 +211,14 @@ class Actor: boost::noncopyable {
 	void evolve(Type toType) {
 		realType = toType;
 		type = realType;
+		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
 		if (possessing) { // Kill possessed
 			possessing->hurt(1000);
+			msgs.push_back("You're ascension destroyed your vessel.");
 			killed_humans++;
 		}
 		setInitialHealth();
 		exp = 0;
-		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
 		forceRedrawUI = true;
 	}
 

@@ -119,13 +119,7 @@ bool Ability_HealSelf::operator()(Actor* self, bool force) {
 
 
 bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
-	if (target->type != Actor::HUMAN || self->possessing) return false;
-	// Reveal cloaked angel
-	if (target->realType & (Actor::ANGEL | Actor::ARCHANGEL)) {
-		self->msgs.push_back("The human is an angel in disguise!");
-		target->type = Actor::CLOAKEDANGEL;
-		return true;
-	}
+	if (target->realType != Actor::HUMAN || self->possessing || target->possessed) return false;
 	// Handle blessed humans
 	if (target->blessed > 0) {
 		self->hurt(target->blessed);
