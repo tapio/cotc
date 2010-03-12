@@ -72,7 +72,8 @@ void msglog(const Actor& pl) {
 	box(stdscr, 0, 0);
 	while (true) {
 		int k = getch();
-		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
+		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER
+		  || k == 'q' || k == 'Q' || k == 'm' || k == 'M') break;
 	}
 	flushinp();
 	clear();
