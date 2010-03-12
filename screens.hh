@@ -4,6 +4,28 @@
 #include "actor.hh"
 #include "ability.hh"
 
+void help() {
+	int x = 2;
+	erase();
+	setColor(COLOR_CYAN+8); move(3,x); addstr("BACKGROUND");
+	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
+	addrowstr("The city is in trouble. It's people are being hunted, possessed and killed by Devil's minions.");
+	setColor(COLOR_CYAN+8); move(getcury(stdscr)+2,x); addstr("HEAVENLY HOST");
+	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
+	addrowstr("Angels' task is to hunt down the demons, free the possessed and to bless the humans, so that no evil can enter their souls.");
+	setColor(COLOR_CYAN+8); move(getcury(stdscr)+2,x); addstr("FORCES OF EVIL");
+	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
+	addrowstr("Demons' task is to possess a human body to work as a vessel and then cause chaos by killing everyone around. Angels should also be taken care of, although be warned, they are powerful creatures able to mask themselves as humans.");
+	setColor(COLOR_CYAN+8); move(getcury(stdscr)+2,x); addstr("GENERAL");
+	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
+	addrowstr("Use arrow keys or numpad to move. Hitting objects / creatures chooses the suitable action. You also have some abilitities that you can use by pressing an appropriate key. Refer to the game UI for reference.");
+	setColor(COLOR_CYAN+8);
+	box(stdscr, 0, 0);
+	move(1,2); addcstr("HELP!");
+	refresh();
+	getch();
+}
+
 void addflamestr(std::string str, bool letter = true) {
 	static int flamecolors[] = { COLOR_RED, COLOR_YELLOW, COLOR_YELLOW+8 };
 	int x,y;
@@ -42,6 +64,7 @@ int title() {
 	setColor(COLOR_GREEN+8);
 	addcstr("[a] Join the Heavenly Host   "); addstr("\n");
 	addcstr("[b] Join the forces of Hell  "); addstr("\n\n");
+	addcstr("[h] Story and help           "); addstr("\n");
 	addcstr("[c] Toggle default background"); addstr("\n");
 	addcstr("[q] Quit                     ");
 	setColor(COLOR_GREEN);
@@ -54,6 +77,7 @@ int title() {
 		if (k == 'a' || k == 'A') return 1;
 		if (k == 'b' || k == 'B') return 2;
 		if (k == 'q' || k == 'Q' || k == KEY_ESCAPE) return 0;
+		if (k == 'h' || k == 'H') { help(); return title(); }
 		if (k == 'c' || k == 'C') { toggleDefaultColors(); return title(); }
 	}
 	flushinp();
@@ -250,14 +274,4 @@ void frame(const Actor& pl, bool O = false) {
 	// Frame
 	setColor(COLOR_RED);
 	if (!O) box(stdscr, 0, 0);
-}
-
-void help() {
-	erase();
-	setColor(COLOR_CYAN+8);
-	box(stdscr, 0, 0);
-	move(1,2);
-	addcstr("HELP!");
-	refresh();
-	getch();
 }

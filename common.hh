@@ -110,6 +110,8 @@ void addcstr(std::string str);
 /// Draws the string justified to the right.
 void addrstr(std::string str);
 
+void addrowstr(std::string str, size_t w = 0);
+
 void addnum(int num);
 
 void box2(int x, int y, int w, int h);

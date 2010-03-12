@@ -57,6 +57,29 @@ void addrstr(std::string str) {
 	mvaddstr(getcury(stdscr), x, str.c_str());
 }
 
+void addrowstr(const std::string str, size_t w) {
+	size_t x = getcurx(stdscr);
+	if (w <= 0) w = COLS - x - 2;
+	std::string curword;
+	size_t row_w = 0;
+	for (size_t i = 0; i < str.length(); i++) {
+		if (str[i] == ' ') {
+			size_t l = curword.length();
+			if (row_w + 1 + l > w) { // Wrap
+				move(getcury(stdscr)+1, x);
+				row_w = l;
+			} else { addch(' '); row_w += l + 1; } // Same row
+			addstr(curword.c_str());
+			curword = "";
+		} else curword += str[i];
+	}
+	// Last word
+	if (row_w + 1 + curword.length() > w) // Wrap
+		move(getcury(stdscr)+1, x);
+	else addch(' '); // Same row
+	addstr(curword.c_str());
+}
+
 void box2(int x, int y, int w, int h) {
 	move(y,x);
 	echochar(ACS_ULCORNER);
