@@ -1,15 +1,19 @@
 City of the Condemned
 =====================
-_Copyright (C) 2010 Tapio Vierros_
- 
-Seven Day Roguelike Challenge 2010 Entry.
+_Seven Day Roguelike Challenge 2010 Entry._
+
+[![CotC gameplay](pics/cotc_thumb.png "Optional title")](pics/cotc.png)
+
 
 The game depicts a battle between the armies of
 Heaven and Hell in a town where innocent people's
 souls are in danger.
 
-Play as an angel, a divine warrior of God, or as
-a demon, sinister creation of the Devil.
+Play as an angel, a divine warrior of God, with the
+mission to vanquish all evil and protect the humans.
+
+Or take your stand as a demon, sinister creation of the Devil
+able to possess the people to create chaos.
 
 ## Play ##
 Use your favourite ssh client and do following:
