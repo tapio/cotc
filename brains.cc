@@ -112,10 +112,14 @@ void Actor::AI_angel() {
 	if (target && !target->blessed) { // Don't go after blessed people
 		// Remember target
 		targetx = target->x; targety = target->y;
+		// Heal if needed
+		if (getHealth() < 7 && getExp() > 1 && manhattan_dist(x,y,target->x,target->y) > 1) {
+			Ability_HealSelf heal; heal(this);
+			return;
+		}
 		// Decloak if near
 		if (type != realType && manhattan_dist(x,y,target->x,target->y) <= 1) {
-			Ability_ConcealDivinity decloak;
-			decloak(this);
+			Ability_ConcealDivinity decloak; decloak(this);
 		}
 		// Angels always attack fearlessly (or go blessing)
 		moveTowards(target->x, target->y);
