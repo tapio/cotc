@@ -138,8 +138,8 @@ class Actor: boost::noncopyable {
 		return -1;
 	}
 
-	std::string getTypeName() const {
-		switch(type) {
+	std::string getTypeName(bool real = false) const {
+		switch(real ? realType : type) {
 			case HUMAN:        return "Human";
 			case CLOAKEDANGEL: return "Angel in disguise";
 			case ANGEL:        return "Angel";

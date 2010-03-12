@@ -79,11 +79,11 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 	int dmg = randint(5,7) + (self->realType == Actor::ARCHANGEL) ? randint(5,8) : 0;
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?
-		std::string("You vanquished the ") + target->getTypeName() + "." :
+		std::string("You vanquished the ") + target->getTypeName(true) + "." :
 		std::string("You punish the ") + target->getTypeName() + " (" + num2str(dmg) + ")."
 		);
 	target->msgs.push_back(died ?
-		std::string("You fell to the attack of the ") + self->getTypeName() + "." :
+		std::string("You fell to the attack of the ") + self->getTypeName(true) + "." :
 		std::string("You were hurt by the ") + self->getTypeName() + " (" + num2str(dmg) + ")."
 		);
 
@@ -163,11 +163,11 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 	if (self->realType == Actor::IMP) dmg = randint(1,2);
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?
-		std::string("You burnt the ") + target->getTypeName() + " to oblivion." :
+		std::string("You burnt the ") + target->getTypeName(true) + " to oblivion." :
 		std::string("You burn the ") + target->getTypeName() + " (" + num2str(dmg) + ")."
 		);
 	target->msgs.push_back(died ?
-		std::string("You fell to the attack of the ") + self->getTypeName() + "." :
+		std::string("You fell to the attack of the ") + self->getTypeName(true) + "." :
 		std::string("You were hurt by the ") + self->getTypeName() + " (" + num2str(dmg) + ")."
 		);
 	if (died) {
