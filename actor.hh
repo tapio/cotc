@@ -158,7 +158,7 @@ class Actor: boost::noncopyable {
 			case HUMAN: maxhealth = randint(4,7); break;
 			case ANGEL: maxhealth = 16; break;
 			case ARCHANGEL: maxhealth = 28; break;
-			case IMP: maxhealth = randint(6,9); break;
+			case IMP: maxhealth = randint(8,9); break;
 			case DEMON: maxhealth = randint(14,16); break;
 			case ARCHDEMON: maxhealth = randint(24,27); break;
 			default: break;
