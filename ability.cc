@@ -155,7 +155,7 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		self->type = Actor::POSSESSED;
 	}
 	// Do fire
-	int dmg = randint(5,6) + (self->realType == Actor::ARCHDEMON) ? randint(5,8) : 0;
+	int dmg = randint(4,5) + (self->realType == Actor::ARCHDEMON) ? randint(5,8) : 0;
 	if (self->realType == Actor::IMP) dmg = randint(1,2);
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?
