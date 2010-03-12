@@ -148,14 +148,9 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		self->msgs.push_back("You must be possessing a body to use demon fire.");
 		return false;
 	}
-	// Reveal cloaked angel
-	if (target->type == Actor::HUMAN && (target->realType & GOOD_ACTORS)) {
-		self->msgs.push_back("The human is an angel in disguise!");
-		target->type = Actor::CLOAKEDANGEL;
-		return true;
-	}
-	// Reveal self when attacking angel
-	if (self->type == Actor::HUMAN && self->possessing && target->realType & GOOD_ACTORS) {
+	// Reveal self when attacking angel or attacking humans near an angel
+	if (self->type == Actor::HUMAN && self->possessing &&
+	  (target->realType & GOOD_ACTORS || target->getClosestActor(GOOD_ACTORS))) {
 		self->type = Actor::POSSESSED;
 	}
 	// Do fire

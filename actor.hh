@@ -268,8 +268,9 @@ class Actor: boost::noncopyable {
 	int getMaxHealth() const { return maxhealth; }
 	float getCond() const { return float(health) / maxhealth; }
 
-  private:
 	Actor* getClosestActor(int types = ALL);
+
+  private:
 	int countActors(int types = ALL) const;
 	bool moveTowards(int tx, int ty);
 	void moveAway(int tx, int ty);
