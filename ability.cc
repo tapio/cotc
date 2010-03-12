@@ -144,7 +144,7 @@ bool Ability_Possess::operator()(Actor* self, Actor* target, bool force) {
 bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 	if (target->realType & EVIL_ACTORS) return false;
 	// Handle no body
-	if (!self->possessing) {
+	if (!self->possessing && self->realType != Actor::ARCHDEMON) {
 		self->msgs.push_back("You must be possessing a body to use demon fire.");
 		return false;
 	}

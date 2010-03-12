@@ -131,7 +131,7 @@ bool checkWinLose(const Actor& pl) {
 	tempst = num2str(pl.killed_humans) + std::string(pl.realType & EVIL_ACTORS ?
 		" humans killed" : " humans blessed");
 	addcstr(tempst); addch('\n');
-	tempst = num2str(pl.moves) + " moves made    ";
+	tempst = num2str(pl.moves) + " moves made   ";
 	addcstr(tempst); addch('\n');
 	// Menu
 	move(LINES-5, 0);

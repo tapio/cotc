@@ -85,7 +85,7 @@ void Actor::AI_demon() {
 	Actor* target = getClosestActor(GOOD_ACTORS);
 	if (target) {
 		// Only attack if superior numbers, right next to the enemy or archdemon
-		if ((type != IMP || possessing) && (friendCount > enemyCount || realType == ARCHDEMON
+		if ((type == ARCHDEMON || possessing) && (friendCount > enemyCount || realType == ARCHDEMON
 		  || manhattan_dist(x,y,target->x,target->y) <= 1))
 			moveTowards(target->x, target->y);
 		else moveAway(target->x, target->y);
@@ -94,6 +94,8 @@ void Actor::AI_demon() {
 	// Seek humans
 	target = getClosestActor(HUMAN);
 	if (target) {
+		// Remember target
+		targetx = target->x; targety = target->y;
 		moveTowards(target->x, target->y);
 		return;
 	}
@@ -103,7 +105,9 @@ void Actor::AI_demon() {
 void Actor::AI_angel() {
 	Actor* target = getClosestActor(EVIL_ACTORS);
 	if (!target) target = getClosestActor(HUMAN);
-	if (target) {
+	if (target && !target->blessed) { // Don't go after blessed people
+		// Remember target
+		targetx = target->x; targety = target->y;
 		// Decloak if near
 		if (type != realType && manhattan_dist(x,y,target->x,target->y) <= 1) {
 			Ability_ConcealDivinity decloak;
@@ -135,10 +139,12 @@ void Actor::AI_generic() {
 		if (moveTowards(targetx,targety)) return;
 	}
 	// Move randomly
-	int tx, ty; randdir(tx, ty);
-	this->move(tx, ty);
+	if (randbool()) {
+		int tx, ty; randdir(tx, ty);
+		this->move(tx, ty);
+	}
 	// Acquire new destination
-	if (randint(realType == HUMAN ? 10 : 4) == 0) {
+	if (randint(realType == HUMAN ? 10 : 2) == 0) {
 		targetx = randint(1, world->getWidth()-2);
 		targety = randint(1, world->getHeight()-2);
 	}
