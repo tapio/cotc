@@ -90,8 +90,10 @@ void Actor::AI_demon() {
 		  || manhattan_dist(x,y,target->x,target->y) <= 1)) {
 			moveTowards(target->x, target->y);
 			return;
-		} else if (!possessing) runaway = true;
-		return;
+		} else if (!possessing) {
+			targetx = target->x; targety = target->y;
+			runaway = true;
+		} else { moveAway(target->x, target->y); return; }
 	}
 	// Seek humans
 	target = getClosestActor(HUMAN);
@@ -100,7 +102,7 @@ void Actor::AI_demon() {
 		targetx = target->x; targety = target->y;
 		moveTowards(target->x, target->y);
 		return;
-	} else if (runaway) moveAway(target->x, target->y);
+	} else if (runaway) moveAway(targetx, targety);
 	else AI_generic();
 }
 
