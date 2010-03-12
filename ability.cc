@@ -177,6 +177,7 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		self->addExp(expadd);
 		if (target->realType == Actor::HUMAN) self->killed_humans++;
 		else self->killed_enemies++;
+		self->hurt(-1); // Add some health (eating or something...)
 	}
 	return true;
 }
