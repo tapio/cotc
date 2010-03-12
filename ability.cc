@@ -110,8 +110,8 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 
 
 bool Ability_HealSelf::operator()(Actor* self, bool force) {
-	if (self->getExp() >= 2 && self->getHealth() < self->getMaxHealth()) {
-		self->addExp(-2); self->hurt(-1);
+	if (self->getExp() >= 1 && self->getHealth() < self->getMaxHealth()) {
+		self->addExp(-1); self->hurt(-1);
 		self->msgs.push_back("You feel a tiny bit better.");
 	}
 	return true;
