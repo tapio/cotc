@@ -81,14 +81,16 @@ void Actor::AI_human() {
 void Actor::AI_demon() {
 	int friendCount = countActors(EVIL_ACTORS);
 	int enemyCount = countActors(GOOD_ACTORS);
+	bool runaway = false;
 	// Seek angels
 	Actor* target = getClosestActor(GOOD_ACTORS);
 	if (target) {
 		// Only attack if superior numbers, right next to the enemy or archdemon
 		if ((type == ARCHDEMON || possessing) && (friendCount > enemyCount || realType == ARCHDEMON
-		  || manhattan_dist(x,y,target->x,target->y) <= 1))
+		  || manhattan_dist(x,y,target->x,target->y) <= 1)) {
 			moveTowards(target->x, target->y);
-		else moveAway(target->x, target->y);
+			return;
+		} else if (!possessing) runaway = true;
 		return;
 	}
 	// Seek humans
@@ -98,8 +100,8 @@ void Actor::AI_demon() {
 		targetx = target->x; targety = target->y;
 		moveTowards(target->x, target->y);
 		return;
-	}
-	AI_generic();
+	} else if (runaway) moveAway(target->x, target->y);
+	else AI_generic();
 }
 
 void Actor::AI_angel() {
