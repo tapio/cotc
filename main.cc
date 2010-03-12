@@ -74,10 +74,10 @@ bool mainLoop() {
 		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
 		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
 		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
-		Actor::HUMAN, Actor::IMP,   Actor::IMP,   Actor::IMP,
-		Actor::IMP,   Actor::IMP,   Actor::DEMON, Actor::ANGEL
+		Actor::HUMAN, Actor::ANGEL, Actor::DEMON, Actor::DEMON,
+		Actor::IMP,   Actor::IMP,   Actor::IMP,   Actor::IMP
 	};
-	for (int i = 0; i < 150; i++) {
+	for (int i = 0; i < 200; i++) {
 		Actor& a(world->addActor(new Actor(actor_types[randint(20)])));
 		while (!a.position(randint(world->getWidth()),
 		                   randint(world->getHeight())));
