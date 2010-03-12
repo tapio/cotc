@@ -137,7 +137,7 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 			}
 			// Place door
 			if (housetype == 1) { // Two-room house
-				makeDoor(doorx,doory,randint(-1,1));
+				makeDoor(doorx,doory,randint(0,1));
 				randDoor(x1,y1,x2,y2,(randint(0,9)==0));
 			} else if (housetype == 2) { // Two separate houses
 				makeDoor(randint(x1+1,x2-1),y1,randint(0,2));
@@ -155,7 +155,7 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 			}
 			// Place door
 			if (housetype == 1) { // Two-room house
-				makeDoor(doorx,doory,randint(-1,1));
+				makeDoor(doorx,doory,randint(0,1));
 				randDoor(x1,y1,x2,y2,(randint(0,9)==0));
 			} else if (housetype == 2) { // Two separate houses
 				makeDoor(x1,randint(y1+1,y2-1),randint(0,2));
