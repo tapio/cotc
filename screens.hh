@@ -66,7 +66,8 @@ void msglog(const Actor& pl) {
 	addch('\n');
 	setColor(COLOR_GREEN);
 	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend(); ++it) {
-		addcstr(*it); addch('\n');
+		// HACK: Filter tile descriptions by length
+		if (it->length() >= 15) { addcstr(*it); addch('\n'); }
 	}
 	setColor(COLOR_GREEN);
 	box(stdscr, 0, 0);

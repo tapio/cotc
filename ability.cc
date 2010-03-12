@@ -7,7 +7,7 @@ bool Ability_OpenDoor::operator()(Actor* self, Tile* target, bool force) {
 			Tile tile = TileBuilder("Open door");
 			*target = tile;
 			self->confirmAction = false;
-			self->msgs.push_back("Door opened.");
+			self->msgs.push_back("You opened the door.");
 		} else {
 			self->confirmAction = true;
 			self->msgs.push_back("Door is closed. Do you want to open it?");
@@ -22,7 +22,7 @@ bool Ability_CloseDoor::operator()(Actor* self, bool force) {
 	if (*target == TileBuilder("Open door")) {
 		Tile tile = TileBuilder("Closed door");
 		*target = tile;
-		self->msgs.push_back("Door closed.");
+		self->msgs.push_back("You closed the door.");
 		return true;
 	}
 	return false;

@@ -66,6 +66,8 @@ bool mainLoop() {
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
 	pl.position(abc == 1 ? world->getWidth()-3 : 2, world->getHeight() / 2);
 	pl.abilities.push_back(newAbility(Ability_LookAt));
+	pl.msgs.push_back("Hit 'm' to see the message log.");
+	pl.msgs.push_back("Welcome to the City of the Condemned.");
 
 	// Actors
 	Actor::Type actor_types[] = {
