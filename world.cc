@@ -48,6 +48,9 @@ void World::generate(int seed) {
 Actor& World::addActor(Actor* actor) {
 	actors.push_back(actor);
 	actors.back().setWorld(this);
+	if (actor->realType & GOOD_ACTORS) alltime_angels++;
+	else if (actor->realType & EVIL_ACTORS) alltime_demons++;
+	else alltime_humans++;
 	return actors.back();
 }
 

@@ -18,7 +18,7 @@ class Actor: boost::noncopyable {
 
 	Actor(Type type, bool ai = true): type(type), realType(type), x(), y(), targetx(), targety(),
 	  viewDist(10), useAI(ai), confirmAction(false), exp(), blessed(), possessed(NULL), possessing(NULL),
-	  forceRedrawUI(false), msgs(20), world(), moves() {
+	  forceRedrawUI(false), killed_enemies(), killed_humans(), moves(), msgs(20), world() {
 
 		setInitialHealth();
 
@@ -213,7 +213,7 @@ class Actor: boost::noncopyable {
 		type = realType;
 		if (possessing) { // Kill possessed
 			possessing->hurt(1000);
-			kills_humans++;
+			killed_humans++;
 		}
 		setInitialHealth();
 		exp = 0;
@@ -254,8 +254,9 @@ class Actor: boost::noncopyable {
 	Actor* possessing;
 	bool forceRedrawUI;
 
-	int kills_humans;
-	int kills_enemies;
+	int killed_enemies;
+	int killed_humans;
+	int moves;
 
 	ActorPtrs visible_actors;
 	Abilities abilities;
@@ -282,5 +283,4 @@ class Actor: boost::noncopyable {
 
 	int maxhealth;
 	int health;
-	unsigned long moves;
 };

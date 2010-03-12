@@ -7,7 +7,8 @@ class Actor;
 
 class World: boost::noncopyable {
   public:
-	World(): humans(), blessed(), angels(), demons(), windowW(45), windowH(19) {
+	World(): alltime_humans(), alltime_angels(), alltime_demons(), humans(), blessed(), angels(), demons(),
+	  windowW(45), windowH(19) {
 		scrX = COLS - 2 - windowW;
 		scrY = LINES / 2 - windowH / 2 - 2;
 		worldwin = newwin(windowH, windowW, scrY, scrX);
@@ -62,6 +63,9 @@ class World: boost::noncopyable {
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 
+	int alltime_humans;
+	int alltime_angels;
+	int alltime_demons;
 	int humans;
 	int blessed;
 	int angels;

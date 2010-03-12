@@ -92,8 +92,7 @@ bool mainLoop() {
 		refresh();
 		world->update();
 		world->draw(pl);
-	} while(!pl.isDead() && handleInput(pl) && !winner(pl));
-	if (pl.isDead()) death();
+	} while(!checkWinLose(pl) && handleInput(pl));
 
 	return true; // Come back to main loop for the title screen
 }

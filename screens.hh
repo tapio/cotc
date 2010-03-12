@@ -58,33 +58,89 @@ int title() {
 	flushinp();
 }
 
-bool winner(const Actor& pl) {
-	if (pl.getExp() < 50) return false;
-	if (!(pl.realType & (Actor::ARCHANGEL|Actor:: ARCHDEMON))) return false;
+void msglog(const Actor& pl) {
 	clear();
-	move(LINES/2,0);
-	setColor(COLOR_BLUE+8);
-	addcstr("You are victorious!");
+	move (1,0);
+	setColor(COLOR_CYAN+8);
+	addcstr("MESSAGE LOG");
+	addch('\n');
+	setColor(COLOR_GREEN);
+	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend(); ++it) {
+		addcstr(*it); addch('\n');
+	}
+	setColor(COLOR_GREEN);
 	box(stdscr, 0, 0);
 	while (true) {
 		int k = getch();
 		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
+	}
+	flushinp();
+	clear();
+}
+
+bool checkWinLose(const Actor& pl) {
+	// Here be ending conditions
+	WorldPtr wptr = pl.getConstWorldPtr();
+	std::string endst;
+	std::string tempst;
+	bool win = false;
+	// Death
+	if (pl.isDead()) { endst = "You were obliterated!"; win = false; }
+	// Angel conditions
+	if (pl.realType & GOOD_ACTORS) {
+		if (wptr->humans <= 0) {
+			endst = "All humans were killed!"; win = false;
+		} else if (wptr->blessed > wptr->alltime_humans / 2) {
+			endst = "Over half of the humans are blessed!"; win = true;
+		} else if (wptr->demons <= 0) {
+			endst = "All Evil was vanquished!"; win = true;
+		} else if (pl.realType == Actor::ARCHANGEL && pl.getExp() >= pl.getNextExpLevel()) {
+			endst = "You became a Seraph, guardian of God's throne!"; win = true;
+		} else return false;
+	} else if (pl.realType & EVIL_ACTORS) {
+		if (wptr->humans <= 0) {
+			endst = "All humans were killed!"; win = true;
+		} else if (wptr->blessed > wptr->alltime_humans / 2) {
+			endst = "Over half of the humans are blessed!"; win = false;
+		} else if (wptr->angels <= 0) {
+			endst = "All angels were vanquished!"; win = true;
+		} else if (pl.realType == Actor::ARCHDEMON && pl.getExp() >= pl.getNextExpLevel()) {
+			endst = "You became the Devil's right-hand demon!"; win = true;
+		} else return false;
+	} else return false;
+	clear();
+	// Titles
+	move(1,0);
+	setColor((win ? COLOR_GREEN : COLOR_RED));
+	addcstr(win ? "VICTORY" : "DEFEAT"); addch('\n'); addch('\n');
+	addcstr(endst); addch('\n'); addch('\n');
+	// World stats
+	// TODO
+	// Deeds
+	addcstr("   Your deeds:   "); addch('\n');
+	tempst = num2str(pl.killed_enemies) + std::string(pl.realType & EVIL_ACTORS ?
+		" angels crushed" : " demons crushed");
+	addcstr(tempst); addch('\n');
+	tempst = num2str(pl.killed_humans) + std::string(pl.realType & EVIL_ACTORS ?
+		" humans killed" : " humans blessed");
+	addcstr(tempst); addch('\n');
+	tempst = num2str(pl.moves) + " moves made    ";
+	addcstr(tempst); addch('\n');
+	// Menu
+	move(LINES-5, 0);
+	setColor(COLOR_YELLOW);
+	addcstr("[m] See last messages   "); addch('\n');
+	addcstr("[q] Quit to title screen");
+	// Frame
+	setColor((win ? COLOR_GREEN : COLOR_RED));
+	box(stdscr, 0, 0);
+	while (true) {
+		int k = getch();
+		if (k == 'm' || k == 'M') { msglog(pl); return true; }
+		else if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
 	}
 	flushinp();
 	return true;
-}
-
-void death() {
-	clear();
-	move(LINES/2,0);
-	setColor(COLOR_RED);
-	addcstr("You failed!");
-	box(stdscr, 0, 0);
-	while (true) {
-		int k = getch();
-		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
-	}
-	flushinp();
 }
 
 void frame(const Actor& pl, bool O = false) {
@@ -188,25 +244,4 @@ void help() {
 	addcstr("HELP!");
 	refresh();
 	getch();
-}
-
-
-void msglog(const Actor& pl) {
-	clear();
-	move (1,0);
-	setColor(COLOR_CYAN+8);
-	addcstr("MESSAGE LOG");
-	addch('\n');
-	setColor(COLOR_GREEN);
-	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend(); ++it) {
-		addcstr(*it); addch('\n');
-	}
-	setColor(COLOR_GREEN);
-	box(stdscr, 0, 0);
-	while (true) {
-		int k = getch();
-		if (k == KEY_ESCAPE || k == ' ' || k == KEY_ENTER || k == 'q' || k == 'Q') break;
-	}
-	flushinp();
-	clear();
 }
