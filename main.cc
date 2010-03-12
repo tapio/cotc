@@ -53,7 +53,6 @@ bool handleInput(Actor& pl) {
 	} else pl.msgs.push_back("The possessed soul revolts.");
 
 	flushinp();
-	if (pl.isDead()) return false;
 	return true;
 }
 
@@ -92,7 +91,7 @@ bool mainLoop() {
 		refresh();
 		world->update();
 		world->draw(pl);
-	} while(!checkWinLose(pl) && handleInput(pl));
+	} while(!checkWinLose(pl) && handleInput(pl) && !checkWinLose(pl));
 
 	return true; // Come back to main loop for the title screen
 }

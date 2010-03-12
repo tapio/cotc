@@ -87,7 +87,7 @@ bool checkWinLose(const Actor& pl) {
 	// Death
 	if (pl.isDead()) { endst = "You were obliterated!"; win = false; }
 	// Angel conditions
-	if (pl.realType & GOOD_ACTORS) {
+	else if (pl.realType & GOOD_ACTORS) {
 		if (wptr->humans <= 0) {
 			endst = "All humans were killed!"; win = false;
 		} else if (wptr->blessed > wptr->alltime_humans / 2) {
