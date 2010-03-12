@@ -74,7 +74,7 @@ bool mainLoop() {
 		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
 		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
 		Actor::HUMAN, Actor::HUMAN, Actor::HUMAN, Actor::HUMAN,
-		Actor::HUMAN, Actor::ANGEL, Actor::DEMON, Actor::DEMON,
+		Actor::HUMAN, Actor::ANGEL, Actor::DEMON, Actor::IMP,
 		Actor::IMP,   Actor::IMP,   Actor::IMP,   Actor::IMP
 	};
 	for (int i = 0; i < 200; i++) {
