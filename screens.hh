@@ -1,3 +1,4 @@
+#include <sstream>
 #include <curses.h>
 #include "common.hh"
 #include "actor.hh"
@@ -122,7 +123,15 @@ bool checkWinLose(const Actor& pl) {
 	addcstr(win ? "VICTORY" : "DEFEAT"); addch('\n'); addch('\n');
 	addcstr(endst); addch('\n'); addch('\n');
 	// World stats
-	// TODO
+	addcstr("Battle summary:"); addch('\n');
+	std::ostringstream oss, oss2;
+	oss << "Of the " << wptr->alltime_humans << " inhabitants of the city, "
+	  << wptr->alltime_humans - wptr->humans << " were killed and "
+	  << wptr->blessed << " blessed.";
+	oss2 << " There were " << wptr->alltime_angels << " angels and " << wptr->alltime_demons
+	  << " demons, now remains " << wptr->angels << " and " << wptr->demons << ".";
+	addcstr(oss.str().c_str()); addch('\n');
+	addcstr(oss2.str().c_str()); addch('\n'); addch('\n');
 	// Deeds
 	addcstr("   Your deeds:   "); addch('\n');
 	tempst = num2str(pl.killed_enemies) + std::string(pl.realType & EVIL_ACTORS ?
