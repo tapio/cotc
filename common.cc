@@ -44,7 +44,7 @@ void setColor(int color) { setColor(stdscr, color); }
 
 void addnum(int num) {
 	std::string stnum = num2str(num);
-	for (int i = 0; i < stnum.length(); ++i) echochar(stnum[i]);
+	for (size_t i = 0; i < stnum.length(); ++i) echochar(stnum[i]);
 }
 
 void addcstr(std::string str) {
