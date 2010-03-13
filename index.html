@@ -54,8 +54,8 @@
 <p><a href="pics/cotc.png"><img src="pics/cotc_thumb.png" alt="CotC gameplay" title="Optional title" /></a></p>
 
 <p>The game depicts a battle between the armies of
-Heaven and Hell in a town where innocent people's
-souls are in danger.</p>
+Heaven and Hell in a town where the souls of
+innocent people are in danger.</p>
 
 <p>Play as an angel, a divine warrior of God, with the
 mission to vanquish all evil and protect the humans.</p>
@@ -72,15 +72,28 @@ able to possess the people to create chaos.</p>
 
 <p>The password is 'curse'.</p>
 
-<h2>Sources</h2>
+<h2>Download</h2>
 
 <p>You can download this project in either
 <a href="http://github.com/tapio/cotc/zipball/master" title="zip">zip</a> or
-<a href="http://github.com/tapio/cotc/tarball/master" title="tar">tar</a> formats.</p>
+<a href="http://github.com/tapio/cotc/tarball/master" title="tar">tar</a> formats.
+The package includes 32bit binaries for Windows and Linux.</p>
 
 <p>You can also clone the project with <a href="http://git-scm.com" title="Git">Git</a> by running:</p>
 
 <pre><code>$ git clone git://github.com/tapio/cotc
+</code></pre>
+
+<h2>Compilation</h2>
+
+<p>If you wish to compile the game yourself, you need curses (PDcurses on Windows, ncurses on Linux) and Boost headers. CMake can be used to build the game, but on Windows, you need to configure it to find PDcurses. Normal CMake build procedure is as follows (Linux example):</p>
+
+<pre><code>$ mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make &amp;&amp; ./CotC
+</code></pre>
+
+<p>If you want to compile without CMake, execute generate-version.sh to create the version.h header. Then it's just something like this (Windows example):</p>
+
+<pre><code>$ g++ *.cc -O2 -o CotC.exe -lpdcurses
 </code></pre>
 
 		<div class="footer">
