@@ -214,6 +214,7 @@ class Actor: boost::noncopyable {
 		msgs.push_back(std::string("You've been promoted to ") + getTypeName() + "!");
 		if (possessing) { // Kill possessed
 			possessing->hurt(1000);
+			possessing = NULL;
 			msgs.push_back("Your ascension destroyed your vessel.");
 			killed_humans++;
 		}
