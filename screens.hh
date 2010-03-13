@@ -88,7 +88,7 @@ void msglog(const Actor& pl) {
 	move (1,0);
 	setColor(COLOR_CYAN+8);
 	addcstr("MESSAGE LOG");
-	addch('\n');
+	addch('\n'); addch('\n');
 	setColor(COLOR_GREEN);
 	int mcnt = 1;
 	for (MsgBuffer::const_reverse_iterator it = pl.msgs.rbegin(); it != pl.msgs.rend(); ++mcnt) {
