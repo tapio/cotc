@@ -87,9 +87,10 @@ void Actor::AI_demon() {
 	if (target) {
 		// Only attack if superior numbers, right next to the enemy or archdemon
 		if ((type == ARCHDEMON || possessing) && (friendCount > enemyCount || realType == ARCHDEMON
-		  || manhattan_dist(x,y,target->x,target->y) <= 1)) {
+		  || max_axis_dist(x,y,target->x,target->y) <= 1)) {
 			moveTowards(target->x, target->y);
 			return;
+		// Try to find a body
 		} else if (!possessing) {
 			targetx = target->x; targety = target->y;
 			runaway = true;
@@ -97,7 +98,7 @@ void Actor::AI_demon() {
 	}
 	// Seek humans
 	target = getClosestActor(HUMAN);
-	if (target) {
+	if (target && (!runaway || distance2d(x,y,targetx,targety) >= distance2d(x,y,target->x,target->y))) {
 		// Remember target
 		targetx = target->x; targety = target->y;
 		moveTowards(target->x, target->y);
@@ -113,12 +114,12 @@ void Actor::AI_angel() {
 		// Remember target
 		targetx = target->x; targety = target->y;
 		// Heal if needed
-		if (getHealth() < 7 && getExp() > 1 && manhattan_dist(x,y,target->x,target->y) > 1) {
+		if (getHealth() < 7 && getExp() > 1 && max_axis_dist(x,y,target->x,target->y) > 1) {
 			Ability_HealSelf heal; heal(this);
 			return;
 		}
 		// Decloak if near
-		if (type != realType && manhattan_dist(x,y,target->x,target->y) <= 1) {
+		if (type != realType && max_axis_dist(x,y,target->x,target->y) <= 1) {
 			Ability_ConcealDivinity decloak; decloak(this);
 		}
 		// Angels always attack fearlessly (or go blessing)
@@ -143,7 +144,7 @@ void Actor::AI_generic() {
 		return;
 	}
 	// Go towards a random target
-	if (targetx && targety && manhattan_dist(x,y,targetx,targety) >= 2) {
+	if (targetx && targety && max_axis_dist(x,y,targetx,targety) >= 2) {
 		if (moveTowards(targetx,targety)) return;
 	}
 	// Move randomly

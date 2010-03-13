@@ -84,6 +84,13 @@ template<typename T> T inline manhattan_dist(T x1, T y1, T x2, T y2) {
 	return abs(x2-x1) + abs(y2-y1);
 }
 
+template<typename T> T inline max_axis_dist(T x1, T y1, T x2, T y2) {
+	return std::max(abs(x2-x1),abs(y2-y1));
+}
+
+template<typename T> T inline min_axis_dist(T x1, T y1, T x2, T y2) {
+	return std::min(abs(x2-x1),abs(y2-y1));
+}
 
 /** Implement C99 mathematical rounding (which C++ unfortunately currently lacks) **/
 template <typename T> T round(T val) { return int(val + (val >= 0 ? 0.5 : -0.5)); }
