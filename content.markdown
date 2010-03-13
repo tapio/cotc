@@ -33,7 +33,7 @@ You can also clone the project with [Git](http://git-scm.com "Git") by running:
     $ git clone git://github.com/tapio/cotc
 
 ## Compilation ##
-If you wish to compile the game yourself, you need curses (PDcurses on Windows, ncurses on Linux) and Boost headers. CMake can be used to build the game, but on Windows, you need to configure it to find PDcurses. Normal CMake build procedure is as follows (Linux example):
+If you wish to compile the game yourself, you need curses (PDcurses on Windows, ncurses on Linux) and Boost headers. You can use CMake to build the game. Normal build procedure is as follows (Linux example):
 
     $ mkdir build && cd build && cmake .. && make && ./CotC
 
@@ -41,3 +41,4 @@ If you want to compile without CMake, execute generate-version.sh to create the 
 
     $ g++ *.cc -O2 -o CotC.exe -lpdcurses
 
+Note that generate-version.sh needs git, wc and cmp in your path - if that is too much, you can just add VERSION_STRING define to the compiler.

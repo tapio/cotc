@@ -86,7 +86,7 @@ The package includes 32bit binaries for Windows and Linux.</p>
 
 <h2>Compilation</h2>
 
-<p>If you wish to compile the game yourself, you need curses (PDcurses on Windows, ncurses on Linux) and Boost headers. CMake can be used to build the game, but on Windows, you need to configure it to find PDcurses. Normal CMake build procedure is as follows (Linux example):</p>
+<p>If you wish to compile the game yourself, you need curses (PDcurses on Windows, ncurses on Linux) and Boost headers. You can use CMake to build the game. Normal build procedure is as follows (Linux example):</p>
 
 <pre><code>$ mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make &amp;&amp; ./CotC
 </code></pre>
@@ -95,6 +95,8 @@ The package includes 32bit binaries for Windows and Linux.</p>
 
 <pre><code>$ g++ *.cc -O2 -o CotC.exe -lpdcurses
 </code></pre>
+
+<p>Note that generate-version.sh needs git, wc and cmp in your path - if that is too much, you can just add VERSION_STRING define to the compiler.</p>
 
 		<div class="footer">
 			get the source code on GitHub : <a href="http://github.com/tapio/cotc">tapio/cotc</a>
