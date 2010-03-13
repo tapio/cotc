@@ -16,19 +16,19 @@ bool handleInput(Actor& pl) {
 	int k = getch();
 
 	if      (k == KEY_ESCAPE || k == 'q') return false;
-	else if (k == '?' || k == 'h' || k == KEY_F(1)) { help(); frame(pl); }
+	else if (k == '+' || k == '?' || k == KEY_F(1)) { help(); frame(pl); }
 	else if (k == 'm' || k == 'l' || k == KEY_F(2)) { msglog(pl); frame(pl); }
 
 	else if (!pl.possessing || pl.possession()) {
 		if (k == ' ' || k == '5') pl.idle();
-		else if (k == KEY_LEFT   || k == '4') pl.move(-1,0);
-		else if (k == KEY_RIGHT  || k == '6') pl.move(1,0);
-		else if (k == KEY_UP     || k == '8') pl.move(0,-1);
-		else if (k == KEY_DOWN   || k == '2') pl.move(0,1);
-		else if (k == '7') pl.move(-1,-1);
-		else if (k == '9') pl.move( 1,-1);
-		else if (k == '1') pl.move(-1, 1);
-		else if (k == '3') pl.move( 1, 1);
+		else if (k == KEY_LEFT   || k == '4' || k == 'g' || k == 'G') pl.move(-1,0);
+		else if (k == KEY_RIGHT  || k == '6' || k == 'j' || k == 'J') pl.move(1,0);
+		else if (k == KEY_UP     || k == '8' || k == 'y' || k == 'Y') pl.move(0,-1);
+		else if (k == KEY_DOWN   || k == '2' || k == 'h' || k == 'H') pl.move(0,1);
+		else if (k == '7' || k == 't' || k == 'T') pl.move(-1,-1);
+		else if (k == '9' || k == 'u' || k == 'U') pl.move( 1,-1);
+		else if (k == '1' || k == 'b' || k == 'B') pl.move(-1, 1);
+		else if (k == '3' || k == 'n' || k == 'N') pl.move( 1, 1);
 		// Abilities
 		else if (ability_keys.find(k) != std::string::npos) {
 			size_t i = 0;
@@ -66,7 +66,7 @@ bool mainLoop() {
 	Actor& pl(world->addActor(new Actor(abc == 1 ? Actor::ANGEL : Actor::IMP, NO_AI)));
 	pl.position(abc == 1 ? world->getWidth()-3 : 2, world->getHeight() / 2);
 	pl.abilities.push_back(newAbility(Ability_LookAt));
-	pl.msgs.push_back("Hit 'h' for help.");
+	pl.msgs.push_back("Hit '?' for help.");
 	pl.msgs.push_back("Hit 'm' to see the message log.");
 	pl.msgs.push_back("Welcome to the City of the Condemned.");
 
