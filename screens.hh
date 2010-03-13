@@ -7,18 +7,18 @@
 void help() {
 	int x = 2;
 	erase();
-	setColor(COLOR_CYAN+8); move(3,x); addstr("BACKGROUND");
+	setColor(COLOR_CYAN+8); move(2,x); addstr("BACKGROUND");
 	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
-	addrowstr("The city is in trouble. It's people are being hunted, possessed and killed by Devil's minions.");
+	addrowstr("The city is in chaos. Its people are being hunted, possessed and killed by Devil's minions. As the hour grows desperate, a host of angels arrives from Heaven to fight off the Evil.");
 	setColor(COLOR_CYAN+8); move(getcury(stdscr)+2,x); addstr("HEAVENLY HOST");
 	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
-	addrowstr("Angels' task is to hunt down the demons, free the possessed and to bless the humans, so that no evil can enter their souls.");
+	addrowstr("Angels' mission is to hunt down the demons, free the possessed and to bless the people, so that no evil can enter their souls. Angels have the ability to disguise as humans so that they can get close to the enemy undetected. They can also heal themselves.");
 	setColor(COLOR_CYAN+8); move(getcury(stdscr)+2,x); addstr("FORCES OF EVIL");
 	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
-	addrowstr("Demons' task is to possess a human body to work as a vessel and then cause chaos by killing everyone around. Angels should also be taken care of, although be warned, they are powerful creatures able to mask themselves as humans.");
+	addrowstr("Demons' task is to possess a human body to work as a vessel and then cause chaos by killing everyone around. Angels should also be taken care of, although be warned: they are powerful creatures capable of taking human form.");
 	setColor(COLOR_CYAN+8); move(getcury(stdscr)+2,x); addstr("GENERAL");
 	setColor(COLOR_GREEN); move(getcury(stdscr)+1,x);
-	addrowstr("Use arrow keys or numpad to move. Hitting objects / creatures chooses the suitable action. You also have some abilitities that you can use by pressing an appropriate key. Refer to the game UI for reference.");
+	addrowstr("Use arrow keys, numpad or TYUGHJBN to move. Hitting objects / creatures chooses the suitable action automatically. You also have some abilities that you can use by pressing the appropriate key. Refer to the game UI.");
 	setColor(COLOR_CYAN+8);
 	box(stdscr, 0, 0);
 	move(1,2); addcstr("HELP!");
@@ -64,7 +64,7 @@ int title() {
 	setColor(COLOR_GREEN+8);
 	addcstr("[a] Join the Heavenly Host   "); addstr("\n");
 	addcstr("[b] Join the forces of Hell  "); addstr("\n\n");
-	addcstr("[h] Story and help           "); addstr("\n");
+	addcstr("[h] Information              "); addstr("\n");
 	addcstr("[c] Toggle default background"); addstr("\n");
 	addcstr("[q] Quit                     ");
 	setColor(COLOR_GREEN);
