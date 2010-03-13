@@ -7,7 +7,9 @@
 
 VERSION_H="version.h"
 
-echo "#define VERSION_STRING \"0.`git log --pretty=oneline | wc -l`\"" > $VERSION_H.new
+V=`git log --pretty=oneline | wc -l`""
+V=`echo "$V-139"|bc`
+echo "#define VERSION_STRING \"1.$V\"" > $VERSION_H.new
 
 if [ -f $VERSION_H ] ; then
 	# Check if they differ
