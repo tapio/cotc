@@ -4,7 +4,7 @@
 
 #define newAbility(a) dynamic_cast<Ability*>(new a)
 
-const std::string ability_keys = "abcdefg";
+const std::string ability_keys = "asdfzxcv";
 
 class Actor;
 
