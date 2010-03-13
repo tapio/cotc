@@ -25,8 +25,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++98 -Wall -Wno-missing-field-initializers")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-
-list(APPEND LIBS ncurses)
+find_package(Curses)
+include_directories(${CURSES_INCLUDE_DIR})
+list(APPEND LIBS ${CURSES_LIBRARIES})
 
 # Get revision number from Git
 set(VERSION_H ${CMAKE_CURRENT_BINARY_DIR}/version.h)
@@ -35,7 +36,7 @@ add_custom_command(
 	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/generate-version.sh
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*
 )
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB SOURCE_FILES "*.cc")
 file(GLOB HEADER_FILES "*.hh")
