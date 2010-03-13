@@ -114,7 +114,7 @@ void Actor::AI_angel() {
 		// Remember target
 		targetx = target->x; targety = target->y;
 		// Heal if needed
-		if (getHealth() < 7 && getExp() > 1 && max_axis_dist(x,y,target->x,target->y) > 1) {
+		if (getHealth() < 9 && getExp() > 1 && max_axis_dist(x,y,target->x,target->y) > 1) {
 			Ability_HealSelf heal; heal(this);
 			return;
 		}
