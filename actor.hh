@@ -130,6 +130,7 @@ class Actor: boost::noncopyable {
 		if (asker && type == HUMAN) { // Handle same side
 			if (asker->realType & GOOD_ACTORS && realType & GOOD_ACTORS) return COLOR_WHITE;
 			else if (asker->realType & EVIL_ACTORS && realType & EVIL_ACTORS) return COLOR_RED;
+			else if (asker->realType & GOOD_ACTORS && realType == HUMAN && blessed > 0) return COLOR_BLUE;
 		}
 		if (type & HUMAN) return COLOR_YELLOW;
 		else if (type & GOOD_ACTORS) return COLOR_WHITE;
