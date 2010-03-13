@@ -58,9 +58,8 @@ class Actor: boost::noncopyable {
 	}
 
 	bool possession() {
-		int odds = 6;
-		if (realType == DEMON) odds += 6;
-		if (realType == ARCHDEMON) odds += 6;
+		if (realType == ARCHDEMON) return true;
+		int odds = (realType == DEMON ? 24 : 6);
 		if (randint(odds) == 0) {
 			this->move(randint(-1,1),randint(-1,1));
 			return false;
