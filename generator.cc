@@ -18,12 +18,12 @@ namespace {
 	static const Tile grass(TileBuilder("Grass"));
 	static const Tile plaza(TileBuilder("Plaza"));
 	static const Tile housefloor(TileBuilder("Floor"));
-	static const Tile fancyfloor(TileBuilder("Plaza"));
+	static const Tile fancyfloor(TileBuilder("Marble floor"));
 
 	static const Tile wall(TileBuilder("Wall"));
 	static const Tile window(TileBuilder("Window"));
 	static const Tile tree(TileBuilder("Tree"));
-	static const Tile statue(TileBuilder("Tree"));
+	static const Tile statue(TileBuilder("Statue"));
 
 	static const Tile chair(TileBuilder("Chair"));
 	static const Tile table(TileBuilder("Table"));
