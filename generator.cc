@@ -1,3 +1,13 @@
+/**
+ * File: generator.cc
+ *
+ * This file contains functions to generate the world.
+ * The town generator is ported from CoolBasic sources
+ * of an incomplete role playing game Knight of Faith.
+ *
+ * BEWARE: The code is very hackish.
+ */
+
 #include "world.hh"
 #include "actor.hh"
 #include "common.hh"
@@ -191,7 +201,7 @@ void World::createTownHall(int x1, int y1, int x2, int y2) {
 	makeWallsAndFloor(x1,y1,x2,y2,fancyfloor);
 	int xx = (x1+x2)/2;
 	int yy = (y1+y2)/2;
-	//if (randbool()) { // horizontal
+	if (randbool()) { // horizontal
 		int wy1 = y1 + (y2-y1)/3;
 		int wy2 = y1 + (y2-y1)/3*2;
 		int wx = x1 + (x2-x1)/3*randint(1,2);
@@ -212,15 +222,15 @@ void World::createTownHall(int x1, int y1, int x2, int y2) {
 		for (int j = (wy2+y2)/2; j <= y2; j++) tiles[j][wx4] = wall;
 		AddFurniture( x1+1, y1+1, x2-1, wy1-1, randint(20,24), fancyfloor, 1);
 		AddFurniture( x1+1, wy2+1, x2-1, y2-1, randint(20,24), fancyfloor, 1);
-		makeDoor( wx, (wy1+wy2)/2, 0, fancyfloor);
-		makeDoor( wx1, randint(y1+1, (y1+wy1)/2-1) , 0, fancyfloor);
-		makeDoor( wx2, randint((y1+wy1)/2+1, wy1-1), 0, fancyfloor);
-		makeDoor( wx3, randint(wy2+1, (wy2+y2)/2-1), 0, fancyfloor);
-		makeDoor( wx4, randint((wy2+y2)/2+1, y2-1) , 0, fancyfloor);
-		makeDoor( randint(x1+1,wx1-1), (y1+wy1)/2 , 0, fancyfloor);
-		makeDoor( randint(wx2+1,x2-1), (y1+wy1)/2 , 0, fancyfloor);
-		makeDoor( randint(x1+1,wx3-1), (wy2+y2)/2 , 0, fancyfloor);
-		makeDoor( randint(wx4+1,x2-1), (wy2+y2)/2 , 0, fancyfloor);
+		makeDoor(wx, (wy1+wy2)/2, 0, fancyfloor);
+		makeDoor(wx1, randint(y1+1, (y1+wy1)/2-1) , 0, fancyfloor);
+		makeDoor(wx2, randint((y1+wy1)/2+1, wy1-1), 0, fancyfloor);
+		makeDoor(wx3, randint(wy2+1, (wy2+y2)/2-1), 0, fancyfloor);
+		makeDoor(wx4, randint((wy2+y2)/2+1, y2-1) , 0, fancyfloor);
+		makeDoor(randint(x1+1,wx1-1), (y1+wy1)/2 , 0, fancyfloor);
+		makeDoor(randint(wx2+1,x2-1), (y1+wy1)/2 , 0, fancyfloor);
+		makeDoor(randint(x1+1,wx3-1), (wy2+y2)/2 , 0, fancyfloor);
+		makeDoor(randint(wx4+1,x2-1), (wy2+y2)/2 , 0, fancyfloor);
 		if (wx < xx) {
 			for (int i = wx+2; i <= x2-4; i+=3) {
 				tiles[wy1+1][i] = statue;
@@ -250,70 +260,66 @@ void World::createTownHall(int x1, int y1, int x2, int y2) {
 			makeDoor(randint(wx+2,x2-2), wy1, 1, fancyfloor);
 			makeDoor(randint(wx+2,x2-2), wy2, 1, fancyfloor);
 		}
-/*
 	} else { // vertical
-		wx1 = x1 + (x2-x1)/3;
-		wx2 = x1 + (x2-x1)/3*2;
-		wy = y1 + (y2-y1)/3*randint(1,2);
-		wy1 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
-		wy2 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
-		wy3 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
-		wy4 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
-		for (int j = y1;  <= y2
-			tiles[wx1,j) = wall;
-			tiles[wx2,j) = wall;
-			tiles[(x1+wx1)/2,j) = wall;
-			tiles[(x2+wx2)/2,j) = wall;
+		int wx1 = x1 + (x2-x1)/3;
+		int wx2 = x1 + (x2-x1)/3*2;
+		int wy = y1 + (y2-y1)/3*randint(1,2);
+		int wy1 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
+		int wy2 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
+		int wy3 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
+		int wy4 = y1 + randint((y2-y1)/3,(y2-y1)/3*2);
+		for (int j = y1; j <= y2; j++) {
+			tiles[j][wx1] = wall;
+			tiles[j][wx2] = wall;
+			tiles[j][(x1+wx1)/2] = wall;
+			tiles[j][(x2+wx2)/2] = wall;
 		}
-		for (int i = wx1;  <= wx2; tiles[i,wy) = wall; }
-		for (int i = x1;  <= (x1+wx1)/2; tiles[i,wy1) = wall; }
-		for (int i = (x1+wx1)/2;  <= wx1; tiles[i,wy2) = wall; }
-		for (int i = wx2;  <= (wx2+x2)/2; tiles[i,wy3) = wall; }
-		for (int i = (wx2+x2)/2;  <= x2; tiles[i,wy4) = wall; }
-		AddFurniture( x1+1, y1+1, wx1-1, y2-1, randint(20,24), fancyfloor, ON);
-		AddFurniture( wx2+1, y1+1, x2-1, y2-1, randint(20,24), fancyfloor, ON);
+		for (int i = wx1; i <= wx2; i++) tiles[wy][i] = wall;
+		for (int i = x1; i <= (x1+wx1)/2; i++) tiles[wy1][i] = wall;
+		for (int i = (x1+wx1)/2; i <= wx1; i++) tiles[wy2][i] = wall;
+		for (int i = wx2; i <= (wx2+x2)/2; i++) tiles[wy3][i] = wall;
+		for (int i = (wx2+x2)/2; i <= x2; i++) tiles[wy4][i] = wall;
+		AddFurniture( x1+1, y1+1, wx1-1, y2-1, randint(20,24), fancyfloor, 1);
+		AddFurniture( wx2+1, y1+1, x2-1, y2-1, randint(20,24), fancyfloor, 1);
 		makeDoor((wx1+wx2)/2,wy,0);
-		makeDoor( randint(x1+1, (x1+wx1)/2-1) , wy1, 0, fancyfloor);
-		makeDoor( randint((x1+wx1)/2+1, wx1-1), wy2, 0, fancyfloor);
-		makeDoor( randint(wx2+1, (wx2+x2)/2-1), wy3, 0, fancyfloor);
-		makeDoor( randint((wx2+x2)/2+1, x2-1) , wy4, 0, fancyfloor);
-		makeDoor( (x1+wx1)/2, randint(y1+1,wy1-1) , 0, fancyfloor);
-		makeDoor( (x1+wx1)/2, randint(wy2+1,y2-1) , 0, fancyfloor);
-		makeDoor( (wx2+x2)/2, randint(y1+1,wy3-1) , 0, fancyfloor);
-		makeDoor( (wx2+x2)/2, randint(wy4+1,y2-1) , 0, fancyfloor);
+		makeDoor(randint(x1+1, (x1+wx1)/2-1) , wy1, 0, fancyfloor);
+		makeDoor(randint((x1+wx1)/2+1, wx1-1), wy2, 0, fancyfloor);
+		makeDoor(randint(wx2+1, (wx2+x2)/2-1), wy3, 0, fancyfloor);
+		makeDoor(randint((wx2+x2)/2+1, x2-1) , wy4, 0, fancyfloor);
+		makeDoor((x1+wx1)/2, randint(y1+1,wy1-1) , 0, fancyfloor);
+		makeDoor((x1+wx1)/2, randint(wy2+1,y2-1) , 0, fancyfloor);
+		makeDoor((wx2+x2)/2, randint(y1+1,wy3-1) , 0, fancyfloor);
+		makeDoor((wx2+x2)/2, randint(wy4+1,y2-1) , 0, fancyfloor);
 		if (wy < yy) {
-			for (int j = wy+2;  <= y2-4 Step 3
-				tiles[wx1+1,j) = statue;
-				tiles[wx2-1,j) = statue;
+			for (int j = wy+2; j <= y2-4; j+=3) {
+				tiles[j][wx1+1] = statue;
+				tiles[j][wx2-1] = statue;
 			}
-			tiles[xx-1 ,y2-3) = table;
-			tiles[xx ,y2-3) = table;
-			tiles[xx+1 ,y2-3) = table;
-			tiles[xx ,y2-2) = lord;
-			tiles[wx1+1,y2-1) = closet;
-			tiles[wx2-1,y2-1) = closet;
-			tiles[xx,(y1+wy)/2) = statue;
-			makeDoor(xx,y1,0,fancyfloor);
-			makeDoor(wx1,randint(y1+2,wy-2),ON,fancyfloor);
-			makeDoor(wx2,randint(y1+2,wy-2),ON,fancyfloor);
+			tiles[y2-3][xx-1] = table;
+			tiles[y2-3][xx] = table;
+			tiles[y2-3][xx+1] = table;
+			tiles[y2-1][wx1+1] = closet;
+			tiles[y2-1][wx2-1] = closet;
+			tiles[(y1+wy)/2][xx] = statue;
+			makeDoor(xx, y1, 0, fancyfloor);
+			makeDoor(wx1, randint(y1+2,wy-2), 1, fancyfloor);
+			makeDoor(wx2, randint(y1+2,wy-2), 1, fancyfloor);
 		} else {
-			for (int j = y1+4;  <= wy-2 Step 3
-				tiles[wx1+1,j) = statue;
-				tiles[wx2-1,j) = statue;
+			for (int j = y1+4; j <= wy-2; j+=3) {
+				tiles[j][wx1+1] = statue;
+				tiles[j][wx2-1] = statue;
 			}
-			tiles[xx-1 ,y1+3) = table;
-			tiles[xx ,y1+3) = table;
-			tiles[xx+1 ,y1+3) = table;
-			tiles[xx ,y1+2) = lord;
-			tiles[wx1+1,y1+1) = closet;
-			tiles[wx2-1,y1+1) = closet;
-			tiles[xx,(wy+y2)/2) = statue;
-			makeDoor(xx,y2,0,fancyfloor);
-			makeDoor(wx1,randint(wy+2,y2-2),ON,fancyfloor);
-			makeDoor(wx2,randint(wy+2,y2-2),ON,fancyfloor);
+			tiles[y1+3][xx-1] = table;
+			tiles[y1+3][xx] = table;
+			tiles[y1+3][xx+1] = table;
+			tiles[y1+1][wx1+1] = closet;
+			tiles[y1+1][wx2-1] = closet;
+			tiles[(wy+y2)/2][xx] = statue;
+			makeDoor(xx, y2, 0, fancyfloor);
+			makeDoor(wx1, randint(wy+2,y2-2), 1, fancyfloor);
+			makeDoor(wx2, randint(wy+2,y2-2), 1, fancyfloor);
 		}
 	}
-*/
 }
 
 void World::createInn(int x1, int y1, int x2, int y2) {
