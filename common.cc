@@ -7,9 +7,10 @@ Tile TileBuilder(std::string type) {
 	else if (type == "Plaza") tile = Tile(':', COLOR_GREEN, !BLOCKS);
 	else if (type == "Floor") tile = Tile('.', COLOR_YELLOW, !BLOCKS);
 	else if (type == "Marble floor") tile = Tile(':', COLOR_YELLOW, !BLOCKS);
-	else if (type == "Statue") tile = Tile('S', COLOR_YELLOW, BLOCKS);
-	else if (type == "Tree") tile = Tile('T', COLOR_GREEN, BLOCKS);
 	else if (type == "Wall") tile = Tile('#', COLOR_CYAN, BLOCKS);
+	else if (type == "Church") tile = Tile('T', COLOR_CYAN, BLOCKS);
+	else if (type == "Tree") tile = Tile('T', COLOR_GREEN, BLOCKS);
+	else if (type == "Statue") tile = Tile('S', COLOR_YELLOW, BLOCKS);
 	else if (type == "Chair") tile = Tile('h', COLOR_YELLOW, !BLOCKS);
 	else if (type == "Table") tile = Tile('O', COLOR_YELLOW, BLOCKSMOVE);
 	else if (type == "Barrel") tile = Tile('o', COLOR_YELLOW, BLOCKSMOVE);

@@ -23,8 +23,9 @@ namespace {
 	static const Tile wall(TileBuilder("Wall"));
 	static const Tile window(TileBuilder("Window"));
 	static const Tile tree(TileBuilder("Tree"));
-	static const Tile statue(TileBuilder("Statue"));
+	static const Tile church(TileBuilder("Church"));
 
+	static const Tile statue(TileBuilder("Statue"));
 	static const Tile chair(TileBuilder("Chair"));
 	static const Tile table(TileBuilder("Table"));
 	static const Tile barrel(TileBuilder("Barrel"));
@@ -72,7 +73,7 @@ void World::createCity(int xhouses, int yhouses) {
 		BuildingPlan[1] = xyhouses / randint(6,12); // plazas
 		BuildingPlan[2] = randint(1,2) + randint(0,4); // inns
 		BuildingPlan[3] = randint(1,2) + randint(0,4); // smiths/shops
-		BuildingPlan[4] = randint(1,2) + randint(0,1) + randint(0,1); // churches
+		BuildingPlan[4] = randint(20,22) + randint(0,1) + randint(0,1); // churches
 		BuildingPlan[5] = randint(1,2) + randint(0,1) + randint(0,1); // stables
 		total = BuildingPlan[1]+BuildingPlan[2]+BuildingPlan[3]+BuildingPlan[4]+BuildingPlan[5];
 	} while (total > xhouses * yhouses - 4); // 4 is for town hall
@@ -106,8 +107,8 @@ void World::createCity(int xhouses, int yhouses) {
 					//createInn(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset)/2); break;
 				//case 3:
 					//createShop(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
-				//case 4:
-					//createChurch(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset/2)); break;
+				case 4:
+					createChurch(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset/2)); break;
 				//case 5:
 					//createStable(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
 				case 10:
@@ -420,88 +421,82 @@ void World::createInn(int x1, int y1, int x2, int y2) {
 }
 
 void World::createChurch(int x1, int y1, int x2, int y2) {
-/*
 	makeWallsAndFloor(x1,y1,x2,y2,fancyfloor,1);
-	if (randint(0,1) = 0) { // horizontal
-		yy = floor((y1+y2)/2);
-		if (randint(0,1) = 0) {
+	if (randbool()) { // horizontal
+		int yy = floor((y1+y2)/2);
+		if (randbool()) {
 			makeDoor(x1,yy);
-			for (int i = x1+2;  <= x2-4
-				for (int j = y1+2;  <= y2-2
-					if (j != yy) { tiles[j][i] = chair;
-				}
-			}
-			tiles[x1 ,yy-1) = church;
-			tiles[x1 ,yy+1) = church;
-			tiles[x2-2,yy-1) = table;
-			tiles[x2-2,yy ) = table;
-			tiles[x2-2,yy+1) = table;
-			tiles[x2-1,y1+1) = closet;
-			tiles[x2-1,y2-1) = closet;
-			tiles[x2 ,yy ) = window;
-			tiles[x2-3+2*randint(1,0),yy-1+randint(0,2)) = priest;
-		} else {
-			makeDoor(x2,yy)
-			for (int i = x1+4;  <= x2-2
-				for (int j = y1+2;  <= y2-2
+			for (int i = x1+2; i <= x2-4; i++) {
+				for (int j = y1+2; j <= y2-2; j++) {
 					if (j != yy) tiles[j][i] = chair;
 				}
 			}
-			tiles[x2 ,yy-1) = church;
-			tiles[x2 ,yy+1) = church;
-			tiles[x1+2,yy-1) = table;
-			tiles[x1+2,yy ) = table;
-			tiles[x1+2,yy+1) = table;
-			tiles[x1+1,y1+1) = closet;
-			tiles[x1+1,y2-1) = closet;
-			tiles[x1 ,yy ) = window;
-			tiles[x1+3-2*randint(1,0),yy-1+randint(0,2)) = priest;
+			tiles[yy-1][x1] = church;
+			tiles[yy+1][x1] = church;
+			tiles[yy-1][x2-2] = table;
+			tiles[yy][x2-2] = table;
+			tiles[yy+1][x2-2] = table;
+			tiles[y1+1][x2-1] = closet;
+			tiles[y2-1][x2-1] = closet;
+			tiles[yy][x2] = window;
+		} else {
+			makeDoor(x2,yy);
+			for (int i = x1+4; i <= x2-2; i++) {
+				for (int j = y1+2; j <= y2-2; j++) {
+					if (j != yy) tiles[j][i] = chair;
+				}
+			}
+			tiles[yy-1][x2] = church;
+			tiles[yy+1][x2] = church;
+			tiles[yy-1][x1+2] = table;
+			tiles[yy][x1+2] = table;
+			tiles[yy+1][x1+2] = table;
+			tiles[y1+1][x1+1] = closet;
+			tiles[y2-1][x1+1] = closet;
+			tiles[yy][x1] = window;
 		}
-		for (int i = x1+2;  <= x2-2 Step 2
-			tiles[i,y1) = window;
-			tiles[i,y2) = window;
+		for (int i = x1+2; i <= x2-2; i+=2) {
+			tiles[y1][i] = window;
+			tiles[y2][i] = window;
 		}
 	} else { // vertical
-		xx = floor((x1+x2)/2)
-		if (randint(0,1) = 0) {
-			makeDoor(xx,y1)
-			for (int i = x1+2;  <= x2-2
-				for (int j = y1+2;  <= y2-4
+		int xx = floor((x1+x2)/2);
+		if (randbool()) {
+			makeDoor(xx,y1);
+			for (int i = x1+2; i <= x2-2; i++) {
+				for (int j = y1+2; j <= y2-4; j++) {
 					if (i != xx) tiles[j][i] = chair;
 				}
 			}
-			tiles[xx-1,y1 ) = church;
-			tiles[xx+1,y1 ) = church;
-			tiles[xx-1,y2-2) = table;
-			tiles[xx ,y2-2) = table;
-			tiles[xx+1,y2-2) = table;
-			tiles[x1+1,y2-1) = closet;
-			tiles[x2-1,y2-1) = closet;
-			tiles[xx ,y2 ) = window;
-			tiles[xx-1+randint(0,2),y2-3+2*randint(1,0)) = priest;
+			tiles[y1][xx-1] = church;
+			tiles[y1][xx+1] = church;
+			tiles[y2-2][xx-1] = table;
+			tiles[y2-2][xx] = table;
+			tiles[y2-2][xx+1] = table;
+			tiles[y2-1][x1+1] = closet;
+			tiles[y2-1][x2-1] = closet;
+			tiles[y2][xx] = window;
 		} else {
-			makeDoor(xx,y2)
-			for (int i = x1+2;  <= x2-2
-				for (int j = y1+4;  <= y2-2
+			makeDoor(xx,y2);
+			for (int i = x1+2; i <= x2-2; i++) {
+				for (int j = y1+4; j <= y2-2; j++) {
 					if (i != xx) tiles[j][i] = chair;
 				}
 			}
-			tiles[xx-1,y2) = church;
-			tiles[xx+1,y2) = church;
-			tiles[xx-1,y1+2) = table;
-			tiles[xx ,y1+2) = table;
-			tiles[xx+1,y1+2) = table;
-			tiles[x1+1,y1+1) = closet;
-			tiles[x2-1,y1+1) = closet;
-			tiles[xx ,y1 ) = window;
-			tiles[xx-1+randint(0,2),y1+3-2*randint(1,0)) = priest;
+			tiles[y2][xx-1] = church;
+			tiles[y2][xx+1] = church;
+			tiles[y1+2][xx-1] = table;
+			tiles[y1+2][xx] = table;
+			tiles[y1+2][xx+1] = table;
+			tiles[y1+1][x1+1] = closet;
+			tiles[y1+1][x2-1] = closet;
+			tiles[y1][xx] = window;
 		}
-		for (int j = y1+2;  <= y2-2 Step 2
-			tiles[x1,j) = window;
-			tiles[x2,j) = window;
+		for (int j = y1+2; j <= y2-2; j+=2) {
+			tiles[j][x1] = window;
+			tiles[j][x2] = window;
 		}
 	}
-*/
 }
 
 namespace {
