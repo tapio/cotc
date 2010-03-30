@@ -23,16 +23,20 @@ Use your favourite ssh client and do following:
 The password is 'curse'.
 
 ## Download ##
-You can download this project in either
-[zip](http://github.com/tapio/cotc/zipball/master "zip") or
-[tar](http://github.com/tapio/cotc/tarball/master "tar") formats.
-The package includes 32bit binaries for Windows and Linux.
+You can download the original 7DRL version (with added 32 bit executables for Windows and Linux) in either
+[zip](http://github.com/tapio/cotc/zipball/7drl "zip") or
+[tar](http://github.com/tapio/cotc/tarball/7drl "tar") formats.
+
+For latest version, use these:
+[zip](http://github.com/tapio/cotc/zipball/master "zip") |
+[tar](http://github.com/tapio/cotc/tarball/master "tar")
 
 You can also clone the project with [Git](http://git-scm.com "Git") by running:
 
     $ git clone git://github.com/tapio/cotc
 
 ## Compilation ##
+(Applies to latest version.)  
 If you wish to compile the game yourself, you need curses (PDcurses on Windows, ncurses on Linux) and Boost headers. You can use CMake to build the game. Normal build procedure is as follows (Linux example):
 
     $ mkdir build && cd build && cmake .. && make && ./CotC
