@@ -2,7 +2,9 @@ City of the Condemned
 =====================
 _Seven Day Roguelike Challenge 2010 Entry._
 
-[![CotC gameplay](pics/cotc_thumb.png "Optional title")](pics/cotc.png)
+[![CotC gameplay](pics/cotc_thumb.png "CotC Gameplay Screenshot")](pics/cotc.png)
+&nbsp;&nbsp;
+[![7DRL Medal](pics/Medal_7DRL_2010_s.png "7DRL 2010 Medal")](http://roguebasin.roguelikedevelopment.org/index.php?title=7DRL_Contest_2010)
 
 
 The game depicts a battle between the armies of
