@@ -1,7 +1,7 @@
 #include <curses.h>
 #include <ctime>
 
-#ifdef VERSION_STRING
+#ifndef VERSION_STRING
 	#include "version.h"
 #endif
 #ifndef VERSION_STRING
