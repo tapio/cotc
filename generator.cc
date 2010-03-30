@@ -156,8 +156,8 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 				makeDoor(randint(x1+1,x2-1),y2,randint(0,2));
 			}
 			// Add furniture
-			AddFurniture(x1+1,y1+1,x2-1,wy-1,furnit/2);
-			AddFurniture(x1+1,wy+1,x2-1,y2-1,furnit/2);
+			addFurniture(x1+1,y1+1,x2-1,wy-1,furnit/2);
+			addFurniture(x1+1,wy+1,x2-1,y2-1,furnit/2);
 		} else { // Vertical wall
 			int wx = randint(x1+3,x2-3);
 			doory = randint(y1+1,y2-1);
@@ -174,12 +174,12 @@ void World::createHouse(int x1, int y1, int x2, int y2, int furnit, int locked) 
 				makeDoor(x2,randint(y1+1,y2-1),randint(0,2));
 			}
 			// Add furniture
-			AddFurniture(x1+1,y1+1,wx-1,y2-1,furnit/2);
-			AddFurniture(wx+1,y1+1,x2-1,y2-1,furnit/2);
+			addFurniture(x1+1,y1+1,wx-1,y2-1,furnit/2);
+			addFurniture(wx+1,y1+1,x2-1,y2-1,furnit/2);
 		}
 	} else { // No wall / single-room house
 		randDoor(x1,y1,x2,y2,randint(0,2));
-		AddFurniture(x1+1,y1+1,x2-1,y2-1,furnit);
+		addFurniture(x1+1,y1+1,x2-1,y2-1,furnit);
 	}
 }
 
@@ -220,8 +220,8 @@ void World::createTownHall(int x1, int y1, int x2, int y2) {
 		for (int j = (y1+wy1)/2; j <= wy1; j++) tiles[j][wx2] = wall;
 		for (int j = wy2; j <= (wy2+y2)/2; j++) tiles[j][wx3] = wall;
 		for (int j = (wy2+y2)/2; j <= y2; j++) tiles[j][wx4] = wall;
-		AddFurniture( x1+1, y1+1, x2-1, wy1-1, randint(20,24), fancyfloor, 1);
-		AddFurniture( x1+1, wy2+1, x2-1, y2-1, randint(20,24), fancyfloor, 1);
+		addFurniture( x1+1, y1+1, x2-1, wy1-1, randint(20,24), fancyfloor, 1);
+		addFurniture( x1+1, wy2+1, x2-1, y2-1, randint(20,24), fancyfloor, 1);
 		makeDoor(wx, (wy1+wy2)/2, 0, fancyfloor);
 		makeDoor(wx1, randint(y1+1, (y1+wy1)/2-1) , 0, fancyfloor);
 		makeDoor(wx2, randint((y1+wy1)/2+1, wy1-1), 0, fancyfloor);
@@ -279,8 +279,8 @@ void World::createTownHall(int x1, int y1, int x2, int y2) {
 		for (int i = (x1+wx1)/2; i <= wx1; i++) tiles[wy2][i] = wall;
 		for (int i = wx2; i <= (wx2+x2)/2; i++) tiles[wy3][i] = wall;
 		for (int i = (wx2+x2)/2; i <= x2; i++) tiles[wy4][i] = wall;
-		AddFurniture( x1+1, y1+1, wx1-1, y2-1, randint(20,24), fancyfloor, 1);
-		AddFurniture( wx2+1, y1+1, x2-1, y2-1, randint(20,24), fancyfloor, 1);
+		addFurniture( x1+1, y1+1, wx1-1, y2-1, randint(20,24), fancyfloor, 1);
+		addFurniture( wx2+1, y1+1, x2-1, y2-1, randint(20,24), fancyfloor, 1);
 		makeDoor((wx1+wx2)/2,wy,0);
 		makeDoor(randint(x1+1, (x1+wx1)/2-1) , wy1, 0, fancyfloor);
 		makeDoor(randint((x1+wx1)/2+1, wx1-1), wy2, 0, fancyfloor);
@@ -515,7 +515,7 @@ namespace {
 }
 
 
-void World::AddFurniture(int x1, int y1, int x2, int y2, int furnit, Tile floortype, bool nobed) {
+void World::addFurniture(int x1, int y1, int x2, int y2, int furnit, Tile floortype, bool nobed) {
 	int furniturecount = 0;
 	while (furniturecount < furnit) {
 		int i, j, cnt = 0;
