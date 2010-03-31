@@ -60,38 +60,49 @@ void World::createCity(int xhouses, int yhouses) {
 	}
 
 	// Array for special house locations
-	int CityPlan[xhouses][yhouses];
+	enum bType { HOUSE = 0, PLAZA, INN, SHOP, CHURCH, STABLE, TOWNHALL, RESERVED };
+	bType bTypes[] = { HOUSE, PLAZA, INN, SHOP, CHURCH, STABLE, TOWNHALL, RESERVED };
+	bType CityPlan[xhouses][yhouses];
 	for (int j = 0; j < yhouses; ++j)
 		for (int i = 0; i < xhouses; ++i)
-			CityPlan[i][j] = 0;
+			CityPlan[i][j] = HOUSE;
 
 	// Array for amounts of special buildings
-	int BuildingPlan[6];
+	int BuildingPlan[RESERVED];
+	for (int i = 0; i < RESERVED; i++) BuildingPlan[i] = 0;
 	int total = 0;
 	// Create amounts for special buildings
 	do {
-		BuildingPlan[1] = xyhouses / randint(6,12); // plazas
-		BuildingPlan[2] = randint(20,22) + randint(0,4); // inns
-		BuildingPlan[3] = randint(1,2) + randint(0,4); // smiths/shops
-		BuildingPlan[4] = randint(20,22) + randint(0,1) + randint(0,1); // churches
-		BuildingPlan[5] = randint(1,2) + randint(0,1) + randint(0,1); // stables
-		total = BuildingPlan[1]+BuildingPlan[2]+BuildingPlan[3]+BuildingPlan[4]+BuildingPlan[5];
-	} while (total > xhouses * yhouses - 4); // 4 is for town hall
+		total = 0;
+		BuildingPlan[PLAZA] = xyhouses / randint(6,12); // plazas
+		BuildingPlan[INN] = randint(1,2) + randint(0,4); // inns
+		//BuildingPlan[SHOP] = randint(1,2) + randint(0,4); // smiths/shops
+		BuildingPlan[CHURCH] = 1 + randint(0,1) + randint(0,1); // churches
+		//BuildingPlan[STABLE] = randint(1,2) + randint(0,1) + randint(0,1); // stables
+		for (int i = 1; i < RESERVED; i++) total += BuildingPlan[i];
+		// Adjust for town hall and other large buildings
+	} while (xyhouses <= total - 4 + (BuildingPlan[INN] + BuildingPlan[CHURCH]) * 3);
 	// Put Town Hall in the middle
-	int townhallx, townhally;
-	if ((xhouses % 2) == 0) townhallx = xhouses/2; else townhallx = floor(xhouses/2.0) + randint(2);
-	if ((yhouses % 2) == 0) townhally = yhouses/2; else townhally = floor(yhouses/2.0) + randint(2);
-	CityPlan[townhallx][townhally] = 10;
-	CityPlan[townhallx+1][townhally] = 11;
-	CityPlan[townhallx][townhally+1] = 11;
-	CityPlan[townhallx+1][townhally+1] = 11;
+	int townhallx = xhouses/2, townhally = yhouses/2;
+	//if ((xhouses % 2) == 0) townhallx = xhouses/2; else townhallx = floor(xhouses/2.0) + randint(2);
+	//if ((yhouses % 2) == 0) townhally = yhouses/2; else townhally = floor(yhouses/2.0) + randint(2);
+	CityPlan[townhallx][townhally] = TOWNHALL;
+	CityPlan[townhallx+1][townhally] = RESERVED;
+	CityPlan[townhallx][townhally+1] = RESERVED;
+	CityPlan[townhallx+1][townhally+1] = RESERVED;
 	// Position rest of the special buildings (roughly)
 	for (int k = 0; k < total; ++k) {
 		int i,j,b;
-		while (CityPlan[i=randint(xhouses)][j=randint(yhouses)]);
-		while (!BuildingPlan[b = randint(1,5)]);
+		while (CityPlan[i = 2*randint(xhouses/2)][j = 2*randint(yhouses/2)]);
+		while (!BuildingPlan[b = randint(1,TOWNHALL-1)]);
 		BuildingPlan[b]--;
-		CityPlan[i][j] = b;
+		CityPlan[i][j] = bTypes[b];
+		// Large structures
+		if (b != PLAZA) {
+			CityPlan[i+1][j] = RESERVED;
+			CityPlan[i][j+1] = RESERVED;
+			CityPlan[i+1][j+1] = RESERVED;
+		}
 	}
 	// Fine tune positioning and generate the structures
 	for (int j = 0; j < yhouses; ++j) {
@@ -100,24 +111,34 @@ void World::createCity(int xhouses, int yhouses) {
 			int y1 = 1 + streetwidth + j * (househ+streetwidth+1);
 			int x2 = x1 + housew;
 			int y2 = y1 + househ;
+			int off1 = randint(0,offset/2);
+			int off2 = randint(0,offset/2);
 			switch (CityPlan[i][j]) {
-				case 1:
+				case PLAZA:
 					createPlaza(x1, y1, x2, y2); break;
-				case 2:
-					createInn(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset)/2); break;
-				//case 3:
-					//createShop(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
-				case 4:
-					createChurch(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset/2)); break;
-				//case 5:
-					//createStable(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
-				case 10:
-					createTownHall(x1, y1, x1 + streetwidth + 2*housew, y1 + streetwidth + 2*househ); break;
-				case 11:
+				case INN:
+					createInn(x1 + off1, y1 + off2,
+					          x1 + streetwidth + 2*housew - randint(0,offset/2),
+					          y1 + streetwidth + 2*househ - randint(0,offset/2));
 					break;
-				default:
+				case CHURCH:
+					createChurch(x1 + off1, y1 + off2,
+					             x1 + streetwidth + 2*housew - randint(0,offset/2),
+					             y1 + streetwidth + 2*househ - randint(0,offset/2));
+					break;
+				case TOWNHALL:
+					createTownHall(x1, y1, x1 + streetwidth + 2*housew, y1 + streetwidth + 2*househ); break;
+				case RESERVED:
+					break;
+				case SHOP:
+					//createShop(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
+				case STABLE:
+					//createStable(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
+				case HOUSE:
 					int fcount = (x2-x1)*(y2-y1)/randint(5,6);
-					createHouse(x1 + randint(-offset,offset), y1 + randint(-offset,offset), x2 - randint(-offset,offset), y2 - randint(-offset,offset), fcount, randint(0,2)); break;
+					createHouse(x1 + randint(-offset,offset), y1 + randint(-offset,offset),
+					            x2 - randint(-offset,offset), y2 - randint(-offset,offset), fcount, randint(0,2));
+					break;
 			}
 		}
 	}
