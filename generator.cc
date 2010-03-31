@@ -71,7 +71,7 @@ void World::createCity(int xhouses, int yhouses) {
 	// Create amounts for special buildings
 	do {
 		BuildingPlan[1] = xyhouses / randint(6,12); // plazas
-		BuildingPlan[2] = randint(1,2) + randint(0,4); // inns
+		BuildingPlan[2] = randint(20,22) + randint(0,4); // inns
 		BuildingPlan[3] = randint(1,2) + randint(0,4); // smiths/shops
 		BuildingPlan[4] = randint(20,22) + randint(0,1) + randint(0,1); // churches
 		BuildingPlan[5] = randint(1,2) + randint(0,1) + randint(0,1); // stables
@@ -103,8 +103,8 @@ void World::createCity(int xhouses, int yhouses) {
 			switch (CityPlan[i][j]) {
 				case 1:
 					createPlaza(x1, y1, x2, y2); break;
-				//case 2:
-					//createInn(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset)/2); break;
+				case 2:
+					createInn(x1 + randint(0,offset/2), y1 + randint(0,offset/2), x2 - randint(0,offset/2), y2 - randint(0,offset)/2); break;
 				//case 3:
 					//createShop(x1 + randint(0,offset), y1 + randint(0,offset), x2 - randint(0,offset), y2 - randint(0,offset)); break;
 				case 4:
@@ -324,100 +324,94 @@ void World::createTownHall(int x1, int y1, int x2, int y2) {
 }
 
 void World::createInn(int x1, int y1, int x2, int y2) {
-/*
-	makeWallsAndFloor(x1,y1,x2,y2,floor);
-	if (randint(0,1) = 0) { // horizontal
-		yy = floor((y1+y2)/2);
-		if (randint(0,1) = 0) {
+	makeWallsAndFloor(x1,y1,x2,y2,housefloor);
+	if (randbool()) { // horizontal
+		int yy = floor((y1+y2)/2);
+		if (randbool()) {
 			makeDoor(x1,yy);
-			for (int i = x1+2;  <= x2-4 Step 3
-				for (int j = y1+2;  <= y2-2 Step 3
+			for (int i = x1+2; i <= x2-4; i+=3) {
+				for (int j = y1+2; j <= y2-2; j+=3) {
 					tiles[j][i] = table;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
 				}
 			}
-			tiles[x1 ,yy-1) = inn;
-			tiles[x1 ,yy+1) = inn;
-			tiles[x2-2,yy-1) = table;
-			tiles[x2-2,yy ) = table;
-			tiles[x2-2,yy+1) = table;
-			tiles[x2-1,y1+1) = barrel;
-			tiles[x2-1,y2-1) = barrel;
-			if (randint(0,1)) tiles[x2-randint(1,2),y1+randint(1,2)) = barrel;
-			if (randint(0,1)) tiles[x2-randint(1,2),y2-randint(1,2)) = barrel;
-			tiles[x2-3+2*randint(1,0),yy-1+randint(0,2)) = innkeeper;
+			//tiles[x1 ,yy-1) = inn;
+			//tiles[x1 ,yy+1) = inn;
+			tiles[yy-1][x2-2] = table;
+			tiles[yy][x2-2] = table;
+			tiles[yy+1][x2-2] = table;
+			tiles[y1+1][x2-1] = barrel;
+			tiles[y2-1][x2-1] = barrel;
+			if (randbool()) tiles[y1+randint(1,2)][x2-randint(1,2)] = barrel;
+			if (randbool()) tiles[y2-randint(1,2)][x2-randint(1,2)] = barrel;
 		} else {
-			makeDoor(x2,yy)
-			for (int i = x1+4;  <= x2-2 Step 3
-				for (int j = y1+2;  <= y2-2 Step 3
+			makeDoor(x2,yy);
+			for (int i = x1+4; i <= x2-2; i+=3) {
+				for (int j = y1+2; j <= y2-2; j+=3) {
 					tiles[j][i] = table;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
 				}
 			}
-			tiles[x2 ,yy-1) = inn;
-			tiles[x2 ,yy+1) = inn;
-			tiles[x1+2,yy-1) = table;
-			tiles[x1+2,yy ) = table;
-			tiles[x1+2,yy+1) = table;
-			tiles[x1+1,y1+1) = barrel;
-			tiles[x1+1,y2-1) = barrel;
-			if (randint(0,1)) { tiles[x1+randint(1,2),y1+randint(1,2)) = barrel;
-			if (randint(0,1)) { tiles[x1+randint(1,2),y2-randint(1,2)) = barrel;
-			tiles[x1+3-2*randint(1,0),yy-1+randint(0,2)) = innkeeper;
+			//tiles[yy-1][x2] = inn;
+			//tiles[yy+1][x2] = inn;
+			tiles[yy-1][x1+2] = table;
+			tiles[yy][x1+2] = table;
+			tiles[yy+1][x1+2] = table;
+			tiles[y1+1][x1+1] = barrel;
+			tiles[y2-1][x1+1] = barrel;
+			if (randbool()) tiles[y1+randint(1,2)][x1-randint(1,2)] = barrel;
+			if (randbool()) tiles[y2-randint(1,2)][x1-randint(1,2)] = barrel;
 		}
 	} else { // vertical
-		xx = floor((x1+x2)/2);
-		if (randint(0,1) = 0) {
+		int xx = floor((x1+x2)/2);
+		if (randbool()) {
 			makeDoor(xx,y1);
-			for (int i = x1+2;  <= x2-2 Step 3
-				for (int j = y1+2;  <= y2-4 Step 3
+			for (int i = x1+2; i <= x2-2; i+=3) {
+				for (int j = y1+2; j <= y2-4; j+=3) {
 					tiles[j][i] = table;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
 				}
 			}
-			tiles[xx-1,y1 ) = inn;
-			tiles[xx+1,y1 ) = inn;
-			tiles[xx-1,y2-2) = table;
-			tiles[xx ,y2-2) = table;
-			tiles[xx+1,y2-2) = table;
-			tiles[x1+1,y2-1) = barrel;
-			tiles[x2-1,y2-1) = barrel;
-			if (randint(0,1)) tiles[x1+randint(1,2),y2-randint(1,2)) = barrel;
-			if (randint(0,1)) tiles[x2-randint(1,2),y2-randint(1,2)) = barrel;
-			tiles[xx-1+randint(0,2),y2-3+2*randint(1,0)) = innkeeper;
+			//tiles[xx-1,y1 ) = inn;
+			//tiles[xx+1,y1 ) = inn;
+			tiles[y2-2][xx-1] = table;
+			tiles[y2-2][xx] = table;
+			tiles[y2-2][xx+1] = table;
+			tiles[y2-1][x1+1] = barrel;
+			tiles[y2-1][x2-1] = barrel;
+			if (randbool()) tiles[y2-randint(1,2)][x1+randint(1,2)] = barrel;
+			if (randbool()) tiles[y2-randint(1,2)][x2-randint(1,2)] = barrel;
 		} else {
 			makeDoor(xx,y2);
-			for (int i = x1+2;  <= x2-2 Step 3
-				for (int j = y1+4;  <= y2-2 Step 3
+			for (int i = x1+2; i <= x2-2; i+=3) {
+				for (int j = y1+4; j <= y2-2; j+=3) {
 					tiles[j][i] = table;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
-					tiles[i-1+2*randint(1,0),j) = chair;
-					tiles[i,j-1+2*randint(1,0)) = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
+					tiles[j][i-1+2*randint(0,1)] = chair;
+					tiles[j-1+2*randint(0,1)][i] = chair;
 				}
 			}
-			tiles[xx-1,y2) = inn;
-			tiles[xx+1,y2) = inn;
-			tiles[xx-1,y1+2) = table;
-			tiles[xx ,y1+2) = table;
-			tiles[xx+1,y1+2) = table;
-			tiles[x1+1,y1+1) = barrel;
-			tiles[x2-1,y1+1) = barrel;
-			if (randint(0,1)) tiles[x1+randint(1,2),y1+randint(1,2)) = barrel;
-			if (randint(0,1)) tiles[x2-randint(1,2),y1+randint(1,2)) = barrel;
-			tiles[xx-1+randint(0,2),y1+3-2*randint(1,0)) = innkeeper;
+			//tiles[xx-1,y2) = inn;
+			//tiles[xx+1,y2) = inn;
+			tiles[y1+2][xx-1] = table;
+			tiles[y1+2][xx] = table;
+			tiles[y1+2][xx+1] = table;
+			tiles[y1+1][x1+1] = barrel;
+			tiles[y1+1][x2-1] = barrel;
+			if (randbool()) tiles[y1+randint(1,2)][x1+randint(1,2)] = barrel;
+			if (randbool()) tiles[y1+randint(1,2)][x2-randint(1,2)] = barrel;
 		}
 	}
-*/
 }
 
 void World::createChurch(int x1, int y1, int x2, int y2) {
