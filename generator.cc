@@ -75,21 +75,20 @@ void World::createCity(int xhouses, int yhouses) {
 	do {
 		total = 0;
 		BuildingPlan[PLAZA] = xyhouses / randint(6,12); // plazas
-		BuildingPlan[INN] = randint(1,2) + randint(0,4); // inns
+		BuildingPlan[INN] = randint(1,2) + randint(0,3); // inns
 		//BuildingPlan[SHOP] = randint(1,2) + randint(0,4); // smiths/shops
 		BuildingPlan[CHURCH] = 1 + randint(0,1) + randint(0,1); // churches
 		//BuildingPlan[STABLE] = randint(1,2) + randint(0,1) + randint(0,1); // stables
 		for (int i = 1; i < RESERVED; i++) total += BuildingPlan[i];
 		// Adjust for town hall and other large buildings
-	} while (xyhouses <= total - 4 + (BuildingPlan[INN] + BuildingPlan[CHURCH]) * 3);
+	} while (xyhouses <= total + 9 + (BuildingPlan[INN] + BuildingPlan[CHURCH]) * 3);
 	// Put Town Hall in the middle
 	int townhallx = xhouses/2, townhally = yhouses/2;
 	//if ((xhouses % 2) == 0) townhallx = xhouses/2; else townhallx = floor(xhouses/2.0) + randint(2);
 	//if ((yhouses % 2) == 0) townhally = yhouses/2; else townhally = floor(yhouses/2.0) + randint(2);
 	CityPlan[townhallx][townhally] = TOWNHALL;
-	CityPlan[townhallx+1][townhally] = RESERVED;
-	CityPlan[townhallx][townhally+1] = RESERVED;
-	CityPlan[townhallx+1][townhally+1] = RESERVED;
+	for (int i=0; i<3; i++) for (int j=0; j<3; j++) if (i!=0 || j!=0) {
+		CityPlan[townhallx+i][townhally+j] = RESERVED; }
 	// Position rest of the special buildings (roughly)
 	for (int k = 0; k < total; ++k) {
 		int i,j,b;
@@ -127,7 +126,7 @@ void World::createCity(int xhouses, int yhouses) {
 					             y1 + streetwidth + 2*househ - randint(0,offset/2));
 					break;
 				case TOWNHALL:
-					createTownHall(x1, y1, x1 + streetwidth + 2*housew, y1 + streetwidth + 2*househ); break;
+					createTownHall(x1, y1, x1 + 2*streetwidth + 3*housew, y1 + 2*streetwidth + 3*househ); break;
 				case RESERVED:
 					break;
 				case SHOP:
