@@ -17,12 +17,14 @@ mission to vanquish all evil and protect the humans.
 Or take your stand as a demon, sinister creation of the Devil
 able to possess the people to create chaos.
 
+<!--
 ## Play ##
 Use your favourite ssh client and do following:
 
     $ ssh gamer@saluuna.dy.fi
     
 The password is 'curse'.
+-->
 
 ## Download ##
 You can download the original 7DRL version (with added 32 bit executables for Windows and Linux) in either
