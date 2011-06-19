@@ -21,7 +21,7 @@ Actor* Actor::getClosestActor(int types) {
 }
 
 int Actor::countActors(int types) const {
-	if (visible_actors.empty()) return NULL;
+	if (visible_actors.empty()) return 0;
 	if (types == 0) types = ALL;
 	int cnt = 0;
 	for (ActorPtrs::const_iterator it = visible_actors.begin(); it != visible_actors.end(); ++it)
