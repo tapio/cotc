@@ -97,12 +97,10 @@ If you wish to compile the game yourself, you need curses (PDcurses on Windows, 
 <pre><code>$ mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make &amp;&amp; ./CotC
 </code></pre>
 
-<p>If you want to compile without CMake, execute generate-version.sh to create the version.h header. Then it's just something like this (Windows example):</p>
+<p>It's also possible to build without CMake. Just compile all the .cc files and link them with curses as indicated below (Windows example):</p>
 
 <pre><code>$ g++ *.cc -O2 -o CotC.exe -lpdcurses
 </code></pre>
-
-<p>Note that generate-version.sh needs git, wc and cmp in your path - if that is too much, you can just add VERSION_STRING define to the compiler.</p>
 
 		<div class="footer">
 			get the source code on GitHub : <a href="http://github.com/tapio/cotc">tapio/cotc</a>

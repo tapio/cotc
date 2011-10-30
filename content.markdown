@@ -45,8 +45,7 @@ If you wish to compile the game yourself, you need curses (PDcurses on Windows, 
 
     $ mkdir build && cd build && cmake .. && make && ./CotC
 
-If you want to compile without CMake, execute generate-version.sh to create the version.h header. Then it's just something like this (Windows example):
+It's also possible to build without CMake. Just compile all the .cc files and link them with curses as indicated below (Windows example):
 
     $ g++ *.cc -O2 -o CotC.exe -lpdcurses
 
-Note that generate-version.sh needs git, wc and cmp in your path - if that is too much, you can just add VERSION_STRING define to the compiler.
