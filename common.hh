@@ -15,6 +15,10 @@
 
 #include "logger.hh"
 
+#ifndef VERSION_STRING
+	#define VERSION_STRING "unknown"
+#endif
+
 #define KEY_ESCAPE 27
 #define BLOCKS 1
 #define BLOCKSMOVE 100

@@ -1,13 +1,6 @@
 #include <curses.h>
 #include <ctime>
 
-#ifndef VERSION_STRING
-	#include "version.h"
-#endif
-#ifndef VERSION_STRING
-	#define VERSION_STRING "unknown"
-#endif
-
 #include "common.hh"
 #include "console.hh"
 #include "actor.hh"

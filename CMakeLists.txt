@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.6)
 cmake_policy(VERSION 2.6)
 
 set(EXENAME "CotC")
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR "") # Will be determined later
 
 # Avoid source tree pollution
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -26,13 +28,23 @@ include_directories(${CURSES_INCLUDE_DIR})
 list(APPEND LIBS ${CURSES_LIBRARIES})
 
 # Get revision number from Git
-set(VERSION_H ${CMAKE_CURRENT_BINARY_DIR}/version.h)
-add_custom_command(
-	OUTPUT ${VERSION_H}
-	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/generate-version.sh
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*
-)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+if(NOT VERSION_MINOR)
+	execute_process(
+		COMMAND git describe --tags --match ${VERSION_MAJOR}.0
+		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+		OUTPUT_VARIABLE RAW_VERSION
+		RESULT_VARIABLE GIT_RESULT
+	)
+	if(NOT GIT_RESULT)
+		string(REPLACE "${VERSION_MAJOR}.0-" " " RAW_VERSION "${RAW_VERSION}")
+		string(REGEX REPLACE "-g[a-f|0-9]*" "" VERSION_MINOR ${RAW_VERSION})
+		string(STRIP ${VERSION_MINOR} VERSION_MINOR)
+	else()
+		set(VERSION_MINOR "0+")
+	endif()
+endif()
+
+add_definitions(-DVERSION_STRING="${VERSION_MAJOR}.${VERSION_MINOR}")
 
 file(GLOB SOURCE_FILES "*.cc")
 file(GLOB HEADER_FILES "*.hh")
