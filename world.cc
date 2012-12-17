@@ -64,7 +64,7 @@ void World::updateActorsMeta() {
 		if (it->realType & Actor::HUMAN) { humans++; if (it->blessed) blessed++; }
 		else if (it->realType & GOOD_ACTORS) angels++;
 		else if (it->realType & EVIL_ACTORS) demons++;
-		it++;
+		++it;
 	}
 }
 
@@ -86,11 +86,11 @@ void World::updateView(Actor& actor) {
 /// Function updateVisibleActors
 /// Updates all visibile actors lists of all actors
 void World::updateVisibleActors() {
-	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it) {
 		it->visible_actors.clear();
 	}
-	for (Actors::iterator it = actors.begin(); it != actors.end(); it++) {
-		for (Actors::iterator it2 = actors.begin(); it2 != actors.end(); it2++) {
+	for (Actors::iterator it = actors.begin(); it != actors.end(); ++it) {
+		for (Actors::iterator it2 = actors.begin(); it2 != actors.end(); ++it2) {
 			if (it == it2) continue;
 			if (it->getConstView()[it2->y][it2->x].visible && !it2->possessed) {
 				it->visible_actors.push_back(&(*it2));

@@ -10,8 +10,6 @@ class Actor;
 
 class Ability {
   public:
-	enum TargetType { SELF, ACTOR, WORLD } targetType;
-
 	bool automatic;
 	bool hidden;
 

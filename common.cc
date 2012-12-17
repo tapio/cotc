@@ -50,17 +50,17 @@ void addnum(int num) {
 	for (size_t i = 0; i < stnum.length(); ++i) echochar(stnum[i]);
 }
 
-void addcstr(std::string str) {
+void addcstr(const std::string& str) {
 	int x = COLS / 2 - str.length() / 2;
 	mvaddstr(getcury(stdscr), x, str.c_str());
 }
 
-void addrstr(std::string str) {
+void addrstr(const std::string& str) {
 	int x = COLS - str.length() - 2;
 	mvaddstr(getcury(stdscr), x, str.c_str());
 }
 
-void addrowstr(const std::string str, size_t w) {
+void addrowstr(const std::string& str, size_t w) {
 	size_t x = getcurx(stdscr);
 	if (w <= 0) w = COLS - x - 2;
 	std::string curword;

@@ -76,7 +76,7 @@ bool Ability_TouchOfGod::operator()(Actor* self, Actor* target, bool force) {
 		return false;
 	}
 	// Do some damage!
-	int dmg = randint(5,7) + (self->realType == Actor::ARCHANGEL) ? randint(5,8) : 0;
+	int dmg = randint(5,7) + (self->realType == Actor::ARCHANGEL ? randint(5,8) : 0);
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?
 		std::string("You vanquished the ") + target->getTypeName(true) + "." :
@@ -100,7 +100,7 @@ bool Ability_Bless::operator()(Actor* self, Actor* target, bool force) {
 	}
 	if (!(target->realType & Actor::HUMAN) || target->blessed > 0 || target->possessed) return false;
 	// Bless
-	int blessing = randint(1,2) + (self->realType == Actor::ARCHANGEL) ? randint(2,3) : 0;
+	int blessing = randint(1,2) + (self->realType == Actor::ARCHANGEL ? randint(2,3) : 0);
 	target->blessed += blessing;
 	self->msgs.push_back(std::string("You blessed the ") + target->getTypeName() + ".");
 	self->addExp(1);
@@ -155,7 +155,7 @@ bool Ability_DemonFire::operator()(Actor* self, Actor* target, bool force) {
 		self->type = Actor::POSSESSED;
 	}
 	// Do fire
-	int dmg = randint(4,5) + (self->realType == Actor::ARCHDEMON) ? randint(5,8) : 0;
+	int dmg = randint(4,5) + (self->realType == Actor::ARCHDEMON ? randint(5,8) : 0);
 	if (self->realType == Actor::IMP) dmg = randint(1,2);
 	bool died = target->hurt(dmg);
 	self->msgs.push_back(died ?

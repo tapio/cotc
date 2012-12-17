@@ -115,13 +115,13 @@ void setColor(int color);
 
 /// Function: addcstr
 /// Draws a centered string.
-void addcstr(std::string str);
+void addcstr(const std::string& str);
 
 /// Function: addrstr
 /// Draws the string justified to the right.
-void addrstr(std::string str);
+void addrstr(const std::string& str);
 
-void addrowstr(std::string str, size_t w = 0);
+void addrowstr(const std::string& str, size_t w = 0);
 
 void addnum(int num);
 
