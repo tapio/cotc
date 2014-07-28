@@ -17,14 +17,8 @@ mission to vanquish all evil and protect the humans.
 Or take your stand as a demon, sinister creation of the Devil
 able to possess the people to create chaos.
 
-<!--
-## Play ##
-Use your favourite ssh client and do following:
+More information at the [RogueBasin wikipage](http://www.roguebasin.com/index.php?title=City_of_the_Condemned).
 
-    $ ssh gamer@saluuna.dy.fi
-    
-The password is 'curse'.
--->
 
 ## Download ##
 You can download the original 7DRL version (with added 32 bit executables for Windows and Linux) in either
@@ -38,6 +32,7 @@ For latest version, use these:
 You can also clone the project with [Git](http://git-scm.com "Git") by running:
 
     $ git clone git://github.com/tapio/cotc
+
 
 ## Compilation ##
 (Applies to latest version.)  
